@@ -14,7 +14,7 @@
                     <h1 class="text-3xl font-bold">Acesse sua conta</h1>
                     <p class="text-gray-400">Insira seu e-mail e senha para entrar em sua conta.</p>
                     
-                    <form id="login-form" v-on:submit.prevent="validateLogin">
+                    <form id="login-form">
                         <div class="space-y-5 pt-5">
                             <label class="form-control w-full">
                                 <div class="label">

@@ -6,7 +6,7 @@ import Register from './view/Register.vue';
 const routes: RouteRecordRaw[]= [
     {
         path: '/',
-        name: 'Login',
+        name: 'Home',
         component: Login,
         meta: { layout: 'empty' }
     },
