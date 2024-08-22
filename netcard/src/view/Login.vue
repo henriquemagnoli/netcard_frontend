@@ -28,10 +28,10 @@
                                     <span class="label-text flex"><KeyIcon class="w-4 h-4 mr-2" />Senha</span>
                                 </div>
                                 <label class='input input-bordered flex items-center h-10 w-full'>
-                                    <input type="password" class="grow">
-                                    <span class="cursor-pointer hover:bg-light-gray hover:rounded-full p-2">
-                                        <!-- <EyeSlashIcon v-if="!input_password_icon" class="w-4 h-4" />
-                                        <EyeIcon v-if="input_password_icon" class="w-4 h-4" /> -->
+                                    <input :type="input_password_type" class="grow">
+                                    <span v-on:click="showPassword" class="cursor-pointer hover:bg-gray-200 hover:rounded-full p-2">
+                                        <EyeSlashIcon v-if="!input_password_icon" class="w-4 h-4" />
+                                        <EyeIcon v-if="input_password_icon" class="w-4 h-4" />
                                     </span>
                                 </label>  
                                 <div class="text-right">
@@ -47,20 +47,48 @@
                         </div>
                     </form>                
                 </div>
-                <!-- <div class="form-footer">
+                <div class="form-footer">
                     <Footer></Footer>
-                </div> -->
+                </div>
             </div>       
         </div>      
     </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import { EnvelopeIcon, KeyIcon, EyeIcon, EyeSlashIcon } from '@heroicons/vue/24/outline';
+import Footer from '../components/Footer.vue';
 
 export default defineComponent({
+    setup(){
+
+        const input_password_icon = ref(false);
+        const input_password_type = ref('password');
+
+        return {
+            input_password_icon,
+            input_password_type
+        }
+
+    },
+    methods:{
+        showPassword()
+        {
+            if(this.input_password_type == 'password')
+            {
+                this.input_password_type = 'text';
+                this.input_password_icon = true;
+            }
+            else if(this.input_password_type == 'text')
+            {
+                this.input_password_type = 'password';
+                this.input_password_icon = false;
+            }
+        }
+    },
     components:{
+        Footer,
         EnvelopeIcon,
         KeyIcon,
         EyeIcon,

@@ -2,6 +2,8 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 
 import Login from './view/Login.vue';
 import Register from './view/Register.vue';
+import NotFound from './view/NotFound.vue';
+import ForgotPassword from './view/ForgotPassword.vue';
 
 const routes: RouteRecordRaw[]= [
     {
@@ -20,6 +22,18 @@ const routes: RouteRecordRaw[]= [
         path: '/register',
         name: 'Cadastro',
         component: Register,
+        meta: { layout: 'empty' }
+    },
+    {
+        path: '/forgotpassword',
+        name: 'Esqueceu Senha',
+        component: ForgotPassword,
+        meta: { layout: 'empty' }
+    },
+    {
+        path: '/:pathMatch(.*)*',
+        name: 'Not Fount',
+        component: NotFound,
         meta: { layout: 'empty' }
     }
 ];
