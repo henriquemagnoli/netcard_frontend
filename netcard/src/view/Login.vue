@@ -39,7 +39,7 @@
                                 </div>       
                             </label>
                             
-                            <button type="submit" class="btn bg-cyan-500 w-full h-10 rounded-md hover:bg-cyan-700 text-white text-sm">Entrar</button>
+                            <button @click="login" type="submit" class="btn bg-cyan-500 w-full h-10 rounded-md hover:bg-cyan-700 text-white text-sm">Entrar</button>
                             
                             <div class="justify-center flex text-sm gap-1">
                                 <p>Não possuí uma conta? </p><a href="register" class="underline text-cyan-700">Criar conta.</a>
@@ -59,6 +59,7 @@
 import { defineComponent, ref } from 'vue';
 import { EnvelopeIcon, KeyIcon, EyeIcon, EyeSlashIcon } from '@heroicons/vue/24/outline';
 import Footer from '../components/Footer.vue';
+import router from '../router';
 
 export default defineComponent({
     setup(){
@@ -85,6 +86,10 @@ export default defineComponent({
                 this.input_password_type = 'password';
                 this.input_password_icon = false;
             }
+        },
+        login()
+        {
+            router.push('/dashboard');
         }
     },
     components:{

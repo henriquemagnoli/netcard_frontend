@@ -1,13 +1,23 @@
 <template>
-    <div class="min-h-full">
-        <h1>Main</h1>
-        <slot></slot> 
+    <div class="min-h-full bg-base-200">
+        <Navbar />
+        <header class="bg-white shadow">
+            <div class="mx-auto max-w-full px-4 py-6 sm:px-6 lg:px-8">
+                <h1 class="text-2xl font-bold tracking-tight text-cyan-4000">{{ dashboardTitle }}</h1>
+            </div>
+        </header>
+        <main>
+            <div class="mx-auto max-w-full py-6 sm:px-6 lg:px-8 ">  
+                <slot></slot>
+            </div>
+        </main>
     </div> 
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { useRoute } from 'vue-router';
+import Navbar from '../components/Navbar.vue';
 
 export default defineComponent({
     setup(){
@@ -17,6 +27,9 @@ export default defineComponent({
     },
     beforeMount(){
         this.dashboardTitle = String(useRoute().name);
+    },
+    components:{
+        Navbar
     }
 })
 

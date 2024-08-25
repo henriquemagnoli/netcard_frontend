@@ -42,9 +42,11 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { EnvelopeIcon } from '@heroicons/vue/24/outline';
+import Footer from '../components/Footer.vue';
 
 export default defineComponent({
     components: {
+        Footer,
         EnvelopeIcon
     }
 })

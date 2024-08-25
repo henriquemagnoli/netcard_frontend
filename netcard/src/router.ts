@@ -4,6 +4,8 @@ import Login from './view/Login.vue';
 import Register from './view/Register.vue';
 import NotFound from './view/NotFound.vue';
 import ForgotPassword from './view/ForgotPassword.vue';
+import Dashboard from './view/Dashboard.vue';
+import Connections from './view/Connections.vue';
 
 const routes: RouteRecordRaw[]= [
     {
@@ -29,6 +31,18 @@ const routes: RouteRecordRaw[]= [
         name: 'Esqueceu Senha',
         component: ForgotPassword,
         meta: { layout: 'empty' }
+    },
+    {
+        path: '/dashboard',
+        name: 'Painel',
+        component: Dashboard,
+        meta: { layout: 'default' }
+    },
+    {
+        path: '/connections',
+        name: 'Conexões',
+        component: Connections,
+        meta: { layout: 'default' }
     },
     {
         path: '/:pathMatch(.*)*',
