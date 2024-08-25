@@ -8,7 +8,7 @@
             </div>
             <div class="hidden md:block">
               <div class="ml-10 flex items-baseline space-x-4">
-                <a v-for="item in navigation" :key="item.name" :href="item.href" :class="[item.current ? 'bg-gray-900 text-white' : 'text-white hover:bg-gray-700 hover:text-white', 'rounded-md px-3 py-2 text-sm font-medium']" :aria-current="item.current ? 'page' : undefined">{{ item.name }}</a>
+                <a v-for="item in navigation" :key="item.name" :href="item.href" :class="[item.href == path ? 'bg-gray-900 text-white' : 'text-white hover:bg-gray-700 hover:text-white', 'rounded-md px-3 py-2 text-sm font-medium']" :aria-current="item.current ? 'page' : undefined">{{ item.name }}</a>
               </div>
             </div>
           </div>
@@ -79,12 +79,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
+import { useRoute } from 'vue-router';
 
 export default defineComponent({
     setup(){
+        const path = ref("");
+
         const user = {
             name: 'Tom Cook',
             email: 'tom@example.com',
@@ -101,10 +104,14 @@ export default defineComponent({
         ]
 
         return{
-            user,
-            navigation,
-            userNavigation
+          path,
+          user,
+          navigation,
+          userNavigation
         }
+    },
+    beforeMount() {
+      this.path = String(useRoute().path);
     },
     components:{
         Disclosure, 
