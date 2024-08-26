@@ -34,10 +34,11 @@
                     </div>
                     
                     <p class="text-center font-bold text-lg">Jane Doe, 21</p>
+                    <p class="text-center text-sm">Engenheiro de Software</p>
                     
                     <div>
-                        <p class="font-semibold">Resumo</p>
-                        <p>Profissão: Engenheiro de Software</p>
+                        <p class="font-semibold">Biografia</p>
+                        <p class="text-sm">Sed convallis maximus nunc et tincidunt. Aliquam accumsan justo a nunc feugiat, non sagittis ex fermentum. Duis lacinia imperdiet arcu in ornare. In ex tellus, lacinia sit amet nulla vel, porttitor dictum purus.</p>
                     </div>
 
                     <div>
@@ -48,7 +49,14 @@
                     
                     <div>
                         <p class="font-semibold">Redes Sociais</p>
-                    </div>            
+                    </div>  
+
+                    <div class="flex h-full items-center justify-end">
+                        <div class="card-actions">
+                            <button class="btn btn-sm bg-cyan-400 hover:bg-cyan-600 text-white"><PlusIcon class="w-5 h-5" /> Adicionar</button>
+                        </div>
+                    </div>
+                    
                 </div>
             </div>
         </div>
@@ -57,9 +65,12 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { PlusIcon } from '@heroicons/vue/24/outline';
 
 export default defineComponent({
-    
+    components:{
+        PlusIcon
+    }
 })
 
 </script>

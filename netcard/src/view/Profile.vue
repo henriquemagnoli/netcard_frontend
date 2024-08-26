@@ -1,0 +1,169 @@
+<template>
+    <div class="p-5 md:p-0 space-y-10">
+        <div class="rounded-full w-40 h-40 bg-gray-400 cursor-pointer"></div>
+
+        <div class="border-b-2 border-gray-400">
+            <p class="mt-2 flex items-center py-2 font-semibold"><DocumentTextIcon class="w-5 h-5 mr-2" />Documentos</p>
+        </div>
+        
+        <div>
+            <div class="grid md:grid-cols-12 lg:grid-cols-12 gap-0 md:gap-5">
+                <div class="col-span-12 md:col-span-4">
+                    <label class="form-control w-full">
+                        <div class="label">
+                            <span class="label-text flex"><UserIcon class="w-4 h-4 mr-2" />Nome</span>
+                        </div>
+                        <input type="text" class='input input-bordered input-sm w-full'>
+                    </label>
+                </div>
+                <div class="col-span-12 md:col-span-4">
+                    <label class="form-control w-full">
+                        <div class="label">
+                            <span class="label-text flex"><EnvelopeIcon class="w-4 h-4 mr-2" />E-mail</span>
+                        </div>
+                        <input type="text" class='input input-bordered input-sm w-full'>
+                    </label>
+                </div>
+                <div class="col-span-12 md:col-span-4">
+                    <label class="form-control w-full">
+                        <div class="label">
+                            <span class="label-text flex"><DocumentTextIcon class="w-4 h-4 mr-2" />CPF</span>
+                        </div>
+                        <input type="text" class='input input-bordered input-sm w-full'>
+                    </label>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-12 lg:grid-cols-12 gap-0 md:gap-5">
+                <div class="col-span-12 md:col-span-4">
+                    <label class="form-control w-full">
+                        <div class="label">
+                            <span class="label-text flex"><CalendarDaysIcon class="w-4 h-4 mr-2" />Data de Nascimento</span>
+                        </div>
+                        <input type="date" class='input input-bordered input-sm w-full'>
+                    </label>
+                </div>
+                <div class="col-span-12 md:col-span-4">
+                    <label class="form-control w-full">
+                        <div class="label">
+                            <span class="label-text flex"><UserGroupIcon class="w-4 h-4 mr-2" />Gênero</span>
+                        </div>
+                        <input type="text" class='input input-bordered input-sm w-full'>
+                    </label>
+                </div>
+                <div class="col-span-12 md:col-span-4">
+                    <label class="form-control w-full">
+                        <div class="label">
+                            <span class="label-text flex"><BriefcaseIcon class="w-4 h-4 mr-2" />Profissão</span>
+                        </div>
+                        <select class="select select-bordered select-sm w-full"></select>
+                    </label>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-12 lg:grid-cols-12 gap-0 md:gap-5">
+                <div class="col-span-12">
+                    <label class="form-control w-full">
+                        <div class="label">
+                            <span class="label-text flex"><DocumentDuplicateIcon class="w-4 h-4 mr-2" />Biografia</span>
+                        </div>
+                        <textarea class="textarea textarea-bordered" placeholder="Digite sua biografia."></textarea>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="border-b-2 border-gray-400 py-2">
+            <p class="mt-2 flex items-center font-semibold"><MapPinIcon class="w-5 h-5 mr-2" /> Endereço</p>
+        </div>
+
+        <div>
+            <div class="grid md:grid-cols-12 lg:grid-cols-12 gap-0 md:gap-5">
+                <div class="col-span-12 md:col-span-4">
+                    <label class="form-control w-full">
+                        <div class="label">
+                            <span class="label-text flex"><UserIcon class="w-4 h-4 mr-2" />CEP</span>
+                        </div>
+                        <input type="text" class='input input-bordered input-sm w-full'>
+                    </label>
+                </div>
+                <div class="col-span-12 md:col-span-2">
+                    <label class="form-control w-full">
+                        <div class="label">
+                            <span class="label-text flex"><UserIcon class="w-4 h-4 mr-2" />Estado</span>
+                        </div>
+                        <input type="text" class='input input-bordered input-sm w-full'>
+                    </label>
+                </div>
+                <div class="col-span-12 md:col-span-6">
+                    <label class="form-control w-full">
+                        <div class="label">
+                            <span class="label-text flex"><UserIcon class="w-4 h-4 mr-2" />Cidade</span>
+                        </div>
+                        <input type="text" class='input input-bordered input-sm w-full'>
+                    </label>
+                </div>
+            </div>
+            <div class="grid md:grid-cols-12 lg:grid-cols-12 gap-0 md:gap-5">
+                <div class="col-span-12 md:col-span-6">
+                    <label class="form-control w-full">
+                        <div class="label">
+                            <span class="label-text flex"><UserIcon class="w-4 h-4 mr-2" />Endereço</span>
+                        </div>
+                        <input type="text" class='input input-bordered input-sm w-full'>
+                    </label>
+                </div>
+                <div class="col-span-12 md:col-span-4">
+                    <label class="form-control w-full">
+                        <div class="label">
+                            <span class="label-text flex"><UserIcon class="w-4 h-4 mr-2" />Bairro</span>
+                        </div>
+                        <input type="text" class='input input-bordered input-sm w-full'>
+                    </label>
+                </div>
+                <div class="col-span-12 md:col-span-2">
+                    <label class="form-control w-full">
+                        <div class="label">
+                            <span class="label-text flex"><UserIcon class="w-4 h-4 mr-2" />Número</span>
+                        </div>
+                        <input type="text" class='input input-bordered input-sm w-full'>
+                    </label>
+                </div>
+            </div>
+            <div class="grid md:grid-cols-12 lg:grid-cols-12 gap-0 md:gap-5">
+                <div class="col-span-12">
+                    <label class="form-control w-full">
+                        <div class="label">
+                            <span class="label-text flex"><UserIcon class="w-4 h-4 mr-2" />Complemento</span>
+                        </div>
+                        <textarea class="textarea textarea-bordered" placeholder="Digite um complemento para seu endereço."></textarea>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex h-full items-center justify-end">
+            <button class="btn bg-cyan-400 hover:bg-cyan-600 text-white"><PlusIcon class="w-5 h-5" /> Alterar</button>
+        </div>
+    </div>
+</template>
+
+<script lang="ts">
+import { defineComponent } from 'vue';
+import { UserIcon, EnvelopeIcon, DocumentTextIcon, CalendarDaysIcon, UserGroupIcon, MapPinIcon, BriefcaseIcon, PlusIcon, DocumentDuplicateIcon } from '@heroicons/vue/24/outline';
+
+export default defineComponent({
+    components:{
+        UserIcon,
+        EnvelopeIcon,
+        DocumentTextIcon,
+        CalendarDaysIcon,
+        UserGroupIcon,
+        MapPinIcon,
+        BriefcaseIcon,
+        PlusIcon,
+        DocumentDuplicateIcon
+    }
+})
+
+</script>

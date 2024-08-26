@@ -30,7 +30,7 @@
             </div>
 
             <div class="modal-action">
-                <button class="btn btn-sm w-28" @click="closeModal">Fechar</button>
+                <button class="btn btn-sm btn-neutral" @click="closeModal">Fechar</button>
             </div>
         </div>    
     </dialog> 

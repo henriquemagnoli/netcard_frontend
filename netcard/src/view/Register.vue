@@ -163,7 +163,7 @@
                                             <div class="label">
                                                 <span class="label-text flex"><BriefcaseIcon class="w-4 h-4 mr-2" />Profissão</span>
                                             </div>
-                                            <input type="text" class='input input-bordered input-sm w-full'>
+                                            <select class="select select-bordered select-sm w-full"></select>
                                         </label>
                                     </div>
                                 </div>
