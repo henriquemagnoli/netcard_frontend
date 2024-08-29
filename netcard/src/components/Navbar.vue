@@ -8,7 +8,11 @@
             </div>
             <div class="hidden md:block">
               <div class="ml-10 flex items-baseline space-x-4">
-                <a v-for="item in navigation" :key="item.name" :href="item.href" :class="[item.href == path ? 'bg-gray-900 text-white' : 'text-white hover:bg-gray-700 hover:text-white', 'rounded-md px-3 py-2 text-sm font-medium']" :aria-current="item.current ? 'page' : undefined">{{ item.name }}</a>
+                <a v-for="item in navigation" :key="item.name" :href="item.href" :class="[item.href == path ? 'bg-gray-900 text-white' : 'text-white hover:bg-gray-700 hover:text-white', 'rounded-md px-3 py-2 text-sm font-medium flex gap-2']" :aria-current="item.current ? 'page' : undefined">
+                  <Squares2X2Icon class="w-5 h-5" v-if="item.name == 'Painel'" />
+                  <UserGroupIcon class="w-5 h-5" v-if="item.name == 'Conexões'" />
+                  {{ item.name }}
+                </a>
               </div>
             </div>
           </div>
@@ -53,7 +57,11 @@
 
       <DisclosurePanel class="md:hidden">
         <div class="space-y-1 px-2 pb-3 pt-2 sm:px-3">
-          <DisclosureButton v-for="item in navigation" :key="item.name" as="a" :href="item.href" :class="[item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 'block rounded-md px-3 py-2 text-base font-medium']" :aria-current="item.current ? 'page' : undefined">{{ item.name }}</DisclosureButton>
+          <DisclosureButton v-for="item in navigation" :key="item.name" as="a" :href="item.href" :class="[item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 'flex gap-2 rounded-md px-3 py-2 text-base font-medium']" :aria-current="item.current ? 'page' : undefined">
+            <Squares2X2Icon class="w-5 h-5" v-if="item.name == 'Painel'" />
+            <UserGroupIcon class="w-5 h-5" v-if="item.name == 'Conexões'" />
+            {{ item.name }}
+          </DisclosureButton>
         </div>
         <div class="border-t border-gray-700 pb-3 pt-4">
           <div class="flex items-center px-5">
@@ -81,7 +89,7 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
+import { Bars3Icon, BellIcon, XMarkIcon, UserGroupIcon, Squares2X2Icon } from '@heroicons/vue/24/outline'
 import { useRoute } from 'vue-router';
 
 export default defineComponent({
@@ -123,7 +131,9 @@ export default defineComponent({
         MenuItems,
         Bars3Icon,
         BellIcon, 
-        XMarkIcon
+        XMarkIcon, 
+        UserGroupIcon, 
+        Squares2X2Icon 
     }
 })
 
