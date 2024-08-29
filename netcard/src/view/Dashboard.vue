@@ -29,6 +29,10 @@
         <div class="col-span-12 md:col-span-4">
             <div class="card bg-base-100 shadow-xl">
                 <div class="card-body">
+                    <div class="flex justify-end">
+                        <XMarkIcon class="w-5 h-5 cursor-pointer hover:bg-gray-400 rounded-full" />
+                    </div>
+
                     <div class="flex items-center justify-center">
                         <div class="rounded-full w-32 h-32 bg-gray-500"></div>
                     </div>
@@ -64,12 +68,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { PlusIcon } from '@heroicons/vue/24/outline';
+import { defineComponent, ref } from 'vue';
+import { PlusIcon, XMarkIcon } from '@heroicons/vue/24/outline';
 
 export default defineComponent({
+    setup(){
+
+    },
     components:{
-        PlusIcon
+        PlusIcon,
+        XMarkIcon
     }
 })
 

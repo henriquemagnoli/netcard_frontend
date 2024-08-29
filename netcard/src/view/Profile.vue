@@ -74,6 +74,56 @@
         </div>
 
         <div class="border-b-2 border-gray-400 py-2">
+            <p class="mt-2 flex items-center font-semibold"><GlobeAltIcon class="w-5 h-5 mr-2" /> Redes Sociais</p>
+        </div>
+
+        <div class="space-y-5">
+            <div class="grid md:grid-cols-12 lg:grid-cols-12 gap-0 md:gap-5">
+                <div class="col-span-12 md:col-span-4">
+                    <label class="form-control w-full">
+                        <div class="label">
+                            <span class="label-text flex"><BriefcaseIcon class="w-4 h-4 mr-2" />Redes Sociais</span>
+                        </div>
+                        <select class="select select-bordered select-sm w-full"></select>
+                    </label>
+                </div>
+                <div class="col-span-12 md:col-span-6">
+                    <label class="form-control w-full">
+                        <div class="label">
+                            <span class="label-text flex"><BriefcaseIcon class="w-4 h-4 mr-2" />Url</span>
+                        </div>
+                        <input type="text" class='input input-bordered input-sm w-full'>
+                    </label>
+                </div>
+            </div>
+
+            <div>
+                <button class="btn bg-cyan-400 btn-sm hover:bg-cyan-600 text-white"><PlusIcon class="w-5 h-5" /> Adicionar</button>
+            </div>
+
+            <div class="grid md:grid-cols-12 lg:grid-cols-12 gap-0 md:gap-5">
+                <div class="col-span-12 md:col-span-3">
+                    <div class="card bg-base-100 shadow-xl">
+                        <div class="card-body p-4">
+                            <div class="flex">
+                                <p class="font-bold">Facebook</p>
+                                <div class="flex justify-end gap-2">
+                                    <button class="btn btn-success btn-sm text-white"><PencilIcon class="w-5 h-5" /></button>
+                                    <button class="btn btn-error btn-sm text-white"><TrashIcon class="w-5 h-5" /></button>
+                                </div>
+                            </div>
+                            
+                            <div class="flex gap-2">
+                                <LinkIcon class="w-5 h-5" /> <p>Url: <a href="">https://teste.com.br</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="border-b-2 border-gray-400 py-2">
             <p class="mt-2 flex items-center font-semibold"><MapPinIcon class="w-5 h-5 mr-2" /> Endereço</p>
         </div>
 
@@ -150,7 +200,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { UserIcon, EnvelopeIcon, DocumentTextIcon, CalendarDaysIcon, UserGroupIcon, MapPinIcon, BriefcaseIcon, PlusIcon, DocumentDuplicateIcon } from '@heroicons/vue/24/outline';
+import { UserIcon, EnvelopeIcon, DocumentTextIcon, CalendarDaysIcon, UserGroupIcon, MapPinIcon, BriefcaseIcon, PlusIcon, DocumentDuplicateIcon, GlobeAltIcon, PencilIcon, TrashIcon, LinkIcon } from '@heroicons/vue/24/outline';
 
 export default defineComponent({
     components:{
@@ -162,7 +212,11 @@ export default defineComponent({
         MapPinIcon,
         BriefcaseIcon,
         PlusIcon,
-        DocumentDuplicateIcon
+        DocumentDuplicateIcon,
+        GlobeAltIcon,
+        PencilIcon, 
+        TrashIcon,
+        LinkIcon
     }
 })
 
