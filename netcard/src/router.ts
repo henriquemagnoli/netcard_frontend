@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
+import { auth } from './hooks/useAuth';
 
 import Login from './view/Login.vue';
 import Register from './view/Register.vue';
@@ -37,19 +38,22 @@ const routes: RouteRecordRaw[]= [
         path: '/dashboard',
         name: 'Painel',
         component: Dashboard,
-        meta: { layout: 'default' }
+        meta: { layout: 'default' },
+        beforeEnter: auth
     },
     {
         path: '/connections',
         name: 'Conexões',
         component: Connections,
-        meta: { layout: 'default' }
+        meta: { layout: 'default' },
+        beforeEnter: auth
     },
     {
         path: '/profile',
         name: 'Perfil',
         component: Profile,
-        meta: { layout: 'default' }
+        meta: { layout: 'default' },
+        beforeEnter: auth
     },
     {
         path: '/:pathMatch(.*)*',
