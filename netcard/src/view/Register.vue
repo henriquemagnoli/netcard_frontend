@@ -37,7 +37,7 @@
                                             <div class="label">
                                                 <span class="label-text flex"><DocumentTextIcon class="w-4 h-4 mr-2" />CPF</span>
                                             </div>
-                                            <input v-model="cpf" type="text" class='input input-bordered input-sm w-full'>
+                                            <input v-model="cpf" maxlength="11" type="text" class='input input-bordered input-sm w-full'>
                                         </label>
                                     </div>
                                     <div class="col-span-12 md:col-span-6">
@@ -85,7 +85,7 @@
                                             <div class="label">
                                                 <span class="label-text flex"><DocumentTextIcon class="w-4 h-4 mr-2" />CEP</span>
                                             </div>
-                                            <input v-model="zipCode" type="text" class='input input-bordered input-sm w-full'>
+                                            <input v-model="zipCode" maxlength="8" type="text" class='input input-bordered input-sm w-full'>
                                         </label>
                                     </div>   
                                     <div class="col-span-12 md:col-span-6">
