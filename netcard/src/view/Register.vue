@@ -93,9 +93,16 @@
                                             <div class="label">
                                                 <span class="label-text flex"><DocumentTextIcon class="w-4 h-4 mr-2" />Estado</span>
                                             </div>
-                                            <select v-model="state" class="select select-bordered select-sm w-full">
-                                                <option value="SP">São Paulo</option>
-                                            </select>
+
+                                            <span v-if="isLoadingStates == false">
+                                                <select v-for="state in states" v-model="state" class="select select-bordered select-sm w-full">
+                                                    <option value="SP">São Paulo</option>
+                                                </select>
+                                            </span>
+                                            
+                                            <span v-if="isLoadingStates == true">
+                                                <div class="skeleton select-sm w-full"></div>
+                                            </span>
                                         </label>
                                     </div> 
                                 </div>
@@ -228,6 +235,8 @@
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs } from 'vue';
 import { IUserState, setUser } from '../hooks/useUser';
+import { IStatesState, getAllStates } from '../hooks/useStates';
+import { ICitiesState, getAllCitiesBasedOnStateId } from '../hooks/useCities';
 import { EnvelopeIcon, KeyIcon, EyeIcon, EyeSlashIcon, DocumentTextIcon, CalendarDaysIcon, ChevronRightIcon, ChevronLeftIcon, UserIcon, PhotoIcon, BuildingOffice2Icon, BriefcaseIcon } from '@heroicons/vue/24/outline';
 import Footer from '../components/Footer.vue';
 import Swal from 'sweetalert2';
@@ -241,6 +250,18 @@ export default defineComponent({
             isLoading: false,
             messages: '',
             statusCode: 0
+        });
+
+        const statesState: IStatesState = reactive({
+            isLoadingStates: false,
+            messagesStates: '',
+            statusCodeStates: 0
+        });
+
+        const citiesState: ICitiesState = reactive({
+            isLoadingCities: false,
+            messagesCities: '',
+            statusCodeCities: 0
         });
         
         // Helper variables
@@ -256,7 +277,7 @@ export default defineComponent({
         const sex = ref('M');
         const profilePicture = ref('');
         const zipCode = ref('');
-        const state = ref('');
+        const states = ref('');
         const city = ref('');
         const street = ref('');
         const district = ref('');
@@ -268,6 +289,8 @@ export default defineComponent({
 
         return{
             ...toRefs(userState),
+            ...toRefs(statesState),
+            ...toRefs(citiesState),
             page,
             input_password_icon,
             input_password_type,
@@ -278,7 +301,7 @@ export default defineComponent({
             sex,
             profilePicture,
             zipCode,
-            state,
+            states,
             city,
             street,
             district,
@@ -335,10 +358,23 @@ export default defineComponent({
 
             const response: any = await setUser(userObject);
 
-            if(response.value['statusCode'] != 200)
-                Swal.fire({ icon: 'error', title: 'Erro', text: response.value['messages'] });
-            else
+            if(response.value['statusCode'] == 200)
                 Swal.fire({ icon: 'success', title: 'Scuesso', text: 'Sua conta foi criada.' }).then(() => router.push('/'));
+            else
+                Swal.fire({ icon: 'error', title: 'Erro', text: response.value['messages'] });
+        },
+        async listStates()
+        {
+            this.isLoadingStates = true;
+
+            const response: any = await getAllStates();
+
+            if(response.value['statusCode'] == 200)
+                this.states = response.value['data'];
+            else 
+                Swal.fire({ icon: 'error', title: 'Erro', text: response.value['messages'] })
+        
+            this.isLoadingStates = false;
         },
         validateFields()
         {
@@ -378,7 +414,7 @@ export default defineComponent({
                 return false;
             } 
 
-            if(this.state == '')
+            if(this.states == '')
             {   
                 Swal.fire({ icon: 'error', title: 'Erro', text: 'O estado deve ser selecionado.' });
                 return false;
@@ -434,6 +470,9 @@ export default defineComponent({
 
             return true;
         }
+    },
+    beforeMount() {
+        this.listStates();
     },
     components:{
         Footer,
