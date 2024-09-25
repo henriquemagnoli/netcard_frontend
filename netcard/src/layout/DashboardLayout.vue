@@ -7,9 +7,10 @@
             </div>
         </header>
         <main>
-            <div class="mx-auto max-w-full py-6 sm:px-6 lg:px-8 ">  
+            <!-- <div class="mx-auto max-w-full py-6 sm:px-6 lg:px-8 ">  
                 <slot></slot>
-            </div>
+            </div> -->
+            <slot></slot>
         </main>
     </div> 
 </template>

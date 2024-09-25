@@ -1,108 +1,109 @@
 <template>
-    <div class="space-y-2 p-5 md:p-0">
-        <div class="card bg-base-100 shadow-xl">
-            <div class="card-body">
-                <h2 class="card-title"><FunnelIcon class="w-5 h-5" /> Filtro</h2>
-                <div class="grid md:grid-cols-12 lg:grid-cols-12 gap-0 md:gap-5">
-                    <div class="col-span-12 md:col-span-3">
-                        <label class="form-control w-full">
-                            <div class="label">
-                                <span class="label-text">Nome</span>
-                            </div>
-                            <input type="text" placeholder="Digite o nome que deseja pesquisar..." class="input input-sm input-bordered w-full" />
-                        </label>
-                    </div>
-                    <div class="col-span-12 md:col-span-3">
-                        <label class="form-control w-full">
-                            <div class="label">
-                                <span class="label-text">Profissão</span>
-                            </div>
+    <div class="mx-auto max-w-full py-6 sm:px-6 lg:px-8 ">
+        <div class="space-y-2 p-5 md:p-0">
+            <div class="card bg-base-100 shadow-xl">
+                <div class="card-body">
+                    <h2 class="card-title"><FunnelIcon class="w-5 h-5" /> Filtro</h2>
+                    <div class="grid md:grid-cols-12 lg:grid-cols-12 gap-0 md:gap-5">
+                        <div class="col-span-12 md:col-span-3">
+                            <label class="form-control w-full">
+                                <div class="label">
+                                    <span class="label-text">Nome</span>
+                                </div>
+                                <input type="text" placeholder="Digite o nome que deseja pesquisar..." class="input input-sm input-bordered w-full" />
+                            </label>
+                        </div>
+                        <div class="col-span-12 md:col-span-3">
+                            <label class="form-control w-full">
+                                <div class="label">
+                                    <span class="label-text">Profissão</span>
+                                </div>
 
-                            <span v-if="isLoadingJobs == false">
-                                <select v-model="job" class="select select-bordered select-sm w-full">
-                                    <option value="">(Todas)</option>
-                                    <option v-for="job in jobs" :key="job.Id" :value="job.Id">{{ job.Name }}</option>
+                                <span v-if="isLoadingJobs == false">
+                                    <select v-model="job" class="select select-bordered select-sm w-full">
+                                        <option value="">(Todas)</option>
+                                        <option v-for="job in jobs" :key="job.Id" :value="job.Id">{{ job.Name }}</option>
+                                    </select>
+                                </span>
+
+                                <span v-if="isLoadingJobs == true">
+                                    <div class="skeleton select-sm w-full"></div>
+                                </span> 
+                            </label>
+                        </div>
+                        <div class="col-span-12 md:col-span-2">
+                            <label class="form-control w-full">
+                                <div class="label">
+                                    <span class="label-text">Sexo</span>
+                                </div>
+                                <select class="select select-sm select-bordered w-full">
+                                    <option disabled selected>Masculino</option>
+                                    <option>Feminino</option>
+                                    <option>Outros</option>
                                 </select>
-                            </span>
+                            </label>
+                        </div>
+                        <div class="col-span-12 md:col-span-2">
+                            <label class="form-control w-full">
+                                <div class="label">
+                                    <span class="label-text">Estado</span>
+                                </div>
 
-                            <span v-if="isLoadingJobs == true">
-                                <div class="skeleton select-sm w-full"></div>
-                            </span> 
-                        </label>
+                                <span v-if="isLoadingStates == false">
+                                    <select v-model="state" v-on:change="listCities" class="select select-sm select-bordered w-full">
+                                        <option value="">(Todos)</option>
+                                        <option v-for="state in states" :key="state.Id" :value="state.Id">{{ state.Name }}</option>
+                                    </select>
+                                </span>
+
+                                <span v-if="isLoadingStates == true">
+                                    <div class="skeleton select-sm w-full"></div>
+                                </span>
+                            </label>
+                        </div>
+                        <div class="col-span-12 md:col-span-2">
+                            <label class="form-control w-full">
+                                <div class="label">
+                                    <span class="label-text">Cidade</span>
+                                </div>
+
+                                <span v-if="isLoadingCities == false">
+                                    <select v-model="city" class="select select-bordered select-sm w-full" >
+                                        <option v-for="city in cities" :key="city.Id" :value="city.Id">{{ city.Name }}</option>
+                                    </select>
+                                </span>
+
+                                <span v-if="isLoadingCities == true">
+                                    <div class="skeleton select-sm w-full"></div>
+                                </span>
+                            </label>
+                        </div>
                     </div>
-                    <div class="col-span-12 md:col-span-2">
-                        <label class="form-control w-full">
-                            <div class="label">
-                                <span class="label-text">Sexo</span>
-                            </div>
-                            <select class="select select-sm select-bordered w-full">
-                                <option disabled selected>Masculino</option>
-                                <option>Feminino</option>
-                                <option>Outros</option>
-                            </select>
-                        </label>
-                    </div>
-                    <div class="col-span-12 md:col-span-2">
-                        <label class="form-control w-full">
-                            <div class="label">
-                                <span class="label-text">Estado</span>
-                            </div>
-
-                            <span v-if="isLoadingStates == false">
-                                <select v-model="state" v-on:change="listCities" class="select select-sm select-bordered w-full">
-                                    <option value="">(Todos)</option>
-                                    <option v-for="state in states" :key="state.Id" :value="state.Id">{{ state.Name }}</option>
-                                </select>
-                            </span>
-
-                            <span v-if="isLoadingStates == true">
-                                <div class="skeleton select-sm w-full"></div>
-                            </span>
-                        </label>
-                    </div>
-                    <div class="col-span-12 md:col-span-2">
-                        <label class="form-control w-full">
-                            <div class="label">
-                                <span class="label-text">Cidade</span>
-                            </div>
-
-                            <span v-if="isLoadingCities == false">
-                                <select v-model="city" class="select select-bordered select-sm w-full" >
-                                    <option v-for="city in cities" :key="city.Id" :value="city.Id">{{ city.Name }}</option>
-                                </select>
-                            </span>
-
-                            <span v-if="isLoadingCities == true">
-                                <div class="skeleton select-sm w-full"></div>
-                            </span>
-                        </label>
-                    </div>
-                </div>
-                <div class="card-actions">
-                    <button class="btn btn-sm bg-cyan-400 hover:bg-cyan-600 text-white"><MagnifyingGlassIcon class="w-5 h-5" /> Pesquisar</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="card bg-base-100 max-w-72 shadow-xl">
-            <div class="card-body p-4">
-                <div class="rounded-full w-10 h-10 bg-gray-400"></div>
-                <p class="font-bold">Jane Doe, 21</p>
-                <p class="text-sm">Engenharia de Software</p>
-                <div class="flex h-full items-center justify-end">
                     <div class="card-actions">
-                        <button @click="modalState" class="btn btn-sm bg-cyan-400 hover:bg-cyan-600"><EyeIcon class="w-5 h-5 text-white" /></button>
-                        <button @click="deleteConection" class="btn btn-sm btn-error"><TrashIcon class="w-5 h-5 text-white" /></button>
+                        <button class="btn btn-sm bg-cyan-400 hover:bg-cyan-600 text-white"><MagnifyingGlassIcon class="w-5 h-5" /> Pesquisar</button>
                     </div>
-                </div> 
+                </div>
+            </div>
+
+            <div class="card bg-base-100 max-w-72 shadow-xl">
+                <div class="card-body p-4">
+                    <div class="rounded-full w-10 h-10 bg-gray-400"></div>
+                    <p class="font-bold">Jane Doe, 21</p>
+                    <p class="text-sm">Engenharia de Software</p>
+                    <div class="flex h-full items-center justify-end">
+                        <div class="card-actions">
+                            <button @click="modalState" class="btn btn-sm bg-cyan-400 hover:bg-cyan-600"><EyeIcon class="w-5 h-5 text-white" /></button>
+                            <button @click="deleteConection" class="btn btn-sm btn-error"><TrashIcon class="w-5 h-5 text-white" /></button>
+                        </div>
+                    </div> 
+                </div>
             </div>
         </div>
+        
+        <div v-if="show_modal">
+            <ConnectionModal :show_modal="show_modal" :connection_id="connection_id" @closeModal="modalState" />
+        </div>
     </div>
-    
-    <div v-if="show_modal">
-        <ConnectionModal :show_modal="show_modal" :connection_id="connection_id" @closeModal="modalState" />
-    </div>
-    
 </template>
 
 <script lang="ts">
