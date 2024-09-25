@@ -10,7 +10,7 @@
                     <div>
                         <GoogleMap
                             :api-key="google_key"
-                            style="width: 100%; height: 500px"
+                            style="width: 100%; height: 600px"
                             :center="center"
                             :zoom="15">
                             <Marker :options="{ position: center }" @click="teste" /> 
