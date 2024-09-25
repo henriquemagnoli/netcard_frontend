@@ -14,10 +14,7 @@ export async function setUser(userObject: any)
 {
     const request = await fetch(`${api_url}/user`, {
         method: 'POST',
-        headers: { 
-            'Authorization': String(getCookies('userToken')), 
-            'Content-Type': 'application/json'     
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(userObject)
     });
 
@@ -32,7 +29,45 @@ export async function getUser()
 {
     const request = await fetch(`${api_url}/user/${getCookies('userId')}`, {
         method: 'GET',
-        headers: { 'Content-Type': 'application/json'}
+        headers: { 
+            'Authorization': String(getCookies('userToken')), 
+            'Content-Type': 'application/json'     
+        }
+    });
+
+    const response = await request.json();
+
+    const data = ref<IUserState[]>(response);
+
+    return data;
+}
+
+export async function setUserCoordinate(userObject: any)
+{
+    const request = await fetch(`${api_url}/user/${getCookies('userId')}/coordinate`, {
+        method: 'POST',
+        headers: {
+            'Authorization': String(getCookies('userToken')), 
+            'Content-Type': 'application/json'     
+        },
+        body: JSON.stringify(userObject)
+    });
+
+    const response = await request.json();
+
+    const data = ref<IUserState[]>(response);
+
+    return data;
+}
+
+export async function getAllCoordinates() 
+{
+    const request = await fetch(`${api_url}/user/coordinates`, {
+        method: 'GET',
+        headers: {
+            'Authorization': String(getCookies('userToken')), 
+            'Content-Type': 'application/json'     
+        }
     });
 
     const response = await request.json();
