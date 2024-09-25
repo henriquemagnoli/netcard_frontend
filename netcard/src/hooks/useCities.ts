@@ -12,7 +12,8 @@ export interface ICitiesState
 export async function getAllCitiesBasedOnStateId(state_id: number) 
 {
     const request = await fetch(`${api_url}/cities/${state_id}`, {
-        method: 'GET'
+        method: 'GET',
+        headers: { "Content-Type": "application/json" }
     });
 
     const response = await request.json();

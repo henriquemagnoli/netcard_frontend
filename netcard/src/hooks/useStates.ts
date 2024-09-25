@@ -12,7 +12,8 @@ export interface IStatesState
 export async function getAllStates() 
 {
     const request = await fetch(`${api_url}/states`, {
-        method: 'GET'
+        method: 'GET',
+        headers: { "Content-Type": "application/json" }
     });
 
     const response = await request.json();

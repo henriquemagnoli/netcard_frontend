@@ -13,7 +13,7 @@
                         <div class="label">
                             <span class="label-text flex"><UserIcon class="w-4 h-4 mr-2" />Nome</span>
                         </div>
-                        <input type="text" class='input input-bordered input-sm w-full'>
+                        <input v-model="name" type="text" class='input input-bordered input-sm w-full'>
                     </label>
                 </div>
                 <div class="col-span-12 md:col-span-4">
@@ -199,10 +199,85 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, reactive, toRefs, ref } from 'vue';
+import { IUserState, getUser } from '../hooks/useUser';
+import Swal from 'sweetalert2';
 import { UserIcon, EnvelopeIcon, DocumentTextIcon, CalendarDaysIcon, UserGroupIcon, MapPinIcon, BriefcaseIcon, PlusIcon, DocumentDuplicateIcon, GlobeAltIcon, PencilIcon, TrashIcon, LinkIcon } from '@heroicons/vue/24/outline';
 
 export default defineComponent({
+    setup(){
+
+        const userState: IUserState = reactive({
+            isLoadingUser: false,
+            messagesUser: '',
+            statusCodeUser: 0
+        });
+
+        // User Variables
+        const name = ref('');
+        const email = ref('');
+        const cpf = ref('');
+        const birthDate = ref('');
+        const sex = ref('');
+        const profilePicture = ref('');
+        const zipCode = ref('');
+        const state = ref('');
+        const city = ref('');
+        const street = ref('');
+        const district = ref('');
+        const streetNumber = ref('');
+        const streetComplement = ref('');
+        const job = ref('');
+        const biography = ref();
+    
+        // User object
+        const socialMedia = ref();
+
+        return{
+            ...toRefs(userState),
+            name,
+            email,
+            cpf,
+            birthDate,
+            sex,
+            profilePicture,
+            zipCode,
+            state,
+            city,
+            street,
+            district,
+            streetNumber,
+            streetComplement,
+            job,
+            biography,
+            socialMedia
+        }
+
+    },
+    methods:
+    {
+        async getUser()
+        {
+            this.isLoadingUser = true;
+
+            const response: any = await getUser();
+
+            if(response.value['statusCode'] == 200)
+            {
+                this.name = response.value['data'].UserName;
+            }
+            else
+            {
+                Swal.fire({ icon:'error', title: 'Erro', text: response.value['messages'] })
+            }
+            
+            console.log(response.value['data']);
+            this.isLoadingUser = false;
+        }
+    },
+    async beforeMount() {
+        await this.getUser();
+    },
     components:{
         UserIcon,
         EnvelopeIcon,

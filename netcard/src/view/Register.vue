@@ -95,8 +95,8 @@
                                             </div>
 
                                             <span v-if="isLoadingStates == false">
-                                                <select v-for="state in states" v-model="state" class="select select-bordered select-sm w-full">
-                                                    <option value="SP">São Paulo</option>
+                                                <select v-model="state" v-on:change="listCities" class="select select-bordered select-sm w-full">
+                                                    <option v-for="state in states" :key="state.Id" :value="state.Id">{{ state.Name }}</option>
                                                 </select>
                                             </span>
                                             
@@ -113,9 +113,16 @@
                                             <div class="label">
                                                 <span class="label-text flex"><BuildingOffice2Icon class="w-4 h-4 mr-2" />Cidade</span>
                                             </div>
-                                            <select v-model="city" class="select select-bordered select-sm w-full">
-                                                <option value="1">São João da Boa Vista</option>
-                                            </select>
+
+                                            <span v-if="isLoadingCities == false">
+                                                <select v-model="city" class="select select-bordered select-sm w-full">
+                                                    <option v-for="city in cities" :key="city.Id" :value="city.Id">{{ city.Name }}</option>
+                                                </select>
+                                            </span>
+
+                                            <span v-if="isLoadingCities == true">
+                                                <div class="skeleton select-sm w-full"></div>
+                                            </span>
                                         </label>
                                     </div>
                                 </div>
@@ -174,9 +181,16 @@
                                             <div class="label">
                                                 <span class="label-text flex"><BriefcaseIcon class="w-4 h-4 mr-2" />Profissão</span>
                                             </div>
-                                            <select v-model="job" class="select select-bordered select-sm w-full">
-                                                <option value="1">Engenharia de Software</option>
-                                            </select>
+
+                                            <span v-if="isLoadingJobs == false">
+                                                <select v-model="job" class="select select-bordered select-sm w-full">
+                                                    <option v-for="job in jobs" :key="job.Id" :value="job.Id">{{ job.Name }}</option>
+                                                </select>
+                                            </span>
+
+                                            <span v-if="isLoadingJobs == true">
+                                                <div class="skeleton select-sm w-full"></div>
+                                            </span> 
                                         </label>
                                     </div>
                                 </div>
@@ -237,6 +251,7 @@ import { defineComponent, ref, reactive, toRefs } from 'vue';
 import { IUserState, setUser } from '../hooks/useUser';
 import { IStatesState, getAllStates } from '../hooks/useStates';
 import { ICitiesState, getAllCitiesBasedOnStateId } from '../hooks/useCities';
+import { IJobsState, getAllJobs } from '../hooks/useJobs';
 import { EnvelopeIcon, KeyIcon, EyeIcon, EyeSlashIcon, DocumentTextIcon, CalendarDaysIcon, ChevronRightIcon, ChevronLeftIcon, UserIcon, PhotoIcon, BuildingOffice2Icon, BriefcaseIcon } from '@heroicons/vue/24/outline';
 import Footer from '../components/Footer.vue';
 import Swal from 'sweetalert2';
@@ -247,9 +262,9 @@ export default defineComponent({
 
         // Interface variables
         const userState: IUserState = reactive({
-            isLoading: false,
-            messages: '',
-            statusCode: 0
+            isLoadingUser: false,
+            messagesUser: '',
+            statusCodeUser: 0
         });
 
         const statesState: IStatesState = reactive({
@@ -264,6 +279,12 @@ export default defineComponent({
             statusCodeCities: 0
         });
         
+        const jobsState: IJobsState = reactive({
+            isLoadingJobs: false,
+            messagesJobs: '',
+            statusCodeJobs: 0
+        });
+
         // Helper variables
         const page = ref(1);
         const input_password_icon = ref(false);
@@ -277,7 +298,7 @@ export default defineComponent({
         const sex = ref('M');
         const profilePicture = ref('');
         const zipCode = ref('');
-        const states = ref('');
+        const state = ref('');
         const city = ref('');
         const street = ref('');
         const district = ref('');
@@ -287,10 +308,16 @@ export default defineComponent({
         const password = ref('');
         const confirmPassword = ref('');
 
+        // Objects variables
+        const states = ref();
+        const cities = ref();
+        const jobs = ref();
+
         return{
             ...toRefs(userState),
             ...toRefs(statesState),
             ...toRefs(citiesState),
+            ...toRefs(jobsState),
             page,
             input_password_icon,
             input_password_type,
@@ -301,7 +328,7 @@ export default defineComponent({
             sex,
             profilePicture,
             zipCode,
-            states,
+            state,
             city,
             street,
             district,
@@ -309,7 +336,10 @@ export default defineComponent({
             streetComplement,
             job,
             password,
-            confirmPassword
+            confirmPassword,
+            states,
+            cities,
+            jobs
         }
     },
     methods:{
@@ -372,9 +402,35 @@ export default defineComponent({
             if(response.value['statusCode'] == 200)
                 this.states = response.value['data'];
             else 
-                Swal.fire({ icon: 'error', title: 'Erro', text: response.value['messages'] })
+                Swal.fire({ icon: 'error', title: 'Erro', text: response.value['messages'] });
         
             this.isLoadingStates = false;
+        },
+        async listCities()
+        {
+            this.isLoadingCities = true;
+
+            const response: any = await getAllCitiesBasedOnStateId(Number(this.state));
+
+            if(response.value['statusCode'] == 200)
+                this.cities = response.value['data'];
+            else 
+                Swal.fire({ icon: 'error', title: 'Erro', text: response.value['messages']});
+
+            this.isLoadingCities = false;
+        },
+        async listJobs()
+        {
+            this.isLoadingJobs = true;
+
+            const response: any = await getAllJobs();
+
+            if(response.value['statusCode'] == 200)
+                this.jobs = response.value['data'];
+            else
+                Swal.fire({ icon: 'error', title: 'Erro', text: response.value['messages']});
+
+            this.isLoadingJobs = false;
         },
         validateFields()
         {
@@ -471,8 +527,9 @@ export default defineComponent({
             return true;
         }
     },
-    beforeMount() {
-        this.listStates();
+    async beforeMount() {
+        await this.listStates();
+        await this.listJobs();
     },
     components:{
         Footer,
