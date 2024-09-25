@@ -17,7 +17,17 @@
                             <div class="label">
                                 <span class="label-text">Profissão</span>
                             </div>
-                            <select class="select select-sm select-bordered w-full"></select>
+
+                            <span v-if="isLoadingJobs == false">
+                                <select v-model="job" class="select select-bordered select-sm w-full">
+                                    <option value="">(Todas)</option>
+                                    <option v-for="job in jobs" :key="job.Id" :value="job.Id">{{ job.Name }}</option>
+                                </select>
+                            </span>
+
+                            <span v-if="isLoadingJobs == true">
+                                <div class="skeleton select-sm w-full"></div>
+                            </span> 
                         </label>
                     </div>
                     <div class="col-span-12 md:col-span-2">
@@ -37,7 +47,17 @@
                             <div class="label">
                                 <span class="label-text">Estado</span>
                             </div>
-                            <select class="select select-sm select-bordered w-full"></select>
+
+                            <span v-if="isLoadingStates == false">
+                                <select v-model="state" v-on:change="listCities" class="select select-sm select-bordered w-full">
+                                    <option value="">(Todos)</option>
+                                    <option v-for="state in states" :key="state.Id" :value="state.Id">{{ state.Name }}</option>
+                                </select>
+                            </span>
+
+                            <span v-if="isLoadingStates == true">
+                                <div class="skeleton select-sm w-full"></div>
+                            </span>
                         </label>
                     </div>
                     <div class="col-span-12 md:col-span-2">
@@ -45,7 +65,16 @@
                             <div class="label">
                                 <span class="label-text">Cidade</span>
                             </div>
-                            <select class="select select-sm select-bordered w-full"></select>
+
+                            <span v-if="isLoadingCities == false">
+                                <select v-model="city" class="select select-bordered select-sm w-full" >
+                                    <option v-for="city in cities" :key="city.Id" :value="city.Id">{{ city.Name }}</option>
+                                </select>
+                            </span>
+
+                            <span v-if="isLoadingCities == true">
+                                <div class="skeleton select-sm w-full"></div>
+                            </span>
                         </label>
                     </div>
                 </div>
@@ -77,19 +106,60 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, reactive, ref, toRefs } from 'vue';
+import { IStatesState, getAllStates } from '../hooks/useStates';
+import { ICitiesState, getAllCitiesBasedOnStateId } from '../hooks/useCities';
+import { IJobsState, getAllJobs } from '../hooks/useJobs';
 import { MagnifyingGlassIcon, FunnelIcon, EyeIcon, TrashIcon } from '@heroicons/vue/24/outline';
 import ConnectionModal from '../components/ConnectionModal.vue';
 import Swal from 'sweetalert2';
 
+
 export default defineComponent({
     setup(){
+
+        const statesState: IStatesState = reactive({
+            isLoadingStates: false,
+            messagesStates: '',
+            statusCodeStates: 0
+        });
+
+        const citiesState: ICitiesState = reactive({
+            isLoadingCities: false,
+            messagesCities: '',
+            statusCodeCities: 0
+        });
+
+        const jobsState : IJobsState = reactive({
+            isLoadingJobs: false,
+            messagesJobs: '',
+            statusCodeJobs: 0
+        });
+
         const show_modal = ref(false);
         const connection_id = ref(1);
 
+        const city = ref('');
+        const state = ref('');
+        const job = ref('');
+
+        // Object variables
+        const cities = ref();
+        const states = ref();
+        const jobs = ref();
+
         return{
+            ...toRefs(statesState),
+            ...toRefs(citiesState),
+            ...toRefs(jobsState),
             show_modal,
-            connection_id
+            connection_id,
+            city,
+            state,
+            job,
+            cities,
+            states,
+            jobs
         }
     },
     methods:{
@@ -97,7 +167,7 @@ export default defineComponent({
         {
             this.show_modal = !this.show_modal;
         },
-        deleteConection()
+        async deleteConection()
         {
             Swal.fire({
                 title: 'Atenção',
@@ -116,7 +186,53 @@ export default defineComponent({
                     Swal.fire({ icon: 'success', title: 'Sucesso', text: 'Conexão com o usuário rompida.'});
                 }
             })
+        },
+        async listStates()
+        {
+            this.isLoadingStates = true;
+
+            const response: any = await getAllStates();
+
+            if(response.value['statusCode'] == 200)
+                this.states = response.value['data'];
+            else
+                Swal.fire({ icon: 'error', title: 'Erro', text: response.value['messages'] });
+        
+            this.isLoadingStates = false;
+        },
+        async listCities()
+        {
+            if(this.state == "")
+                return;
+
+            this.isLoadingCities = true;
+
+            const response: any = await getAllCitiesBasedOnStateId(Number(this.state));
+
+            if(response.value['statusCode'] == 200)
+                this.cities = response.value['data'];
+            else 
+                Swal.fire({ icon: 'error', title: 'Erro', text: response.value['messages']});
+
+            this.isLoadingCities = false;
+        },
+        async listJobs()
+        {
+            this.isLoadingJobs = true;
+
+            const response: any = await getAllJobs();
+
+            if(response.value['statusCode'] == 200)
+                this.jobs = response.value['data'];
+            else
+                Swal.fire({ icon: 'error', title: 'Erro', text: response.value['messages']});
+            
+            this.isLoadingJobs = false;
         }
+    },
+    async beforeMount() {
+        await this.listJobs();
+        await this.listStates();
     },
     components: {
         ConnectionModal,
