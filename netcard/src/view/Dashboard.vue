@@ -10,15 +10,17 @@
                     <input type="checkbox" />
                     <div class="collapse-title text-md font-medium flex items-center gap-2"><UserGroupIcon class="w-5 h-5" /> Conexões Próximas</div>
                     <div class="collapse-content">
-                        <div class="card bg-base-200 cursor-pointer hover:scale-105 transition-all mb-2">
-                            <div class="card-body p-4 text-md md:text-xs">
-                                <div class="flex gap-3 items-center">
-                                    <div class="rounded-full w-10 h-10 bg-gray-500"></div>
-                                    <div>
-                                        <p class="font-bold">Jane Doe, 21</p>
-                                        <p>Engenheiro de Software</p>
+                        <div v-for="userCoordinate in usersCoordinates" :key="userCoordinate.User_id">
+                            <div class="card bg-base-200 cursor-pointer hover:scale-105 transition-all mb-2">
+                                <div class="card-body p-4 text-md md:text-xs">
+                                    <div class="flex gap-3 items-center">
+                                        <div class="rounded-full w-10 h-10 bg-gray-500"></div>
+                                        <div>
+                                            <p class="font-bold">{{ userCoordinate.User_name }}, 16</p>
+                                            <p>{{ userCoordinate.Job_name }}</p>
+                                        </div>
+                                        <p class="font-bold">10 km</p>
                                     </div>
-                                    <p class="font-bold">10 km</p>
                                 </div>
                             </div>
                         </div>
@@ -27,16 +29,16 @@
             </div>
         </div>
 
-        <GoogleMap
+        <!-- <GoogleMap
             :api-key="google_key"
             style="width: 100%; height: 100%"
             :center="center"
-            :zoom="18"
+            :zoom="20"
             disable-default-ui="false"
             :styles="[{ 'featureType': 'poi', 'stylers': [{'visibility': 'off'}] }]">
 
             <Marker v-for="userCoordinate in usersCoordinates" :key="userCoordinate.Id" :options="{ position: userCoordinate.Coordinates }"  @click="teste(userCoordinate.User_id)" /> 
-        </GoogleMap>
+        </GoogleMap> -->
     </div>
 </template>
 
@@ -114,8 +116,6 @@ export default defineComponent({
             if(response.value['statusCode'] == 200)
             {
                 response.value['data'] != null ? this.usersCoordinates = response.value['data'] : false;
-
-                console.log(this.usersCoordinates[0]['Coordinates'])
             }
             else
             {
