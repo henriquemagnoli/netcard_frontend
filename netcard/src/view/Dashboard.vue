@@ -29,7 +29,7 @@
             </div>
         </div>
 
-        <!-- <GoogleMap
+        <GoogleMap
             :api-key="google_key"
             style="width: 100%; height: 100%"
             :center="center"
@@ -37,8 +37,18 @@
             disable-default-ui="false"
             :styles="[{ 'featureType': 'poi', 'stylers': [{'visibility': 'off'}] }]">
 
-            <Marker v-for="userCoordinate in usersCoordinates" :key="userCoordinate.Id" :options="{ position: userCoordinate.Coordinates }"  @click="teste(userCoordinate.User_id)" /> 
-        </GoogleMap> -->
+            <Marker v-for="userCoordinate in usersCoordinates" :key="userCoordinate.Id" :options="{ position: userCoordinate.Coordinates }"  @click="teste(userCoordinate.User_id)">
+                <InfoWindow>
+                    <div id="content">
+                        <h1 id="firstHeading" class="firstHeading text-xl">{{ userCoordinate.User_name }}</h1>
+                        <div id="bodyContent">
+                            <p>{{ userCoordinate.Job_name }}</p>
+                        </div>
+                        <button class="btn btn-primary">Entrar</button>
+                    </div>
+                </InfoWindow>
+            </Marker> 
+        </GoogleMap>
     </div>
 </template>
 
@@ -46,7 +56,7 @@
 import { defineComponent, reactive, ref, toRefs } from 'vue';
 import { IUserState, setUserCoordinate, getAllCoordinates } from '../hooks/useUser';
 import { PlusIcon, XMarkIcon, UserGroupIcon } from '@heroicons/vue/24/outline';
-import { GoogleMap, Marker, MarkerCluster } from 'vue3-google-map';
+import { GoogleMap, Marker, MarkerCluster, InfoWindow } from 'vue3-google-map';
 import Swal from 'sweetalert2';
 
 export default defineComponent({
@@ -135,7 +145,8 @@ export default defineComponent({
         UserGroupIcon,
         GoogleMap,
         Marker, 
-        MarkerCluster
+        MarkerCluster,
+        InfoWindow
     }
 })
 
