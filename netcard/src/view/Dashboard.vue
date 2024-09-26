@@ -27,7 +27,7 @@
             </div>
         </div>
 
-        <!-- <GoogleMap
+        <GoogleMap
             :api-key="google_key"
             style="width: 100%; height: 100%"
             :center="center"
@@ -35,8 +35,8 @@
             disable-default-ui="false"
             :styles="[{ 'featureType': 'poi', 'stylers': [{'visibility': 'off'}] }]">
 
-            <Marker :options="{ position: center }" @click="teste" /> 
-        </GoogleMap> -->
+            <Marker v-for="userCoordinate in usersCoordinates" :key="userCoordinate.Id" :options="{ position: userCoordinate.Coordinates }"  @click="teste(userCoordinate.User_id)" /> 
+        </GoogleMap>
     </div>
 </template>
 
@@ -70,14 +70,9 @@ export default defineComponent({
 
     },
     methods:{
-        teste()
+        teste(user_id: number)
         {
-            if(navigator.geolocation)
-            {
-                navigator.geolocation.getCurrentPosition((position) => {
-                    console.log(position.coords.latitude, position.coords.longitude) 
-                });
-            }
+           console.log(user_id);
         },
         async setUserCoordinate()
         {
@@ -119,6 +114,8 @@ export default defineComponent({
             if(response.value['statusCode'] == 200)
             {
                 response.value['data'] != null ? this.usersCoordinates = response.value['data'] : false;
+
+                console.log(this.usersCoordinates[0]['Coordinates'])
             }
             else
             {
@@ -129,7 +126,8 @@ export default defineComponent({
         }
     },  
     async beforeMount() {
-        await this.setUserCoordinate();
+        //await this.setUserCoordinate();
+        await this.listCoordinates();
     },
     components:{
         PlusIcon,
