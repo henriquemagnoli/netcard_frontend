@@ -1,9 +1,18 @@
 <template>
     <div class="mx-auto max-w-full py-6 sm:px-6 lg:px-8 ">
+
+        <div class="text-sm breadcrumbs mx-5 md:mx-0">
+            <ul>
+                <li><a href="/dashboard">Painel</a></li> 
+                <li>Conexões</li> 
+            </ul>
+        </div>
+        
         <div class="space-y-2 p-5 md:p-0">
-            <div class="card bg-base-100 shadow-xl">
-                <div class="card-body">
-                    <h2 class="card-title"><FunnelIcon class="w-5 h-5" /> Filtro</h2>
+            <div class="collapse collapse-arrow bg-base-100 max-w-full shadow-md p-4">
+                <input type="checkbox" :checked="open_filter" />
+                <div class="collapse-title text-xl font-medium"><h2 class="card-title"><FunnelIcon class="h-5 w-5" /> Filtro</h2></div>
+                <div class="collapse-content">
                     <div class="grid md:grid-cols-12 lg:grid-cols-12 gap-0 md:gap-5">
                         <div class="col-span-12 md:col-span-3">
                             <label class="form-control w-full">
@@ -79,6 +88,11 @@
                             </label>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <div class="card bg-base-100 max-w-full shadow-md">
+                <div class="card-body p-5">
                     <div class="card-actions">
                         <button class="btn btn-sm bg-cyan-400 hover:bg-cyan-600 text-white"><MagnifyingGlassIcon class="w-5 h-5" /> Pesquisar</button>
                     </div>
@@ -99,11 +113,11 @@
                 </div>
             </div>
         </div>
-        
+
         <div v-if="show_modal">
             <ConnectionModal :show_modal="show_modal" :connection_id="connection_id" @closeModal="modalState" />
-        </div>
-    </div>
+        </div> 
+    </div>   
 </template>
 
 <script lang="ts">
@@ -139,6 +153,7 @@ export default defineComponent({
 
         const show_modal = ref(false);
         const connection_id = ref(1);
+        const open_filter = ref(false);
 
         const city = ref('');
         const state = ref('');
@@ -155,6 +170,7 @@ export default defineComponent({
             ...toRefs(jobsState),
             show_modal,
             connection_id,
+            open_filter,
             city,
             state,
             job,

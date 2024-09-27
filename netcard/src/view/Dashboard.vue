@@ -11,7 +11,7 @@
                     <div class="collapse-title text-md font-medium flex items-center gap-2"><UserGroupIcon class="w-5 h-5" /> Conexões Próximas</div>
                     <div class="collapse-content">
                         <div v-for="userCoordinate in usersCoordinates" :key="userCoordinate.User_id">
-                            <div class="card bg-base-200 cursor-pointer hover:scale-105 transition-all mb-2">
+                            <div class="card bg-base-200 cursor-pointer hover:scale-105 transition-all mb-2" @click="modalState(userCoordinate.User_id)">
                                 <div class="card-body p-4 text-md md:text-xs">
                                     <div class="flex gap-3 items-center">
                                         <div class="rounded-full w-10 h-10 bg-gray-500"></div>
@@ -29,7 +29,7 @@
             </div>
         </div>
 
-        <GoogleMap
+        <!-- <GoogleMap
             :api-key="google_key"
             style="width: 100%; height: 100%"
             :center="center"
@@ -37,26 +37,34 @@
             disable-default-ui="false"
             :styles="[{ 'featureType': 'poi', 'stylers': [{'visibility': 'off'}] }]">
 
-            <Marker v-for="userCoordinate in usersCoordinates" :key="userCoordinate.Id" :options="{ position: userCoordinate.Coordinates }"  @click="teste(userCoordinate.User_id)">
+            <Marker v-for="userCoordinate in usersCoordinates" :key="userCoordinate.Id" :options="{ position: userCoordinate.Coordinates }">
                 <InfoWindow>
-                    <div id="content">
-                        <h1 id="firstHeading" class="firstHeading text-xl">{{ userCoordinate.User_name }}</h1>
-                        <div id="bodyContent">
-                            <p>{{ userCoordinate.Job_name }}</p>
+                    <div id="content" class="space-y-4">
+                        <div>
+                            <h1 id="firstHeading" class="firstHeading text-xl font-semibold">{{ userCoordinate.User_name }}, {{  userCoordinate.Birth_date }}</h1>
+                            <div id="bodyContent">
+                                <p>{{ userCoordinate.Job_name }}</p>
+                            </div>
                         </div>
-                        <button class="btn btn-primary">Entrar</button>
+                      
+                        <button type="button" class="btn btn-sm bg-cyan-400 hover:bg-cyan-600 text-white" @click="modalState(userCoordinate.User_id)"><EyeIcon class="w-5 h-5 text-white"/></button>
                     </div>
                 </InfoWindow>
             </Marker> 
-        </GoogleMap>
+        </GoogleMap> -->
+
+        <div v-if="show_modal">
+            <ConnectionModal :show_modal="show_modal" :connection_id="connection_id" @closeModal="modalState" />
+        </div> 
     </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, reactive, ref, toRefs } from 'vue';
 import { IUserState, setUserCoordinate, getAllCoordinates } from '../hooks/useUser';
-import { PlusIcon, XMarkIcon, UserGroupIcon } from '@heroicons/vue/24/outline';
+import { PlusIcon, XMarkIcon, UserGroupIcon, EyeIcon } from '@heroicons/vue/24/outline';
 import { GoogleMap, Marker, MarkerCluster, InfoWindow } from 'vue3-google-map';
+import ConnectionModal from '../components/ConnectionModal.vue';
 import Swal from 'sweetalert2';
 
 export default defineComponent({
@@ -73,18 +81,24 @@ export default defineComponent({
 
         const usersCoordinates = ref();
 
+        const show_modal = ref(false);
+        const connection_id = ref(0);
+
         return{
             ...toRefs(userState),
             google_key,
             center,
-            usersCoordinates
+            usersCoordinates,
+            show_modal,
+            connection_id
         }
 
     },
     methods:{
-        teste(user_id: number)
+        modalState(user_id: number)
         {
-           console.log(user_id);
+            this.connection_id = user_id;
+            this.show_modal = !this.show_modal
         },
         async setUserCoordinate()
         {
@@ -143,10 +157,12 @@ export default defineComponent({
         PlusIcon,
         XMarkIcon,
         UserGroupIcon,
+        EyeIcon,
         GoogleMap,
         Marker, 
         MarkerCluster,
-        InfoWindow
+        InfoWindow,
+        ConnectionModal
     }
 })
 

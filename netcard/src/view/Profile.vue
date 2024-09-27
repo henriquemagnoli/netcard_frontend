@@ -218,6 +218,7 @@ import { defineComponent, reactive, toRefs, ref } from 'vue';
 import { IUserState, getUser } from '../hooks/useUser';
 import Swal from 'sweetalert2';
 import { UserIcon, EnvelopeIcon, DocumentTextIcon, CalendarDaysIcon, UserGroupIcon, MapPinIcon, BriefcaseIcon, PlusIcon, DocumentDuplicateIcon, GlobeAltIcon, PencilIcon, TrashIcon, LinkIcon } from '@heroicons/vue/24/outline';
+import { getCookies } from '../helper/helper';
 
 export default defineComponent({
     setup(){
@@ -275,7 +276,7 @@ export default defineComponent({
         {
             this.isLoadingUser = true;
 
-            const response: any = await getUser();
+            const response: any = await getUser(Number(getCookies('userId')));
 
             if(response.value['statusCode'] == 200)
             {

@@ -25,9 +25,9 @@ export async function setUser(userObject: any)
     return data;
 }
 
-export async function getUser()
+export async function getUser(user_id: number)
 {
-    const request = await fetch(`${api_url}/user/${getCookies('userId')}`, {
+    const request = await fetch(`${api_url}/user/${user_id}`, {
         method: 'GET',
         headers: { 
             'Authorization': String(getCookies('userToken')), 
