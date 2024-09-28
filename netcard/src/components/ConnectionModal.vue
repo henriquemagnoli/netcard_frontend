@@ -1,79 +1,97 @@
 <template>
     <dialog class="modal" :class="{'modal-open': show_modal}" >
         <div class="modal-box max-w-3xl p-0">
-            
-            <div class="bg-gradient-to-r from-cyan-500 to-blue-500 w-full h-48 p-10"></div>
-
             <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" @click="closeModal">✕</button>
-            <!-- <h3 class="font-bold text-lg flex items-center gap-3 text-aflablue-400 mb-10"><EyeIcon class="w-5 h-5"/> Visualização de Conexão </h3> -->
-            
-            <div v-if="isLoadingUser == true">
-                <div class="space-y-5">
-                    <div class="skeleton rounded-full w-32 h-32"></div>
+  
+            <div class="bg-gradient-to-r from-cyan-500 to-blue-500 w-full h-48 p-8">
+                <div v-if="isLoadingUser == true" class="absolute mt-24">
+                    <div class="skeleton rounded-full w-32 h-32 border-4 border-base-200"></div>
+                </div>
 
-                    <div class="skeleton h-6 w-40"></div> 
-                    <div class="skeleton h-4 w-28"></div>
-        
-                    <div class="skeleton h-6 w-28"></div> 
-                    <div class="skeleton h-10 w-full"></div>
-                    
-                    <div class="skeleton h-6 w-28"></div> 
-                    <div class="skeleton h-4 w-32"></div>
-                    <div class="skeleton h-4 w-32"></div>
-        
-                    <div class="skeleton h-4 w-28"></div> 
-
-                    <div class="flex gap-4">
-                        <div class="skeleton h-12 w-12"></div> 
-                        <div class="skeleton h-12 w-12"></div> 
-                        <div class="skeleton h-12 w-12"></div> 
-                    </div>
+                <div v-if="isLoadingUser == false" class="absolute mt-24">
+                    <img class="w-32 h-32 border-4 border-base-200 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
                 </div>
             </div>
 
-            <div v-if="isLoadingUser == false">
-                <div class="space-y-5 p-10">
-                    <!-- <div class="rounded-full bg-gray-400 w-32 h-32"></div> -->
-                    <img class="w-32 h-32 fixed border-2 border-white rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
+            <div class="p-8">
+                <div class="mt-10">
+                    <div v-if="isLoadingUser == true">
+                        <div class="space-y-5">             
+                            <div class="skeleton h-6 w-44"></div> 
+                            <div class="skeleton h-6 w-32"></div> 
+                            <div class="skeleton h-10 w-full"></div>
 
-                    <div class="font-bold">
-                        <p class="text-xl">{{ name }}, {{ birthDate }}</p>
-                        <p class="text-sm">{{ jobName }}</p>
-                    </div>
-                            
-                    <div>
-                        <p class="font-semibold">Biografia</p>
-                        <p class="text-sm">{{ biography }}</p>
-                    </div>
-
-                    <div>
-                        <p class="font-semibold">Contatos:</p>
-                        <p>Telefone: 12345-1235</p>
-                        <p>E-mail: {{ email }}</p>
-                    </div>
-
-                    <div>
-                        <p class="font-semibold">Redes Sociais</p>
-
-                        <div class="flex gap-4" >
-                            <div v-for="socialMedia in socialMedias">
-                                <a :href="socialMedia.Url" :class="[socialMedia.Social_media_id == 1 ? 'bg-[#0E76A8]' : 
-                                            socialMedia.Social_media_id == 2 ? 'bg-[#1877F2]' :
-                                            socialMedia.Social_media_id == 3 ? 'bg-[#6134AF]' :
-                                            'bg-[#171515]', 'btn text-white']">
-                                    <i v-if="socialMedia.Social_media_id == 1" class="fa-brands fa-linkedin-in fa-xl"></i> 
-                                    <i v-if="socialMedia.Social_media_id == 2" class="fa-brands fa-facebook-f fa-xl"></i>
-                                    <i v-if="socialMedia.Social_media_id == 3" class="fa-brands fa-instagram fa-xl"></i>
-                                    <i v-if="socialMedia.Social_media_id == 4" class="fa-brands fa-github fa-xl"></i>
-                                </a>
+                            <div class="grid grid-cols-12 gap-2">
+                                <div class="col-span-12 md:col-span-6">
+                                    <div class="skeleton h-20 w-full"></div> 
+                                </div>
+                                <div class="col-span-12 md:col-span-6">
+                                    <div class="skeleton h-20 w-full"></div> 
+                                </div>
                             </div>
                         </div>
-                    </div>            
-                </div>
-            </div>
+                    </div>
 
-            <div class="modal-action">
-                <button class="btn btn-sm btn-neutral" @click="closeModal">Fechar</button>
+                    <div v-if="isLoadingUser == false">
+                        <div class="space-y-5">
+                            <div class="font-bold">
+                                <p class="text-xl">{{ name }}, {{ birthDate }}</p>
+                                <p class="text-sm">{{ jobName }}</p>
+                            </div>
+
+                            <div>
+                                <p class="text-sm">{{ biography }}</p>
+                            </div>
+
+                            <div class="grid grid-cols-12 gap-2">
+                                <div class="col-span-12 md:col-span-6">
+                                    <div class="card bg-base-200 shadow-lg">
+                                        <div class="card-body p-4 text-md md:text-xs">
+                                            <div class="space-y-3 gap-3 items-center">
+                                                <div>
+                                                    <p class="font-semibold text-lg">Contatos:</p>
+                                                </div>
+                                                <div>   
+                                                    <p><span class="font-semibold">Telefone:</span> 12345-1235</p>
+                                                    <p class="break-all"><span class="font-semibold"> E-mail:</span> {{ email }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-span-12 md:col-span-6">
+                                    <div class="card bg-base-200 shadow-lg">
+                                        <div class="card-body p-4 text-md md:text-xs">
+                                            <div class="flex gap-3 items-center">
+                                            
+                                                <div>
+                                                    <p class="font-semibold text-lg">Redes Sociais:</p>
+                                                    <div class="flex gap-4" >
+                                                        <div v-for="socialMedia in socialMedias">
+                                                            <a :href="socialMedia.Url" :class="[socialMedia.Social_media_id == 1 ? 'bg-[#0E76A8]' : 
+                                                                        socialMedia.Social_media_id == 2 ? 'bg-[#1877F2]' :
+                                                                        socialMedia.Social_media_id == 3 ? 'bg-[#6134AF]' :
+                                                                        'bg-[#171515]', 'btn text-white']">
+                                                                <i v-if="socialMedia.Social_media_id == 1" class="fa-brands fa-linkedin-in fa-xl"></i> 
+                                                                <i v-if="socialMedia.Social_media_id == 2" class="fa-brands fa-facebook-f fa-xl"></i>
+                                                                <i v-if="socialMedia.Social_media_id == 3" class="fa-brands fa-instagram fa-xl"></i>
+                                                                <i v-if="socialMedia.Social_media_id == 4" class="fa-brands fa-github fa-xl"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>          
+                    </div>
+                </div>
+
+                <div class="modal-action">
+                    <button class="btn btn-sm btn-neutral" @click="closeModal">Fechar</button>
+                </div>
             </div>
         </div>    
     </dialog> 
