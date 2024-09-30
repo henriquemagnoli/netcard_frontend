@@ -1,6 +1,6 @@
 <template>
 
-    <div class="h-[calc(100vh-144px)] mx-auto max-w-full py-6 sm:px-6 lg:px-8 ">
+    <div class="h-full mx-auto max-w-full py-6 sm:px-6 lg:px-8 ">
         <div class="p-5 md:p-0">
             <div v-if="isLoadingUser == true">
                 <div class="text-center">
@@ -12,7 +12,52 @@
                 </div>
             </div>
 
-            <div class="space-y-10" v-if="isLoadingUser == false">
+            <div class="card bg-base-100 shadow-md">
+                <div class="card-body p-4 text-md md:text-xs">
+                    <div role="tablist" class="tabs tabs-bordered">
+                        <input type="radio" name="my_tabs_1" role="tab" class="tab" aria-label="Tab 1" checked />
+                        <div role="tabpanel" class="tab-content p-10">
+                            <div class="grid grid-cols-12">
+                                <div class="col-span-12">
+                                    <div class="flex">
+                                        <img class="w-40 h-40 border-4 border-base-200 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
+
+                                        <div class="flex items-center ml-5">
+                                            <div class="flex-col">
+                                                <p class="text-lg font-semibold">{{ name }}, {{ birthDate }}</p>
+                                                <p class="text-base">Teste</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-12 mt-5">
+                                <div class="col-span-12 md:col-span-4">
+                                    <label class="form-control w-full">
+                                        <div class="label">
+                                            <span class="label-text flex"><UserIcon class="w-4 h-4 mr-2" />Nome</span>
+                                        </div>
+                                        <input v-model="name" type="text" class='input input-bordered input-sm w-full'>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <input type="radio" name="my_tabs_1" role="tab" class="tab" aria-label="Tab 2" />
+                        <div role="tabpanel" class="tab-content p-10">
+                            Tab content 2
+                        </div>
+
+                        <input type="radio" name="my_tabs_1" role="tab" class="tab" aria-label="Tab 3" />
+                        <div role="tabpanel" class="tab-content p-10">
+                            Tab content 3
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- <div class="space-y-10" v-if="isLoadingUser == false">
                 <img class="w-40 h-40 border-4 border-base-100 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
 
                 <div class="border-b-2 border-gray-400">
@@ -208,7 +253,7 @@
                 <div class="flex h-full items-center justify-end">
                     <button class="btn bg-cyan-400 hover:bg-cyan-600 text-white"><PlusIcon class="w-5 h-5" /> Alterar</button>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>    
 </template>

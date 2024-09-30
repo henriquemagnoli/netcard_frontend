@@ -36,7 +36,7 @@
                 </div>
             </div>
 
-            <GoogleMap
+            <!-- <GoogleMap
                 :api-key="google_key"
                 :center="center"
                 :zoom="20"
@@ -58,7 +58,7 @@
                         </div>
                     </InfoWindow>
                 </Marker> 
-            </GoogleMap>
+            </GoogleMap> -->
 
             <div v-if="show_modal">
                 <ConnectionModal :show_modal="show_modal" :connection_id="connection_id" @closeModal="modalState" />
@@ -180,6 +180,7 @@ export default defineComponent({
 
         //await this.getUserCoordinate();
         //await this.setUserCoordinate();
+        //await this.listCoordinates();
     },
     components:{
         PlusIcon,
