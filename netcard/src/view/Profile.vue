@@ -1,6 +1,6 @@
 <template>
 
-    <div class="mx-auto max-w-full py-6 sm:px-6 lg:px-8 ">
+    <div class="h-[calc(100vh-144px)] mx-auto max-w-full py-6 sm:px-6 lg:px-8 ">
         <div class="p-5 md:p-0">
             <div v-if="isLoadingUser == true">
                 <div class="text-center">
