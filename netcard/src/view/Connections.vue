@@ -1,5 +1,5 @@
 <template>
-    <div class="mx-auto max-w-full py-6 sm:px-6 lg:px-8 ">
+    <div class="h-[calc(100vh-144px)] mx-auto max-w-full py-6 sm:px-6 lg:px-8 ">
 
         <div class="text-sm breadcrumbs mx-5 md:mx-0">
             <ul>

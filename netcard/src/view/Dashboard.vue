@@ -105,6 +105,10 @@ export default defineComponent({
             this.isLoadingUser = true;
 
             const orderObject = await this.getUserCoordinate();
+
+            console.log(orderObject);
+
+            return;
             
             const response: any = await setUserCoordinate(orderObject);
 

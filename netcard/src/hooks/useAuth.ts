@@ -32,7 +32,6 @@ export async function verifyLogin(email: string, password: string)
 
     if(response.statusCode == 200)
     {   
-        console.log(response);
         setCookie('userId', response.data.ID, expiryIn);
         setCookie('userName', response.data.Name, expiryIn);
         setCookie('userEmail', response.data.Email, expiryIn);

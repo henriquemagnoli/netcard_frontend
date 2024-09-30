@@ -13,7 +13,7 @@
             </div>
 
             <div class="space-y-10" v-if="isLoadingUser == false">
-                <div class="rounded-full w-40 h-40 bg-gray-400 cursor-pointer"></div>
+                <img class="w-40 h-40 border-4 border-base-100 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
 
                 <div class="border-b-2 border-gray-400">
                     <p class="mt-2 flex items-center py-2 font-semibold"><DocumentTextIcon class="w-5 h-5 mr-2" />Documentos</p>
