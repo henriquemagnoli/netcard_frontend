@@ -1,6 +1,6 @@
 <template>
 
-    <div class="h-full mx-auto max-w-full py-6 sm:px-6 lg:px-8 ">
+    <div class="h-[calc(100vh-144px)] mx-auto max-w-full py-6 sm:px-6 lg:px-8 ">
         <div class="p-5 md:p-0">
             <div v-if="isLoadingUser == true">
                 <div class="text-center">
@@ -15,12 +15,17 @@
             <div class="card bg-base-100 shadow-md">
                 <div class="card-body p-4 text-md md:text-xs">
                     <div role="tablist" class="tabs tabs-bordered">
-                        <input type="radio" name="my_tabs_1" role="tab" class="tab" aria-label="Tab 1" checked />
-                        <div role="tabpanel" class="tab-content p-10">
+                        <input type="radio" name="my_tabs_1" role="tab" class="tab" aria-label="Dados" checked />
+                        <div role="tabpanel" class="tab-content p-5">
                             <div class="grid grid-cols-12">
                                 <div class="col-span-12">
                                     <div class="flex">
-                                        <img class="w-40 h-40 border-4 border-base-200 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
+                                        <div class="avatar">
+                                            <div class="md:w-44">
+                                                <img class="border-4 border-base-200 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
+                                            </div>
+                                        </div>
+                                        
 
                                         <div class="flex items-center ml-5">
                                             <div class="flex-col">
@@ -32,7 +37,7 @@
                                     
                                 </div>
                             </div>
-                            <div class="grid grid-cols-12 mt-5">
+                            <div class="grid grid-cols-12 mt-5 gap-0 md:gap-5">
                                 <div class="col-span-12 md:col-span-4">
                                     <label class="form-control w-full">
                                         <div class="label">
@@ -41,19 +46,66 @@
                                         <input v-model="name" type="text" class='input input-bordered input-sm w-full'>
                                     </label>
                                 </div>
+                                <div class="col-span-12 md:col-span-4">
+                                    <label class="form-control w-full">
+                                        <div class="label">
+                                            <span class="label-text flex"><EnvelopeIcon class="w-4 h-4 mr-2" />E-mail</span>
+                                        </div>
+                                        <input v-model="email" type="text" class='input input-bordered input-sm w-full'>
+                                    </label>
+                                </div>
+                                <div class="col-span-12 md:col-span-4">
+                                    <label class="form-control w-full">
+                                        <div class="label">
+                                            <span class="label-text flex"><DocumentTextIcon class="w-4 h-4 mr-2" />CPF</span>
+                                        </div>
+                                        <input v-model="cpf" type="text" class='input input-bordered input-sm w-full'>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-12 gap-0 md:gap-5">
+                                <div class="col-span-12 md:col-span-4">
+                                    <label class="form-control w-full">
+                                        <div class="label">
+                                            <span class="label-text flex"><UserGroupIcon class="w-4 h-4 mr-2" />Gênero</span>
+                                        </div>
+                                        <input v-model="sex" type="text" class='input input-bordered input-sm w-full'>
+                                    </label>
+                                </div>
+                                <div class="col-span-12 md:col-span-4">
+                                    <label class="form-control w-full">
+                                        <div class="label">
+                                            <span class="label-text flex"><BriefcaseIcon class="w-4 h-4 mr-2" />Profissão</span>
+                                        </div>
+                                        <select class="select select-bordered select-sm w-full"></select>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-12">
+                                <div class="col-span-12">
+                                    <label class="form-control w-full">
+                                        <div class="label">
+                                            <span class="label-text flex"><DocumentDuplicateIcon class="w-4 h-4 mr-2" />Biografia</span>
+                                        </div>
+                                        <textarea v-model="biography" class="textarea textarea-bordered" placeholder="Digite sua biografia."></textarea>
+                                    </label>
+                                </div>
                             </div>
                         </div>
 
-                        <input type="radio" name="my_tabs_1" role="tab" class="tab" aria-label="Tab 2" />
+                        <input type="radio" name="my_tabs_1" role="tab" class="tab" aria-label="Redes Socias" />
                         <div role="tabpanel" class="tab-content p-10">
                             Tab content 2
                         </div>
 
-                        <input type="radio" name="my_tabs_1" role="tab" class="tab" aria-label="Tab 3" />
+                        <input type="radio" name="my_tabs_1" role="tab" class="tab" aria-label="Endereço" />
                         <div role="tabpanel" class="tab-content p-10">
                             Tab content 3
                         </div>
                     </div>
+                </div>
+                <div class="card-actions flex justify-end py-5 px-9">
+                    <button class="btn bg-cyan-400 hover:bg-cyan-600 text-white">Alterar</button>    
                 </div>
             </div>
 
