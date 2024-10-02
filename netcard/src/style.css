@@ -17,12 +17,12 @@
      -webkit-font-smoothing: antialiased;
  }
 
- ::-webkit-scrollbar{
-    width: 6px;
-    height: 4px;
-    background-color: #EFEFEF;
-  }
-    
-  ::-webkit-scrollbar-thumb {
-    background: #BAD9E6; 
-  }
+::-webkit-scrollbar{
+  width: 6px;
+  height: 4px;
+  background-color: #EFEFEF;
+}
+  
+::-webkit-scrollbar-thumb {
+  background: #BAD9E6; 
+}

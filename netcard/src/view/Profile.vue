@@ -94,12 +94,53 @@
                         </div>
 
                         <input type="radio" name="my_tabs_1" role="tab" class="tab" aria-label="Redes Socias" />
-                        <div role="tabpanel" class="tab-content p-10">
-                            Tab content 2
+                        <div role="tabpanel" class="tab-content p-5">
+                            <div class="grid grid-cols-12 gap-2 md:gap-5">
+                                <div class="col-span-12 md:col-span-4">
+                                    <label class="form-control w-full">
+                                        <div class="label">
+                                            <span class="label-text flex"><BriefcaseIcon class="w-4 h-4 mr-2" />Redes Sociais</span>
+                                        </div>
+                                        <select class="select select-bordered select-sm w-full"></select>
+                                    </label>
+                                </div>
+                                <div class="col-span-12 md:col-span-6">
+                                    <label class="form-control w-full">
+                                        <div class="label">
+                                            <span class="label-text flex"><BriefcaseIcon class="w-4 h-4 mr-2" />Url</span>
+                                        </div>
+                                        <input type="text" class='input input-bordered input-sm w-full'>
+                                    </label>
+                                </div>
+                                <div class="col-span-12 md:col-span-2">
+                                    <div class="flex">
+                                        <button class="btn w-full bg-cyan-400 btn-sm hover:bg-cyan-600 text-white"><PlusIcon class="w-5 h-5" /> Adicionar</button>
+                                    </div>
+                                </div>               
+                            </div>
+                            <div class="grid md:grid-cols-12 lg:grid-cols-12 gap-0 md:gap-5">
+                                <div class="col-span-12 md:col-span-4" v-for="socialMedia in socialMedias">
+                                    <div class="card bg-base-100 shadow-xl mb-2">
+                                        <div class="card-body p-4">
+                                            <div class="flex">
+                                                <p class="font-bold">{{ socialMedia.Name }}</p>
+                                                <div class="flex justify-end gap-2">
+                                                    <button class="btn btn-success btn-sm text-white"><PencilIcon class="w-5 h-5" /></button>
+                                                    <button class="btn btn-error btn-sm text-white"><TrashIcon class="w-5 h-5" /></button>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="flex gap-2">
+                                                <LinkIcon class="w-5 h-5" /> <p class="break-all">Url: <a href="">{{ socialMedia.Url }}</a></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <input type="radio" name="my_tabs_1" role="tab" class="tab" aria-label="Endereço" />
-                        <div role="tabpanel" class="tab-content p-10">
+                        <div role="tabpanel" class="tab-content p-5">
                             Tab content 3
                         </div>
                     </div>
