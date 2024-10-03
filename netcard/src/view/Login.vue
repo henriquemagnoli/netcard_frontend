@@ -39,7 +39,14 @@
                                 </div>       
                             </label>
                             
-                            <button @click="login" type="button" class="btn bg-cyan-500 w-full h-10 rounded-md hover:bg-cyan-700 text-white text-sm">Entrar</button>
+                            <button @click="login" type="button" class="btn bg-cyan-500 w-full h-10 rounded-md hover:bg-cyan-700 text-white text-sm" :disabled="isLoading">
+                                <span v-if="!isLoading">
+                                    Entrar
+                                </span>
+                                <span v-if="isLoading">
+                                    <span class="loading loading-spinner loading-sm"></span>
+                                </span>
+                            </button>
                             
                             <div class="justify-center flex text-sm gap-1">
                                 <p>Não possuí uma conta? </p><a href="register" class="underline text-cyan-700">Criar conta.</a>
@@ -107,12 +114,16 @@ export default defineComponent({
             if(!this.validateFields())
                 return;
 
+            this.isLoading = true;
+
             const response: any = await verifyLogin(this.email, this.password);
 
             if(response.value['statusCode'] != 200)
                 Swal.fire({ icon: 'error', title: 'Erro', text: response.value['messages']});
             else
                 router.push('/dashboard');  
+
+            this.isLoading = false;
         },
         validateFields()
         {

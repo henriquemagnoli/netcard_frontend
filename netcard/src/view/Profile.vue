@@ -118,12 +118,12 @@
                                     </div>
                                 </div>               
                             </div>
-                            <div class="grid md:grid-cols-12 lg:grid-cols-12 gap-0 md:gap-5">
-                                <div class="col-span-12 md:col-span-4" v-for="socialMedia in socialMedias">
-                                    <div class="card bg-base-100 shadow-xl mb-2">
+                            <div class="grid md:grid-cols-12 lg:grid-cols-12 gap-0 md:gap-5 mt-2">
+                                <div class="col-span-12 md:col-span-3" v-for="socialMedia in socialMedias">
+                                    <div class="card bg-base-200 shadow-xl mb-2">
                                         <div class="card-body p-4">
                                             <div class="flex">
-                                                <p class="font-bold">{{ socialMedia.Name }}</p>
+                                                <p class="font-bold text-base">{{ socialMedia.Name }}</p>
                                                 <div class="flex justify-end gap-2">
                                                     <button class="btn btn-success btn-sm text-white"><PencilIcon class="w-5 h-5" /></button>
                                                     <button class="btn btn-error btn-sm text-white"><TrashIcon class="w-5 h-5" /></button>
@@ -131,7 +131,7 @@
                                             </div>
                                             
                                             <div class="flex gap-2">
-                                                <LinkIcon class="w-5 h-5" /> <p class="break-all">Url: <a href="">{{ socialMedia.Url }}</a></p>
+                                                <LinkIcon class="w-5 h-5" /> <p class="break-all text-sm">Url: <a href="" class="hover:text-cyan-500 hover:underline">{{ socialMedia.Url }}</a></p>
                                             </div>
                                         </div>
                                     </div>
@@ -141,7 +141,68 @@
 
                         <input type="radio" name="my_tabs_1" role="tab" class="tab" aria-label="Endereço" />
                         <div role="tabpanel" class="tab-content p-5">
-                            Tab content 3
+                            <div class="grid grid-cols-12 gap-0 md:gap-5">
+                                <div class="col-span-12 md:col-span-2">
+                                    <label class="form-control w-full">
+                                        <div class="label">
+                                            <span class="label-text flex"><UserIcon class="w-4 h-4 mr-2" />CEP</span>
+                                        </div>
+                                        <input v-model="zipCode" type="text" class='input input-bordered input-sm w-full'>
+                                    </label>
+                                </div>
+                                <div class="col-span-12 md:col-span-2">
+                                    <label class="form-control w-full">
+                                        <div class="label">
+                                            <span class="label-text flex"><UserIcon class="w-4 h-4 mr-2" />Estado</span>
+                                        </div>
+                                        <input v-model="state" type="text" class='input input-bordered input-sm w-full'>
+                                    </label>
+                                </div>
+                                <div class="col-span-12 md:col-span-8">
+                                    <label class="form-control w-full">
+                                        <div class="label">
+                                            <span class="label-text flex"><UserIcon class="w-4 h-4 mr-2" />Munícipios</span>
+                                        </div>
+                                        <input v-model="city" type="text" class='input input-bordered input-sm w-full'>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-12 gap-0 md:gap-5">
+                                <div class="col-span-12 md:col-span-6">
+                                    <label class="form-control w-full">
+                                        <div class="label">
+                                            <span class="label-text flex"><UserIcon class="w-4 h-4 mr-2" />Endereço</span>
+                                        </div>
+                                        <input v-model="street" type="text" class='input input-bordered input-sm w-full'>
+                                    </label>
+                                </div>
+                                <div class="col-span-12 md:col-span-4">
+                                    <label class="form-control w-full">
+                                        <div class="label">
+                                            <span class="label-text flex"><UserIcon class="w-4 h-4 mr-2" />Bairro</span>
+                                        </div>
+                                        <input v-model="district" type="text" class='input input-bordered input-sm w-full'>
+                                    </label>
+                                </div>
+                                <div class="col-span-12 md:col-span-2">
+                                    <label class="form-control w-full">
+                                        <div class="label">
+                                            <span class="label-text flex"><UserIcon class="w-4 h-4 mr-2" />Número</span>
+                                        </div>
+                                        <input v-model="streetNumber" type="text" class='input input-bordered input-sm w-full'>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="grid md:grid-cols-12 lg:grid-cols-12 gap-0 md:gap-5">
+                                <div class="col-span-12">
+                                    <label class="form-control w-full">
+                                        <div class="label">
+                                            <span class="label-text flex"><UserIcon class="w-4 h-4 mr-2" />Complemento</span>
+                                        </div>
+                                        <textarea v-model="streetComplement" class="textarea textarea-bordered" placeholder="Digite um complemento para seu endereço."></textarea>
+                                    </label>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
