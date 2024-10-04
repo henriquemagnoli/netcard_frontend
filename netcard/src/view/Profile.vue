@@ -30,8 +30,9 @@
                                         <div class="flex items-center ml-5">
                                             <div class="flex-col">
                                                 <p class="text-lg font-semibold">{{ name }}, {{ birthDate }}</p>
-                                                <p class="text-base">Teste</p>
-                                            </div>
+                                                <p class="text-sm">{{ jobName }}</p>
+                                                <input type="file" @change="teste" class="file-input file-input-bordered w-full max-w-xs" />
+                                            </div> 
                                         </div>
                                     </div>
                                     
@@ -77,7 +78,9 @@
                                         <div class="label">
                                             <span class="label-text flex"><BriefcaseIcon class="w-4 h-4 mr-2" />Profissão</span>
                                         </div>
-                                        <select class="select select-bordered select-sm w-full"></select>
+                                        <select v-model="jobId" class="select select-bordered select-sm w-full">
+                                            <option v-for="job in jobs" :key="job.Id" :value="job.Id">{{ job.Name }}</option>
+                                        </select>
                                     </label>
                                 </div>
                             </div>
@@ -155,15 +158,19 @@
                                         <div class="label">
                                             <span class="label-text flex"><UserIcon class="w-4 h-4 mr-2" />Estado</span>
                                         </div>
-                                        <input v-model="state" type="text" class='input input-bordered input-sm w-full'>
+                                        <select v-model="state" v-on:change="listCities" class="select select-bordered select-sm w-full">
+                                            <option v-for="state in states" :key="state.Id" :value="state.Id">{{ state.Name }}</option>
+                                        </select>
                                     </label>
                                 </div>
                                 <div class="col-span-12 md:col-span-8">
                                     <label class="form-control w-full">
                                         <div class="label">
-                                            <span class="label-text flex"><UserIcon class="w-4 h-4 mr-2" />Munícipios</span>
+                                            <span class="label-text flex"><UserIcon class="w-4 h-4 mr-2" />Cidade</span>
                                         </div>
-                                        <input v-model="city" type="text" class='input input-bordered input-sm w-full'>
+                                        <select v-model="city" class="select select-bordered select-sm w-full">
+                                            <option v-for="city in cities" :key="city.Id" :value="city.Id">{{ city.Name }}</option>
+                                        </select>
                                     </label>
                                 </div>
                             </div>
@@ -210,204 +217,6 @@
                     <button class="btn bg-cyan-400 hover:bg-cyan-600 text-white">Alterar</button>    
                 </div>
             </div>
-
-            <!-- <div class="space-y-10" v-if="isLoadingUser == false">
-                <img class="w-40 h-40 border-4 border-base-100 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
-
-                <div class="border-b-2 border-gray-400">
-                    <p class="mt-2 flex items-center py-2 font-semibold"><DocumentTextIcon class="w-5 h-5 mr-2" />Documentos</p>
-                </div>
-                
-                <div>
-                    <div class="grid md:grid-cols-12 lg:grid-cols-12 gap-0 md:gap-5">
-                        <div class="col-span-12 md:col-span-4">
-                            <label class="form-control w-full">
-                                <div class="label">
-                                    <span class="label-text flex"><UserIcon class="w-4 h-4 mr-2" />Nome</span>
-                                </div>
-                                <input v-model="name" type="text" class='input input-bordered input-sm w-full'>
-                            </label>
-                        </div>
-                        <div class="col-span-12 md:col-span-4">
-                            <label class="form-control w-full">
-                                <div class="label">
-                                    <span class="label-text flex"><EnvelopeIcon class="w-4 h-4 mr-2" />E-mail</span>
-                                </div>
-                                <input v-model="email" type="text" class='input input-bordered input-sm w-full'>
-                            </label>
-                        </div>
-                        <div class="col-span-12 md:col-span-4">
-                            <label class="form-control w-full">
-                                <div class="label">
-                                    <span class="label-text flex"><DocumentTextIcon class="w-4 h-4 mr-2" />CPF</span>
-                                </div>
-                                <input v-model="cpf" type="text" class='input input-bordered input-sm w-full'>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="grid md:grid-cols-12 lg:grid-cols-12 gap-0 md:gap-5">
-                        <div class="col-span-12 md:col-span-4">
-                            <label class="form-control w-full">
-                                <div class="label">
-                                    <span class="label-text flex"><CalendarDaysIcon class="w-4 h-4 mr-2" />Data de Nascimento</span>
-                                </div>
-                                <input v-model="birthDate" type="date" class='input input-bordered input-sm w-full'>
-                            </label>
-                        </div>
-                        <div class="col-span-12 md:col-span-4">
-                            <label class="form-control w-full">
-                                <div class="label">
-                                    <span class="label-text flex"><UserGroupIcon class="w-4 h-4 mr-2" />Gênero</span>
-                                </div>
-                                <input v-model="sex" type="text" class='input input-bordered input-sm w-full'>
-                            </label>
-                        </div>
-                        <div class="col-span-12 md:col-span-4">
-                            <label class="form-control w-full">
-                                <div class="label">
-                                    <span class="label-text flex"><BriefcaseIcon class="w-4 h-4 mr-2" />Profissão</span>
-                                </div>
-                                <select class="select select-bordered select-sm w-full"></select>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="grid md:grid-cols-12 lg:grid-cols-12 gap-0 md:gap-5">
-                        <div class="col-span-12">
-                            <label class="form-control w-full">
-                                <div class="label">
-                                    <span class="label-text flex"><DocumentDuplicateIcon class="w-4 h-4 mr-2" />Biografia</span>
-                                </div>
-                                <textarea v-model="biography" class="textarea textarea-bordered" placeholder="Digite sua biografia."></textarea>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="border-b-2 border-gray-400 py-2">
-                    <p class="mt-2 flex items-center font-semibold"><GlobeAltIcon class="w-5 h-5 mr-2" /> Redes Sociais</p>
-                </div>
-
-                <div class="space-y-5">
-                    <div class="grid md:grid-cols-12 lg:grid-cols-12 gap-0 md:gap-5">
-                        <div class="col-span-12 md:col-span-4">
-                            <label class="form-control w-full">
-                                <div class="label">
-                                    <span class="label-text flex"><BriefcaseIcon class="w-4 h-4 mr-2" />Redes Sociais</span>
-                                </div>
-                                <select class="select select-bordered select-sm w-full"></select>
-                            </label>
-                        </div>
-                        <div class="col-span-12 md:col-span-6">
-                            <label class="form-control w-full">
-                                <div class="label">
-                                    <span class="label-text flex"><BriefcaseIcon class="w-4 h-4 mr-2" />Url</span>
-                                </div>
-                                <input type="text" class='input input-bordered input-sm w-full'>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div>
-                        <button class="btn bg-cyan-400 btn-sm hover:bg-cyan-600 text-white"><PlusIcon class="w-5 h-5" /> Adicionar</button>
-                    </div>
-
-                    <div class="grid md:grid-cols-12 lg:grid-cols-12 gap-0 md:gap-5">
-                        <div class="col-span-12 md:col-span-4" v-for="socialMedia in socialMedias">
-                            <div class="card bg-base-100 shadow-xl mb-2">
-                                <div class="card-body p-4">
-                                    <div class="flex">
-                                        <p class="font-bold">{{ socialMedia.Name }}</p>
-                                        <div class="flex justify-end gap-2">
-                                            <button class="btn btn-success btn-sm text-white"><PencilIcon class="w-5 h-5" /></button>
-                                            <button class="btn btn-error btn-sm text-white"><TrashIcon class="w-5 h-5" /></button>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="flex gap-2">
-                                        <LinkIcon class="w-5 h-5" /> <p class="break-all">Url: <a href="">{{ socialMedia.Url }}</a></p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="border-b-2 border-gray-400 py-2">
-                    <p class="mt-2 flex items-center font-semibold"><MapPinIcon class="w-5 h-5 mr-2" /> Endereço</p>
-                </div>
-
-                <div>
-                    <div class="grid md:grid-cols-12 lg:grid-cols-12 gap-0 md:gap-5">
-                        <div class="col-span-12 md:col-span-4">
-                            <label class="form-control w-full">
-                                <div class="label">
-                                    <span class="label-text flex"><UserIcon class="w-4 h-4 mr-2" />CEP</span>
-                                </div>
-                                <input v-model="zipCode" type="text" class='input input-bordered input-sm w-full'>
-                            </label>
-                        </div>
-                        <div class="col-span-12 md:col-span-2">
-                            <label class="form-control w-full">
-                                <div class="label">
-                                    <span class="label-text flex"><UserIcon class="w-4 h-4 mr-2" />Estado</span>
-                                </div>
-                                <input v-model="state" type="text" class='input input-bordered input-sm w-full'>
-                            </label>
-                        </div>
-                        <div class="col-span-12 md:col-span-6">
-                            <label class="form-control w-full">
-                                <div class="label">
-                                    <span class="label-text flex"><UserIcon class="w-4 h-4 mr-2" />Cidade</span>
-                                </div>
-                                <input v-model="city" type="text" class='input input-bordered input-sm w-full'>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="grid md:grid-cols-12 lg:grid-cols-12 gap-0 md:gap-5">
-                        <div class="col-span-12 md:col-span-6">
-                            <label class="form-control w-full">
-                                <div class="label">
-                                    <span class="label-text flex"><UserIcon class="w-4 h-4 mr-2" />Endereço</span>
-                                </div>
-                                <input v-model="street" type="text" class='input input-bordered input-sm w-full'>
-                            </label>
-                        </div>
-                        <div class="col-span-12 md:col-span-4">
-                            <label class="form-control w-full">
-                                <div class="label">
-                                    <span class="label-text flex"><UserIcon class="w-4 h-4 mr-2" />Bairro</span>
-                                </div>
-                                <input v-model="district" type="text" class='input input-bordered input-sm w-full'>
-                            </label>
-                        </div>
-                        <div class="col-span-12 md:col-span-2">
-                            <label class="form-control w-full">
-                                <div class="label">
-                                    <span class="label-text flex"><UserIcon class="w-4 h-4 mr-2" />Número</span>
-                                </div>
-                                <input v-model="streetNumber" type="text" class='input input-bordered input-sm w-full'>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="grid md:grid-cols-12 lg:grid-cols-12 gap-0 md:gap-5">
-                        <div class="col-span-12">
-                            <label class="form-control w-full">
-                                <div class="label">
-                                    <span class="label-text flex"><UserIcon class="w-4 h-4 mr-2" />Complemento</span>
-                                </div>
-                                <textarea v-model="streetComplement" class="textarea textarea-bordered" placeholder="Digite um complemento para seu endereço."></textarea>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="flex h-full items-center justify-end">
-                    <button class="btn bg-cyan-400 hover:bg-cyan-600 text-white"><PlusIcon class="w-5 h-5" /> Alterar</button>
-                </div>
-            </div> -->
         </div>
     </div>    
 </template>
@@ -415,6 +224,9 @@
 <script lang="ts">
 import { defineComponent, reactive, toRefs, ref } from 'vue';
 import { IUserState, getUser } from '../hooks/useUser';
+import { IStatesState, getAllStates } from '../hooks/useStates';
+import { ICitiesState, getAllCitiesBasedOnStateId } from '../hooks/useCities';
+import { IJobsState, getAllJobs } from '../hooks/useJobs';
 import Swal from 'sweetalert2';
 import { UserIcon, EnvelopeIcon, DocumentTextIcon, CalendarDaysIcon, UserGroupIcon, MapPinIcon, BriefcaseIcon, PlusIcon, DocumentDuplicateIcon, GlobeAltIcon, PencilIcon, TrashIcon, LinkIcon } from '@heroicons/vue/24/outline';
 import { getCookies } from '../helper/helper';
@@ -426,6 +238,24 @@ export default defineComponent({
             isLoadingUser: false,
             messagesUser: '',
             statusCodeUser: 0
+        });
+
+        const statesState: IStatesState = reactive({
+            isLoadingStates: false,
+            messagesStates: '',
+            statusCodeStates: 0
+        });
+
+        const citiesState: ICitiesState = reactive({
+            isLoadingCities: false,
+            messagesCities: '',
+            statusCodeCities: 0
+        });
+        
+        const jobsState: IJobsState = reactive({
+            isLoadingJobs: false,
+            messagesJobs: '',
+            statusCodeJobs: 0
         });
 
         // User Variables
@@ -442,14 +272,21 @@ export default defineComponent({
         const district = ref('');
         const streetNumber = ref('');
         const streetComplement = ref('');
-        const job = ref('');
+        const jobId = ref('');
+        const jobName = ref('');
         const biography = ref();
     
         // User object
         const socialMedias = ref();
+        const states = ref();
+        const cities = ref();
+        const jobs = ref();
 
         return{
             ...toRefs(userState),
+            ...toRefs(statesState),
+            ...toRefs(citiesState),
+            ...toRefs(jobsState),
             name,
             email,
             cpf,
@@ -463,9 +300,13 @@ export default defineComponent({
             district,
             streetNumber,
             streetComplement,
-            job,
+            jobId,
+            jobName,
             biography,
-            socialMedias
+            socialMedias,
+            states,
+            cities,
+            jobs
         }
 
     },
@@ -492,7 +333,8 @@ export default defineComponent({
                 this.district = response.value['data'].District;
                 this.streetNumber = response.value['data'].Street_number;
                 this.streetComplement = response.value['data'].Street_complement;
-                this.job = response.value['data'].Job_id;
+                //this.jobId = response.value['data'].Job_id;
+                this.jobName = response.value['data'].JobName;
                 this.biography = response.value['data'].Biography;
                 this.socialMedias = response.value['data'].User_social_media;
             }
@@ -502,9 +344,55 @@ export default defineComponent({
             }
             
             this.isLoadingUser = false;
+        },
+        async listStates()
+        {
+            this.isLoadingStates = true;
+
+            const response: any = await getAllStates();
+
+            if(response.value['statusCode'] == 200)
+                this.states = response.value['data'];
+            else 
+                Swal.fire({ icon: 'error', title: 'Erro', text: response.value['messages'] });
+        
+            this.isLoadingStates = false;
+        },
+        async listCities()
+        {
+            this.isLoadingCities = true;
+
+            const response: any = await getAllCitiesBasedOnStateId(Number(this.state));
+
+            if(response.value['statusCode'] == 200)
+                this.cities = response.value['data'];
+            else 
+                Swal.fire({ icon: 'error', title: 'Erro', text: response.value['messages']});
+
+            this.isLoadingCities = false;
+        },
+        async listJobs()
+        {
+            this.isLoadingJobs = true;
+
+            const response: any = await getAllJobs();
+
+            if(response.value['statusCode'] == 200)
+                this.jobs = response.value['data'];
+            else
+                Swal.fire({ icon: 'error', title: 'Erro', text: response.value['messages']});
+
+            this.isLoadingJobs = false;
+        },
+        teste(event: any)
+        {
+            console.log(event.target.files[0])
         }
     },
     async beforeMount() {
+
+        await this.listJobs();
+        await this.listStates();
         await this.getUser();
     },
     components:{
