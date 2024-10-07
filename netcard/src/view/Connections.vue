@@ -94,24 +94,30 @@
             <div class="card bg-base-100 max-w-full shadow-md">
                 <div class="card-body p-5">
                     <div class="card-actions">
-                        <button class="btn btn-sm bg-cyan-400 hover:bg-cyan-600 text-white"><MagnifyingGlassIcon class="w-5 h-5" /> Pesquisar</button>
+                        <button type="button" @click="listUserConnections()" class="btn btn-sm bg-cyan-400 hover:bg-cyan-600 text-white"><MagnifyingGlassIcon class="w-5 h-5" /> Pesquisar</button>
                     </div>
                 </div>
             </div>
 
-            <div class="card bg-base-100 max-w-72 shadow-xl">
-                <div class="card-body p-4">
-                    <div class="rounded-full w-10 h-10 bg-gray-400"></div>
-                    <p class="font-bold">Jane Doe, 21</p>
-                    <p class="text-sm">Engenharia de Software</p>
-                    <div class="flex h-full items-center justify-end">
-                        <div class="card-actions">
-                            <button @click="modalState" class="btn btn-sm bg-cyan-400 hover:bg-cyan-600"><EyeIcon class="w-5 h-5 text-white" /></button>
-                            <button @click="deleteConection" class="btn btn-sm btn-error"><TrashIcon class="w-5 h-5 text-white" /></button>
+            <div class="grid md:grid-cols-12 lg:grid-cols-12 gap-0 md:gap-5 mt-2">
+                <div class="col-span-12 md:col-span-3" v-for="user in users">
+                    <div class="card bg-base-100 shadow-xl">
+                        <div class="card-body p-4">
+                            <img class="border-4 w-12 h-12 border-base-200 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
+                            <p class="font-bold">{{ user.UserName }}, {{ user.Birth_date }}</p>
+                            <p class="text-sm text-neutral-500">{{ user.JobName }}</p>
+                            <div class="flex h-full items-center justify-end">
+                                <div class="card-actions">
+                                    <button @click="modalState(user.Id)" class="btn btn-sm bg-cyan-400 hover:bg-cyan-600"><EyeIcon class="w-5 h-5 text-white" /></button>
+                                    <button @click="deleteConection(user.Id)" class="btn btn-sm btn-error"><TrashIcon class="w-5 h-5 text-white" /></button>
+                                </div>
+                            </div> 
                         </div>
-                    </div> 
+                    </div>
                 </div>
             </div>
+
+            
         </div>
 
         <div v-if="show_modal">
@@ -122,6 +128,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive, ref, toRefs } from 'vue';
+import { IUserState, getAllUserConnections } from '../hooks/useUser';
 import { IStatesState, getAllStates } from '../hooks/useStates';
 import { ICitiesState, getAllCitiesBasedOnStateId } from '../hooks/useCities';
 import { IJobsState, getAllJobs } from '../hooks/useJobs';
@@ -132,6 +139,12 @@ import Swal from 'sweetalert2';
 
 export default defineComponent({
     setup(){
+
+        const userState: IUserState = reactive({
+            isLoadingUser: false,
+            messagesUser: '',
+            statusCodeUser: 0
+        });
 
         const statesState: IStatesState = reactive({
             isLoadingStates: false,
@@ -160,11 +173,13 @@ export default defineComponent({
         const job = ref('');
 
         // Object variables
+        const users = ref();
         const cities = ref();
         const states = ref();
         const jobs = ref();
 
         return{
+            ...toRefs(userState),
             ...toRefs(statesState),
             ...toRefs(citiesState),
             ...toRefs(jobsState),
@@ -174,17 +189,31 @@ export default defineComponent({
             city,
             state,
             job,
+            users,
             cities,
             states,
             jobs
         }
     },
     methods:{
-        modalState()
+        modalState(connection_id: number)
         {
             this.show_modal = !this.show_modal;
         },
-        async deleteConection()
+        async listUserConnections()
+        {
+            this.isLoadingUser = true;
+
+            const response: any = await getAllUserConnections();
+
+            if(response.value['statusCode'] == 200)
+                this.users = response.value['data'];
+            else
+                Swal.fire({ icon: 'error', title: 'Erro', text: response.value['messages'] });
+
+            this.isLoadingUser = false;
+        },
+        async deleteConection(connection_id: number)
         {
             Swal.fire({
                 title: 'Atenção',

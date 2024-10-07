@@ -2,7 +2,7 @@
 
     <div class="h-[calc(100vh-144px)] mx-auto max-w-full py-6 sm:px-6 lg:px-8 ">
         <div class="p-5 md:p-0">
-            <div v-if="isLoadingUser == true">
+            <div v-if="isLoadingUser">
                 <div class="text-center">
                     <p class="text-md font-semibold mt-10">Carregando informações ... <svg aria-hidden="true" class="inline w-4 h-4 text-gray-200 animate-spin dark:text-blue-400 fill-blue-400 dark:fill-blue-100" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                         <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor" />
@@ -12,211 +12,216 @@
                 </div>
             </div>
 
-            <div class="card bg-base-100 shadow-md">
-                <div class="card-body p-4 text-md md:text-xs">
-                    <div role="tablist" class="tabs tabs-bordered">
-                        <input type="radio" name="my_tabs_1" role="tab" class="tab" aria-label="Dados" checked />
-                        <div role="tabpanel" class="tab-content p-5">
-                            <div class="grid grid-cols-12">
-                                <div class="col-span-12">
-                                    <div class="flex">
-                                        <div class="avatar">
-                                            <div class="md:w-44">
-                                                <img class="border-4 border-base-200 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
-                                            </div>
-                                        </div>
-                                        
-
-                                        <div class="flex items-center ml-5">
-                                            <div class="flex-col">
-                                                <p class="text-lg font-semibold">{{ name }}, {{ birthDate }}</p>
-                                                <p class="text-sm">{{ jobName }}</p>
-                                                <input type="file" @change="teste" class="file-input file-input-bordered w-full max-w-xs" />
-                                            </div> 
-                                        </div>
-                                    </div>
-                                    
-                                </div>
-                            </div>
-                            <div class="grid grid-cols-12 mt-5 gap-0 md:gap-5">
-                                <div class="col-span-12 md:col-span-4">
-                                    <label class="form-control w-full">
-                                        <div class="label">
-                                            <span class="label-text flex"><UserIcon class="w-4 h-4 mr-2" />Nome</span>
-                                        </div>
-                                        <input v-model="name" type="text" class='input input-bordered input-sm w-full'>
-                                    </label>
-                                </div>
-                                <div class="col-span-12 md:col-span-4">
-                                    <label class="form-control w-full">
-                                        <div class="label">
-                                            <span class="label-text flex"><EnvelopeIcon class="w-4 h-4 mr-2" />E-mail</span>
-                                        </div>
-                                        <input v-model="email" type="text" class='input input-bordered input-sm w-full'>
-                                    </label>
-                                </div>
-                                <div class="col-span-12 md:col-span-4">
-                                    <label class="form-control w-full">
-                                        <div class="label">
-                                            <span class="label-text flex"><DocumentTextIcon class="w-4 h-4 mr-2" />CPF</span>
-                                        </div>
-                                        <input v-model="cpf" type="text" class='input input-bordered input-sm w-full'>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="grid grid-cols-12 gap-0 md:gap-5">
-                                <div class="col-span-12 md:col-span-4">
-                                    <label class="form-control w-full">
-                                        <div class="label">
-                                            <span class="label-text flex"><UserGroupIcon class="w-4 h-4 mr-2" />Gênero</span>
-                                        </div>
-                                        <input v-model="sex" type="text" class='input input-bordered input-sm w-full'>
-                                    </label>
-                                </div>
-                                <div class="col-span-12 md:col-span-4">
-                                    <label class="form-control w-full">
-                                        <div class="label">
-                                            <span class="label-text flex"><BriefcaseIcon class="w-4 h-4 mr-2" />Profissão</span>
-                                        </div>
-                                        <select v-model="jobId" class="select select-bordered select-sm w-full">
-                                            <option v-for="job in jobs" :key="job.Id" :value="job.Id">{{ job.Name }}</option>
-                                        </select>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="grid grid-cols-12">
-                                <div class="col-span-12">
-                                    <label class="form-control w-full">
-                                        <div class="label">
-                                            <span class="label-text flex"><DocumentDuplicateIcon class="w-4 h-4 mr-2" />Biografia</span>
-                                        </div>
-                                        <textarea v-model="biography" class="textarea textarea-bordered" placeholder="Digite sua biografia."></textarea>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <input type="radio" name="my_tabs_1" role="tab" class="tab" aria-label="Redes Socias" />
-                        <div role="tabpanel" class="tab-content p-5">
-                            <div class="grid grid-cols-12 gap-2 md:gap-5">
-                                <div class="col-span-12 md:col-span-4">
-                                    <label class="form-control w-full">
-                                        <div class="label">
-                                            <span class="label-text flex"><BriefcaseIcon class="w-4 h-4 mr-2" />Redes Sociais</span>
-                                        </div>
-                                        <select class="select select-bordered select-sm w-full"></select>
-                                    </label>
-                                </div>
-                                <div class="col-span-12 md:col-span-6">
-                                    <label class="form-control w-full">
-                                        <div class="label">
-                                            <span class="label-text flex"><BriefcaseIcon class="w-4 h-4 mr-2" />Url</span>
-                                        </div>
-                                        <input type="text" class='input input-bordered input-sm w-full'>
-                                    </label>
-                                </div>
-                                <div class="col-span-12 md:col-span-2">
-                                    <div class="flex">
-                                        <button class="btn w-full bg-cyan-400 btn-sm hover:bg-cyan-600 text-white"><PlusIcon class="w-5 h-5" /> Adicionar</button>
-                                    </div>
-                                </div>               
-                            </div>
-                            <div class="grid md:grid-cols-12 lg:grid-cols-12 gap-0 md:gap-5 mt-2">
-                                <div class="col-span-12 md:col-span-3" v-for="socialMedia in socialMedias">
-                                    <div class="card bg-base-200 shadow-xl mb-2">
-                                        <div class="card-body p-4">
-                                            <div class="flex">
-                                                <p class="font-bold text-base">{{ socialMedia.Name }}</p>
-                                                <div class="flex justify-end gap-2">
-                                                    <button class="btn btn-success btn-sm text-white"><PencilIcon class="w-5 h-5" /></button>
-                                                    <button class="btn btn-error btn-sm text-white"><TrashIcon class="w-5 h-5" /></button>
+            <div v-if="!isLoadingUser">
+                <div class="card bg-base-100 shadow-md">
+                    <div class="card-body p-4 text-md md:text-xs">
+                        <div role="tablist" class="tabs tabs-bordered">
+                            <input type="radio" name="my_tabs_1" role="tab" class="tab" aria-label="Dados" checked />
+                            <div role="tabpanel" class="tab-content p-5">
+                                <div class="grid grid-cols-12">
+                                    <div class="col-span-12">
+                                        <div class="flex">
+                                            <div class="avatar">
+                                                <div class="md:w-44">
+                                                    <img class="border-4 border-base-200 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
                                                 </div>
                                             </div>
                                             
-                                            <div class="flex gap-2">
-                                                <LinkIcon class="w-5 h-5" /> <p class="break-all text-sm">Url: <a href="" class="hover:text-cyan-500 hover:underline">{{ socialMedia.Url }}</a></p>
+
+                                            <div class="flex items-center ml-5">
+                                                <div class="flex-col">
+                                                    <p class="text-lg font-semibold">{{ name }}, {{ birthDate }}</p>
+                                                    <p class="text-sm">{{ jobName }}</p>
+                                                    <input type="file" @change="teste" class="file-input file-input-bordered w-full max-w-xs" />
+                                                </div> 
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-12 mt-5 gap-0 md:gap-5">
+                                    <div class="col-span-12 md:col-span-4">
+                                        <label class="form-control w-full">
+                                            <div class="label">
+                                                <span class="label-text flex"><UserIcon class="w-4 h-4 mr-2" />Nome</span>
+                                            </div>
+                                            <input v-model="name" type="text" class='input input-bordered input-sm w-full'>
+                                        </label>
+                                    </div>
+                                    <div class="col-span-12 md:col-span-4">
+                                        <label class="form-control w-full">
+                                            <div class="label">
+                                                <span class="label-text flex"><EnvelopeIcon class="w-4 h-4 mr-2" />E-mail</span>
+                                            </div>
+                                            <input v-model="email" type="text" class='input input-bordered input-sm w-full'>
+                                        </label>
+                                    </div>
+                                    <div class="col-span-12 md:col-span-4">
+                                        <label class="form-control w-full">
+                                            <div class="label">
+                                                <span class="label-text flex"><DocumentTextIcon class="w-4 h-4 mr-2" />CPF</span>
+                                            </div>
+                                            <input v-model="cpf" type="text" class='input input-bordered input-sm w-full'>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-12 gap-0 md:gap-5">
+                                    <div class="col-span-12 md:col-span-4">
+                                        <label class="form-control w-full">
+                                            <div class="label">
+                                                <span class="label-text flex"><UserGroupIcon class="w-4 h-4 mr-2" />Gênero</span>
+                                            </div>
+                                            <select v-model="sex" class="select select-bordered select-sm w-full">
+                                                <option value="M">Masculino</option>
+                                                <option value="F">Feminino</option>
+                                                <option value="O">Outros</option>
+                                            </select>
+                                        </label>
+                                    </div>
+                                    <div class="col-span-12 md:col-span-4">
+                                        <label class="form-control w-full">
+                                            <div class="label">
+                                                <span class="label-text flex"><BriefcaseIcon class="w-4 h-4 mr-2" />Profissão</span>
+                                            </div>
+                                            <select v-model="jobId" class="select select-bordered select-sm w-full">
+                                                <option v-for="job in jobs" :key="job.Id" :value="job.Id">{{ job.Name }}</option>
+                                            </select>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-12">
+                                    <div class="col-span-12">
+                                        <label class="form-control w-full">
+                                            <div class="label">
+                                                <span class="label-text flex"><DocumentDuplicateIcon class="w-4 h-4 mr-2" />Biografia</span>
+                                            </div>
+                                            <textarea v-model="biography" class="textarea textarea-bordered" placeholder="Digite sua biografia."></textarea>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <input type="radio" name="my_tabs_1" role="tab" class="tab" aria-label="Redes Socias" />
+                            <div role="tabpanel" class="tab-content p-5">
+                                <div class="grid grid-cols-12 gap-2 md:gap-5">
+                                    <div class="col-span-12 md:col-span-4">
+                                        <label class="form-control w-full">
+                                            <div class="label">
+                                                <span class="label-text flex"><BriefcaseIcon class="w-4 h-4 mr-2" />Redes Sociais</span>
+                                            </div>
+                                            <select class="select select-bordered select-sm w-full"></select>
+                                        </label>
+                                    </div>
+                                    <div class="col-span-12 md:col-span-6">
+                                        <label class="form-control w-full">
+                                            <div class="label">
+                                                <span class="label-text flex"><BriefcaseIcon class="w-4 h-4 mr-2" />Url</span>
+                                            </div>
+                                            <input type="text" class='input input-bordered input-sm w-full'>
+                                        </label>
+                                    </div>
+                                    <div class="col-span-12 md:col-span-2">
+                                        <div class="flex">
+                                            <button class="btn w-full bg-cyan-400 btn-sm hover:bg-cyan-600 text-white"><PlusIcon class="w-5 h-5" /> Adicionar</button>
+                                        </div>
+                                    </div>               
+                                </div>
+                                <div class="grid md:grid-cols-12 lg:grid-cols-12 gap-0 md:gap-5 mt-2">
+                                    <div class="col-span-12 md:col-span-3" v-for="socialMedia in socialMedias">
+                                        <div class="card bg-base-200 shadow-xl mb-2">
+                                            <div class="card-body p-4">
+                                                <p class="font-bold text-base">{{ socialMedia.Name }}</p>
+                                                
+                                                <div class="flex gap-2">
+                                                    <LinkIcon class="w-5 h-5" /> <p class="break-all text-sm">Url: <a href="" class="hover:text-cyan-500 hover:underline">{{ socialMedia.Url }}</a></p>
+                                                </div>
+
+                                                <div class="flex justify-end gap-2">
+                                                    <button class="btn btn-success btn-sm text-white"><PencilIcon class="w-5 h-5" /></button>
+                                                    <button class="btn btn-error btn-sm text-white"><TrashIcon class="w-5 h-5" /></button>
+                                                </div>  
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <input type="radio" name="my_tabs_1" role="tab" class="tab" aria-label="Endereço" />
-                        <div role="tabpanel" class="tab-content p-5">
-                            <div class="grid grid-cols-12 gap-0 md:gap-5">
-                                <div class="col-span-12 md:col-span-2">
-                                    <label class="form-control w-full">
-                                        <div class="label">
-                                            <span class="label-text flex"><UserIcon class="w-4 h-4 mr-2" />CEP</span>
-                                        </div>
-                                        <input v-model="zipCode" type="text" class='input input-bordered input-sm w-full'>
-                                    </label>
+                            <input type="radio" name="my_tabs_1" role="tab" class="tab" aria-label="Endereço" />
+                            <div role="tabpanel" class="tab-content p-5">
+                                <div class="grid grid-cols-12 gap-0 md:gap-5">
+                                    <div class="col-span-12 md:col-span-2">
+                                        <label class="form-control w-full">
+                                            <div class="label">
+                                                <span class="label-text flex"><UserIcon class="w-4 h-4 mr-2" />CEP</span>
+                                            </div>
+                                            <input v-model="zipCode" type="text" class='input input-bordered input-sm w-full'>
+                                        </label>
+                                    </div>
+                                    <div class="col-span-12 md:col-span-2">
+                                        <label class="form-control w-full">
+                                            <div class="label">
+                                                <span class="label-text flex"><UserIcon class="w-4 h-4 mr-2" />Estado</span>
+                                            </div>
+                                            <select v-model="state" v-on:change="listCities" class="select select-bordered select-sm w-full">
+                                                <option v-for="state in states" :key="state.Id" :value="state.Id">{{ state.Name }}</option>
+                                            </select>
+                                        </label>
+                                    </div>
+                                    <div class="col-span-12 md:col-span-8">
+                                        <label class="form-control w-full">
+                                            <div class="label">
+                                                <span class="label-text flex"><UserIcon class="w-4 h-4 mr-2" />Cidade</span>
+                                            </div>
+                                            <select v-model="city" class="select select-bordered select-sm w-full">
+                                                <option v-for="city in cities" :key="city.Id" :value="city.Id">{{ city.Name }}</option>
+                                            </select>
+                                        </label>
+                                    </div>
                                 </div>
-                                <div class="col-span-12 md:col-span-2">
-                                    <label class="form-control w-full">
-                                        <div class="label">
-                                            <span class="label-text flex"><UserIcon class="w-4 h-4 mr-2" />Estado</span>
-                                        </div>
-                                        <select v-model="state" v-on:change="listCities" class="select select-bordered select-sm w-full">
-                                            <option v-for="state in states" :key="state.Id" :value="state.Id">{{ state.Name }}</option>
-                                        </select>
-                                    </label>
+                                <div class="grid grid-cols-12 gap-0 md:gap-5">
+                                    <div class="col-span-12 md:col-span-6">
+                                        <label class="form-control w-full">
+                                            <div class="label">
+                                                <span class="label-text flex"><UserIcon class="w-4 h-4 mr-2" />Endereço</span>
+                                            </div>
+                                            <input v-model="street" type="text" class='input input-bordered input-sm w-full'>
+                                        </label>
+                                    </div>
+                                    <div class="col-span-12 md:col-span-4">
+                                        <label class="form-control w-full">
+                                            <div class="label">
+                                                <span class="label-text flex"><UserIcon class="w-4 h-4 mr-2" />Bairro</span>
+                                            </div>
+                                            <input v-model="district" type="text" class='input input-bordered input-sm w-full'>
+                                        </label>
+                                    </div>
+                                    <div class="col-span-12 md:col-span-2">
+                                        <label class="form-control w-full">
+                                            <div class="label">
+                                                <span class="label-text flex"><UserIcon class="w-4 h-4 mr-2" />Número</span>
+                                            </div>
+                                            <input v-model="streetNumber" type="text" class='input input-bordered input-sm w-full'>
+                                        </label>
+                                    </div>
                                 </div>
-                                <div class="col-span-12 md:col-span-8">
-                                    <label class="form-control w-full">
-                                        <div class="label">
-                                            <span class="label-text flex"><UserIcon class="w-4 h-4 mr-2" />Cidade</span>
-                                        </div>
-                                        <select v-model="city" class="select select-bordered select-sm w-full">
-                                            <option v-for="city in cities" :key="city.Id" :value="city.Id">{{ city.Name }}</option>
-                                        </select>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="grid grid-cols-12 gap-0 md:gap-5">
-                                <div class="col-span-12 md:col-span-6">
-                                    <label class="form-control w-full">
-                                        <div class="label">
-                                            <span class="label-text flex"><UserIcon class="w-4 h-4 mr-2" />Endereço</span>
-                                        </div>
-                                        <input v-model="street" type="text" class='input input-bordered input-sm w-full'>
-                                    </label>
-                                </div>
-                                <div class="col-span-12 md:col-span-4">
-                                    <label class="form-control w-full">
-                                        <div class="label">
-                                            <span class="label-text flex"><UserIcon class="w-4 h-4 mr-2" />Bairro</span>
-                                        </div>
-                                        <input v-model="district" type="text" class='input input-bordered input-sm w-full'>
-                                    </label>
-                                </div>
-                                <div class="col-span-12 md:col-span-2">
-                                    <label class="form-control w-full">
-                                        <div class="label">
-                                            <span class="label-text flex"><UserIcon class="w-4 h-4 mr-2" />Número</span>
-                                        </div>
-                                        <input v-model="streetNumber" type="text" class='input input-bordered input-sm w-full'>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="grid md:grid-cols-12 lg:grid-cols-12 gap-0 md:gap-5">
-                                <div class="col-span-12">
-                                    <label class="form-control w-full">
-                                        <div class="label">
-                                            <span class="label-text flex"><UserIcon class="w-4 h-4 mr-2" />Complemento</span>
-                                        </div>
-                                        <textarea v-model="streetComplement" class="textarea textarea-bordered" placeholder="Digite um complemento para seu endereço."></textarea>
-                                    </label>
+                                <div class="grid md:grid-cols-12 lg:grid-cols-12 gap-0 md:gap-5">
+                                    <div class="col-span-12">
+                                        <label class="form-control w-full">
+                                            <div class="label">
+                                                <span class="label-text flex"><UserIcon class="w-4 h-4 mr-2" />Complemento</span>
+                                            </div>
+                                            <textarea v-model="streetComplement" class="textarea textarea-bordered" placeholder="Digite um complemento para seu endereço."></textarea>
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <div class="card-actions flex justify-end py-5 px-9">
+                        <button class="btn bg-cyan-400 hover:bg-cyan-600 text-white">Alterar</button>    
+                    </div>
                 </div>
-                <div class="card-actions flex justify-end py-5 px-9">
-                    <button class="btn bg-cyan-400 hover:bg-cyan-600 text-white">Alterar</button>    
-                </div>
-            </div>
+            </div>   
         </div>
     </div>    
 </template>
@@ -333,7 +338,7 @@ export default defineComponent({
                 this.district = response.value['data'].District;
                 this.streetNumber = response.value['data'].Street_number;
                 this.streetComplement = response.value['data'].Street_complement;
-                //this.jobId = response.value['data'].Job_id;
+                this.jobId = response.value['data'].Job_id;
                 this.jobName = response.value['data'].JobName;
                 this.biography = response.value['data'].Biography;
                 this.socialMedias = response.value['data'].User_social_media;

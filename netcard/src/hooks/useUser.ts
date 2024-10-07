@@ -76,3 +76,20 @@ export async function getAllCoordinates()
 
     return data;
 }
+
+export async function getAllUserConnections()
+{
+    const request = await fetch(`${api_url}/user/${getCookies('userId')}/connections`, {
+        method: 'GET',
+        headers: {
+            'Authorization': String(getCookies('userToken')), 
+            'Content-Type': 'application/json'     
+        }
+    });
+    
+    const response = await request.json();
+
+    const data = ref<IUserState[]>(response);
+
+    return data;
+}
