@@ -94,30 +94,37 @@
             <div class="card bg-base-100 max-w-full shadow-md">
                 <div class="card-body p-5">
                     <div class="card-actions">
-                        <button type="button" @click="listUserConnections()" class="btn btn-sm bg-cyan-400 hover:bg-cyan-600 text-white"><MagnifyingGlassIcon class="w-5 h-5" /> Pesquisar</button>
+                        <!-- <button type="button" @click="listUserConnections()" class="btn btn-sm bg-cyan-400 hover:bg-cyan-600 text-white"><MagnifyingGlassIcon class="w-5 h-5" /> Pesquisar</button> -->
+                        <button type="button" @click="listUserConnections()" class="btn btn-sm bg-blue-500 hover:bg-blue-400 text-white"><MagnifyingGlassIcon class="w-5 h-5" /> Pesquisar</button>
                     </div>
                 </div>
             </div>
 
-            <div class="grid md:grid-cols-12 lg:grid-cols-12 gap-0 md:gap-5 mt-2">
-                <div class="col-span-12 md:col-span-3" v-for="user in users">
-                    <div class="card bg-base-100 shadow-xl">
-                        <div class="card-body p-4">
-                            <img class="border-4 w-12 h-12 border-base-200 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
-                            <p class="font-bold">{{ user.UserName }}, {{ user.Birth_date }}</p>
-                            <p class="text-sm text-neutral-500">{{ user.JobName }}</p>
-                            <div class="flex h-full items-center justify-end">
-                                <div class="card-actions">
-                                    <button @click="modalState(user.Id)" class="btn btn-sm bg-cyan-400 hover:bg-cyan-600"><EyeIcon class="w-5 h-5 text-white" /></button>
-                                    <button @click="deleteConection(user.Id)" class="btn btn-sm btn-error"><TrashIcon class="w-5 h-5 text-white" /></button>
-                                </div>
-                            </div> 
+            <div v-if="isLoadingUser">
+                <div class="text-center">
+                    <p class="text-md font-semibold mt-10">Carregando informações ... <span class="loading loading-spinner loading-sm"></span></p>
+                </div>
+            </div>
+
+            <div v-if="!isLoadingUser">
+                <div class="grid md:grid-cols-12 lg:grid-cols-12 gap-0 md:gap-5 mt-2">
+                    <div class="col-span-12 md:col-span-3" v-for="user in users">
+                        <div class="card bg-base-100 shadow-xl">
+                            <div class="card-body p-4">
+                                <img class="border-4 w-12 h-12 border-base-200 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
+                                <p class="font-bold">{{ user.UserName }}, {{ user.Birth_date }}</p>
+                                <p class="text-sm text-neutral-500">{{ user.JobName }}</p>
+                                <div class="flex h-full items-center justify-end">
+                                    <div class="card-actions">
+                                        <button @click="modalState(user.Id)" class="btn btn-sm bg-blue-500 hover:bg-blue-400"><EyeIcon class="w-5 h-5 text-white" /></button>
+                                        <button @click="deleteConection(user.Id)" class="btn btn-sm btn-error"><TrashIcon class="w-5 h-5 text-white" /></button>
+                                    </div>
+                                </div> 
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-            
         </div>
 
         <div v-if="show_modal">
@@ -164,13 +171,16 @@ export default defineComponent({
             statusCodeJobs: 0
         });
 
-        const show_modal = ref(false);
-        const connection_id = ref(1);
-        const open_filter = ref(false);
-
+        // Filter variables
+        const name = ref('');
+        const sex = ref('');
         const city = ref('');
         const state = ref('');
         const job = ref('');
+
+        const show_modal = ref(false);
+        const connection_id = ref(1);
+        const open_filter = ref(false);
 
         // Object variables
         const users = ref();
@@ -186,6 +196,8 @@ export default defineComponent({
             show_modal,
             connection_id,
             open_filter,
+            name,
+            sex,
             city,
             state,
             job,
@@ -204,7 +216,15 @@ export default defineComponent({
         {
             this.isLoadingUser = true;
 
-            const response: any = await getAllUserConnections();
+            const filterParams: any = ({
+                name: this.name,
+                job: this.job,
+                sex: this.sex,
+                state: this.state,
+                city: this.city
+            });
+
+            const response: any = await getAllUserConnections(filterParams);
 
             if(response.value['statusCode'] == 200)
                 this.users = response.value['data'];
