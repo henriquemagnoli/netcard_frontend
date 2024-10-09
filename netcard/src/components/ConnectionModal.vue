@@ -35,7 +35,7 @@
                     <div v-if="isLoadingUser == false">
                         <div class="space-y-5">
                             <div class="font-bold">
-                                <p class="text-xl">{{ name }}, {{ birthDate }}</p>
+                                <p class="text-xl">{{ name }}, {{ age }}</p>
                                 <p class="text-sm">{{ jobName }}</p>
                             </div>
 
@@ -101,6 +101,7 @@
 import { defineComponent, reactive, toRefs, ref } from 'vue';
 import { IUserState, getUser } from '../hooks/useUser';
 import { EyeIcon } from '@heroicons/vue/24/outline';
+import { calculteAge } from '../helper/helper';
 import Swal from 'sweetalert2';
 
 export default defineComponent({
@@ -117,7 +118,7 @@ export default defineComponent({
         });
 
         const name = ref('');
-        const birthDate = ref('');
+        const age = ref(0);
         const jobName = ref('');
         const biography = ref('');
         const email = ref('');
@@ -127,7 +128,7 @@ export default defineComponent({
         return{
             ...toRefs(userState),
             name,
-            birthDate,
+            age,
             jobName,
             biography,
             email,
@@ -151,7 +152,7 @@ export default defineComponent({
             {
                 this.name = response.value['data'].UserName;
                 this.email = response.value['data'].Email;
-                this.birthDate = (new Date(response.value['data'].Birth_date).toISOString().split('T')[0]);
+                this.age = calculteAge(new Date(response.value['data'].Birth_date));
                 this.profilePicture = response.value['data'].Profile_picture;
                 this.jobName = response.value['data'].JobName;
                 this.biography = response.value['data'].Biography;

@@ -30,3 +30,9 @@ export function deleteCookies()
         document.cookie = `${element}=; expires=${date.toUTCString()}; path=/`;
     });
 }
+
+export function calculteAge(birthDate: Date) : number
+{
+    const timeDiff = Math.abs(Date.now() - birthDate.getTime());
+    return Math.floor((timeDiff / (1000 * 3600 * 24)) / 365);
+}

@@ -179,7 +179,7 @@ export default defineComponent({
         const job = ref('');
 
         const show_modal = ref(false);
-        const connection_id = ref(1);
+        const connection_id = ref(0);
         const open_filter = ref(false);
 
         // Object variables
@@ -210,6 +210,7 @@ export default defineComponent({
     methods:{
         modalState(connection_id: number)
         {
+            this.connection_id = connection_id;
             this.show_modal = !this.show_modal;
         },
         async listUserConnections()
