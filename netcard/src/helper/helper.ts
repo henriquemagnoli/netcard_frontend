@@ -21,7 +21,9 @@ export function deleteCookies()
     const cookieNames: Array<String> = ['userId', 
                                         'userName', 
                                         'userEmail',
-                                        'accessToken'];
+                                        'userToken',
+                                        'userLatitude',
+                                        'userLongitude'];
     const date = new Date();
 
     date.setTime(date.getTime() + (-1 * 24 * 60 * 60 * 1000));

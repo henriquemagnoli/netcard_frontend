@@ -141,12 +141,14 @@ export default defineComponent({
                 }
                 else
                 {
-                    await this.updateUserCoordinate();
+                    console.log('teste')
+
+                    //await this.updateUserCoordinate();
 
                     //setCookie('userLatitude', coordinateObject.latitude, 999999);
                     //setCookie('userLongitude', coordinateObject.longitude, 999999);
 
-                    await this.listCoordinates();
+                    //await this.listCoordinates();
                 }
             }
             catch(error)

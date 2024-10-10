@@ -35,8 +35,11 @@
                 </div>
                 <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
                   <MenuItems class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                    <MenuItem v-for="item in userNavigation" :key="item.name" v-slot="{ active }">
-                      <a :href="item.href" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">{{ item.name }}</a>
+                    <MenuItem>
+                      <a v-on:click="profilePage" class="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 text-sm font-semibold cursor-pointer"><UserIcon class="w-5 h-5" /> Perfil</a>
+                    </MenuItem>
+                    <MenuItem>
+                      <a v-on:click="logout" class="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 text-sm text-red-500 font-semibold cursor-pointer"><ArrowLeftEndOnRectangleIcon class="w-5 h-5" /> Sair</a>
                     </MenuItem>
                   </MenuItems>
                 </transition>
@@ -79,7 +82,8 @@
             </button>
           </div>
           <div class="mt-3 space-y-1 px-2">
-            <DisclosureButton v-for="item in userNavigation" :key="item.name" as="a" :href="item.href" class="block rounded-md px-3 py-2 text-base font-medium text-white hover:bg-gray-700 hover:text-white">{{ item.name }}</DisclosureButton>
+            <DisclosureButton v-on:click="profilePage" class="flex items-center gap-2 rounded-md px-3 py-2 text-base font-medium text-gray-50 hover:bg-gray-700 hover:text-white"><UserIcon class="w-4 h-4" /> Perfil</DisclosureButton>
+            <DisclosureButton v-on:click="logout" class="flex items-center gap-2 rounded-md px-3 py-2 text-base font-medium text-gray-50 hover:bg-gray-700 hover:text-white"><ArrowLeftEndOnRectangleIcon class="w-4 h-4" /> Sair</DisclosureButton>
           </div>
         </div>
       </DisclosurePanel>
@@ -87,10 +91,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, toRefs, reactive } from 'vue';
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
-import { Bars3Icon, BellIcon, XMarkIcon, UserGroupIcon, Squares2X2Icon } from '@heroicons/vue/24/outline'
+import { Bars3Icon, BellIcon, XMarkIcon, UserGroupIcon, Squares2X2Icon, ArrowLeftEndOnRectangleIcon, UserIcon } from '@heroicons/vue/24/outline'
 import { useRoute } from 'vue-router';
+import { IUserState, deleteUserCoordinates } from '../hooks/useUser';
+import router from '../router';
+import Swal from 'sweetalert2';
+import { deleteCookies } from '../helper/helper';
 
 export default defineComponent({
     setup(){
@@ -111,12 +119,58 @@ export default defineComponent({
             { name: 'Sair do Sistema', href: '/logout' },
         ]
 
+        const userState: IUserState = reactive({
+          isLoadingUser: false,
+          messagesUser: '',
+          statusCodeUser: 0
+        });
+
         return{
+          ...toRefs(userState),
           path,
           user,
           navigation,
           userNavigation
         }
+    },
+    methods: {
+      async logout()
+      {
+        Swal.fire({
+            title: "Deseja realmente sair?",
+            text: "Selecione 'Sair' se você deseja encerra a sessão.",
+            icon: "info",
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sair',
+            cancelButtonText: 'Cancelar'
+          }).then(async (result) => {
+            
+            if(result.isConfirmed)
+            {
+              this.isLoadingUser = true;
+
+              const response: any = await deleteUserCoordinates(); 
+
+              if(response.value['statusCode'] == 200)
+              {
+                deleteCookies();
+                router.push('/login');        
+              } 
+              else
+              {
+                Swal.fire({ icon:'error', title: 'Erro', text: response.value['messages'] })
+              }
+              
+              this.isLoadingUser = false;
+            }
+          })       
+      },
+      profilePage()
+      {
+        router.push('/profile')
+      }
     },
     beforeMount() {
       this.path = String(useRoute().path);
@@ -133,7 +187,9 @@ export default defineComponent({
         BellIcon, 
         XMarkIcon, 
         UserGroupIcon, 
-        Squares2X2Icon 
+        Squares2X2Icon,
+        ArrowLeftEndOnRectangleIcon,
+        UserIcon
     }
 })
 

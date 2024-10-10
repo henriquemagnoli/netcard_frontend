@@ -113,3 +113,43 @@ export async function getAllUserConnections(filterParams: any)
 
     return data;
 }
+
+export async function deleteUserCoordinates()
+{
+    const request = await fetch(`${api_url}/user/${getCookies('userId')}/coordinate`, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': String(getCookies('userToken')), 
+            'Content-Type': 'application/json'     
+        }
+    });
+
+    const response = await request.json();
+
+    const data = ref<IUserState[]>(response);
+
+    return data;
+}
+
+export async function updateUserCoordinate(latitude: Number, longitude: Number)
+{
+    const body = {
+        latitude: latitude,
+        longitude: longitude
+    };
+
+    const request = await fetch(`${api_url}/user/${getCookies('userId')}/coordinate`, {
+        method: 'PATCH',
+        headers: {
+            'Authorization': String(getCookies('userToken')), 
+            'Content-Type': 'application/json'     
+        },
+        body: JSON.stringify(body)
+    });
+
+    const response = await request.json();
+
+    const data = ref<IUserState[]>(response);
+
+    return data;
+}

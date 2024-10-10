@@ -93,6 +93,7 @@
                 </div>
 
                 <div class="modal-action">
+                    <button class="btn btn-sm bg-blue-500 hover:bg-blue-400 text-white">Conectar</button>
                     <button class="btn btn-sm btn-neutral" @click="closeModal">Fechar</button>
                 </div>
             </div>
