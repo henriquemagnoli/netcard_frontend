@@ -22,7 +22,7 @@
                                             <div class="flex gap-3 items-center">
                                                 <div class="rounded-full w-10 h-10 bg-gray-500"></div>
                                                 <div>
-                                                    <p class="font-bold">{{ userCoordinate.User_name }}, 16</p>
+                                                    <p class="font-bold">{{ userCoordinate.User_name }}, {{ calculteAge(userCoordinate.Birth_date) }}</p>
                                                     <p>{{ userCoordinate.Job_name }}</p>
                                                 </div>
                                                 <p class="font-bold">10 km</p>
@@ -36,7 +36,7 @@
                 </div>
             </div>
 
-            <!-- <GoogleMap
+            <GoogleMap
                 :api-key="google_key"
                 :center="center"
                 :zoom="20"
@@ -46,19 +46,20 @@
 
                 <Marker v-for="userCoordinate in usersCoordinates" :key="userCoordinate.Id" :options="{ position: userCoordinate.Coordinates }">
                     <InfoWindow>
-                        <div id="content" class="space-y-4">
+                        <div id="content" class="space-y-4">               
                             <div>
-                                <h1 id="firstHeading" class="firstHeading text-xl font-semibold">{{ userCoordinate.User_name }}, {{  userCoordinate.Birth_date }}</h1>
+                                <img class="border-4 w-12 h-12 border-base-200 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
+                                <h1 id="firstHeading" class="firstHeading text-xl font-semibold">{{ userCoordinate.User_name }}, {{ calculteAge(userCoordinate.Birth_date) }}</h1>
                                 <div id="bodyContent">
                                     <p>{{ userCoordinate.Job_name }}</p>
                                 </div>
                             </div>
                         
-                            <button type="button" class="btn btn-sm bg-cyan-400 hover:bg-cyan-600 text-white" @click="modalState(userCoordinate.User_id)"><EyeIcon class="w-5 h-5 text-white"/></button>
+                            <button type="button" class="btn btn-sm w-full bg-blue-500 hover:bg-blue-400 text-white" @click="modalState(userCoordinate.User_id)"><EyeIcon class="w-5 h-5 text-white"/></button>
                         </div>
                     </InfoWindow>
                 </Marker> 
-            </GoogleMap> -->
+            </GoogleMap>
 
             <div v-if="show_modal">
                 <ConnectionModal :show_modal="show_modal" :connection_id="connection_id" @closeModal="modalState" />
@@ -68,7 +69,7 @@
         <div v-if="!is_visible">
             <div class="flex flex-col h-[calc(100vh-144px)] justify-center items-center">
                 <p class="text-center p-5">Seu mapa está desabilitado, clique a baixo para habilita-lo.</p>
-                <button type="button" class="btn btn-outline" @click="setUserCoordinate()">Habilitar Localização <MapPinIcon class="w-5 h-5" /></button>
+                <button type="button" class="btn btn-outline" @click="">Habilitar Localização <MapPinIcon class="w-5 h-5" /></button>
             </div>
         </div>
     </div>
@@ -77,8 +78,10 @@
 <script lang="ts">
 import { defineComponent, reactive, ref, toRefs } from 'vue';
 import { IUserState, setUserCoordinate, getAllCoordinates } from '../hooks/useUser';
+import { calculteAge } from '../helper/helper';
 import { PlusIcon, XMarkIcon, UserGroupIcon, EyeIcon, MapPinIcon } from '@heroicons/vue/24/outline';
 import { GoogleMap, Marker, MarkerCluster, InfoWindow } from 'vue3-google-map';
+import { getCookies, setCookie } from '../helper/helper';
 import ConnectionModal from '../components/ConnectionModal.vue';
 import Swal from 'sweetalert2';
 
@@ -115,17 +118,51 @@ export default defineComponent({
             this.connection_id = user_id;
             this.show_modal = !this.show_modal
         },
-        async setUserCoordinate()
+        async verfiyCoordinates()
+        {
+            // 1 - Verify if location is on
+            // IF verify if exists coordinates on cookie, if not, set a coordinate
+            // IF is on update or set user coordinate and set on cookie, Open Map, List coordinates
+            // ELSE dont set coordinate, continue to disable map
+
+            try
+            {
+                // Verify if exists coordinates on cookies
+                if(getCookies('userLatitude') == undefined || getCookies('userLongitude') == undefined)
+                {
+                    let coordinateObject: any = await this.getUserCoordinate();
+
+                    await this.setUserCoordinate(coordinateObject);
+
+                    setCookie('userLatitude', coordinateObject.latitude, 999999);
+                    setCookie('userLongitude', coordinateObject.longitude, 999999);
+
+                    await this.listCoordinates();
+                }
+                else
+                {
+                    await this.updateUserCoordinate();
+
+                    //setCookie('userLatitude', coordinateObject.latitude, 999999);
+                    //setCookie('userLongitude', coordinateObject.longitude, 999999);
+
+                    await this.listCoordinates();
+                }
+            }
+            catch(error)
+            {
+                console.log(error)
+                this.is_visible = false;
+            }      
+        },
+        async setUserCoordinate(coordinateObject: any)
         {
             this.isLoadingUser = true;
-
-            const orderObject = await this.getUserCoordinate();
             
-            const response: any = await setUserCoordinate(orderObject);
+            const response: any = await setUserCoordinate(coordinateObject);
 
             if(response.value['statusCode'] == 200)
             {
-                console.log(response.value['messages']);
                 this.is_visible = true;
             }
             else
@@ -135,6 +172,10 @@ export default defineComponent({
 
             this.isLoadingUser = false;
         },
+        async updateUserCoordinate()
+        {
+            console.log('atualiza coordenada')
+        },
         async getUserCoordinate()
         {   
             try
@@ -142,7 +183,7 @@ export default defineComponent({
                 const pos: any = await new Promise((resolve, reject) => {
                     if(navigator.geolocation)
                         navigator.geolocation.getCurrentPosition(resolve, reject);
-                })
+                });
 
                 return {
                     latitude: String(pos.coords.latitude),
@@ -171,11 +212,16 @@ export default defineComponent({
             }
 
             this.isLoadingUser = false;
+        },
+        calculteAge(birthDate: string)
+        {
+           return calculteAge(new Date(birthDate))
         }
     },  
     async beforeMount() {
-
-        // if(this.getUserCoordinate == undefined)
+        await this.verfiyCoordinates();
+      
+        // if(this.getUserCoordinate() == undefined)
         //     await this.listCoordinates();
 
         //await this.getUserCoordinate();

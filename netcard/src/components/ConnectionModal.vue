@@ -35,8 +35,11 @@
                     <div v-if="isLoadingUser == false">
                         <div class="space-y-5">
                             <div class="font-bold">
-                                <p class="text-xl">{{ name }}, {{ age }}</p>
+                                <p class="flex items-center gap-3 text-xl">{{ name }}, {{ age }} <span class="text-xs text-gray-400 font-normal">
+                                                                                           <p class="flex items-center"><CheckIcon class="w-4 h-4"/>Adicionado</p>
+                                                                                           </span></p>
                                 <p class="text-sm">{{ jobName }}</p>
+                                
                             </div>
 
                             <div>
@@ -100,7 +103,7 @@
 <script lang="ts">
 import { defineComponent, reactive, toRefs, ref } from 'vue';
 import { IUserState, getUser } from '../hooks/useUser';
-import { EyeIcon } from '@heroicons/vue/24/outline';
+import { EyeIcon, CheckIcon  } from '@heroicons/vue/24/outline';
 import { calculteAge } from '../helper/helper';
 import Swal from 'sweetalert2';
 
@@ -170,7 +173,8 @@ export default defineComponent({
         await this.getUser();
     },
     components:{
-        EyeIcon
+        EyeIcon,
+        CheckIcon
     }
 })
 

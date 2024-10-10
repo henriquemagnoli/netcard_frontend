@@ -105,7 +105,9 @@
                                             <div class="label">
                                                 <span class="label-text flex"><BriefcaseIcon class="w-4 h-4 mr-2" />Redes Sociais</span>
                                             </div>
-                                            <select class="select select-bordered select-sm w-full"></select>
+                                            <select v-model="socialMediaId" class="select select-bordered select-sm w-full">
+                                                <option v-for="socialMedia in socialMedias" :key="socialMedia.Id" :value="socialMedia.Id">{{ socialMedia.Name }}</option>
+                                            </select>
                                         </label>
                                     </div>
                                     <div class="col-span-12 md:col-span-6">
@@ -123,13 +125,13 @@
                                     </div>               
                                 </div>
                                 <div class="grid md:grid-cols-12 lg:grid-cols-12 gap-0 md:gap-5 mt-2">
-                                    <div class="col-span-12 md:col-span-3" v-for="socialMedia in socialMedias">
+                                    <div class="col-span-12 md:col-span-3" v-for="userSocialMedia in userSocialMedias">
                                         <div class="card bg-base-200 shadow-xl mb-2">
                                             <div class="card-body p-4">
-                                                <p class="font-bold text-base">{{ socialMedia.Name }}</p>
+                                                <p class="font-bold text-base">{{ userSocialMedia.Name }}</p>
                                                 
                                                 <div class="flex gap-2">
-                                                    <LinkIcon class="w-5 h-5" /> <p class="break-all text-sm">Url: <a href="" class="hover:text-cyan-500 hover:underline">{{ socialMedia.Url }}</a></p>
+                                                    <LinkIcon class="w-5 h-5" /> <p class="break-all text-sm">Url: <a href="" class="hover:text-cyan-500 hover:underline">{{ userSocialMedia.Url }}</a></p>
                                                 </div>
 
                                                 <div class="flex justify-end gap-2">
@@ -228,9 +230,22 @@ import { IUserState, getUser } from '../hooks/useUser';
 import { IStatesState, getAllStates } from '../hooks/useStates';
 import { ICitiesState, getAllCitiesBasedOnStateId } from '../hooks/useCities';
 import { IJobsState, getAllJobs } from '../hooks/useJobs';
+import { ISocialMediaState, getAllSocialMedias } from '../hooks/useSocialMedias';
 import Swal from 'sweetalert2';
 import { UserIcon, EnvelopeIcon, DocumentTextIcon, CalendarDaysIcon, UserGroupIcon, MapPinIcon, BriefcaseIcon, PlusIcon, DocumentDuplicateIcon, GlobeAltIcon, PencilIcon, TrashIcon, LinkIcon } from '@heroicons/vue/24/outline';
-import { getCookies } from '../helper/helper';
+import { getCookies, calculteAge } from '../helper/helper';
+
+const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+        toast.onmouseover = Swal.stopTimer;
+        toast.onmouseleave = Swal.resumeTimer;
+    }
+});
 
 export default defineComponent({
     setup(){
@@ -259,11 +274,17 @@ export default defineComponent({
             statusCodeJobs: 0
         });
 
+        const socialMediaState: ISocialMediaState = reactive({
+            isLoadingSocialMedia: false,
+            messagesSocialMedia: '',
+            statusCodeSocialMedia: 0
+        });
+
         // User Variables
         const name = ref('');
         const email = ref('');
         const cpf = ref('');
-        const birthDate = ref('');
+        const birthDate = ref(0);
         const sex = ref('');
         const profilePicture = ref('');
         const zipCode = ref('');
@@ -276,8 +297,10 @@ export default defineComponent({
         const jobId = ref('');
         const jobName = ref('');
         const biography = ref();
+        const socialMediaId = ref();
     
         // User object
+        const userSocialMedias = ref();
         const socialMedias = ref();
         const states = ref();
         const cities = ref();
@@ -288,6 +311,7 @@ export default defineComponent({
             ...toRefs(statesState),
             ...toRefs(citiesState),
             ...toRefs(jobsState),
+            ...toRefs(socialMediaState),
             name,
             email,
             cpf,
@@ -304,10 +328,12 @@ export default defineComponent({
             jobId,
             jobName,
             biography,
+            userSocialMedias,
             socialMedias,
             states,
             cities,
-            jobs
+            jobs,
+            socialMediaId
         }
 
     },
@@ -324,7 +350,7 @@ export default defineComponent({
                 this.name = response.value['data'].UserName;
                 this.email = response.value['data'].Email;
                 this.cpf = response.value['data'].Cpf;
-                this.birthDate = (new Date(response.value['data'].Birth_date).toISOString().split('T')[0]);
+                this.birthDate = calculteAge(new Date(response.value['data'].Birth_date));
                 this.sex = response.value['data'].Sex;
                 this.profilePicture = response.value['data'].Profile_picture;
                 this.zipCode = response.value['data'].Zip_code;
@@ -337,7 +363,7 @@ export default defineComponent({
                 this.jobId = response.value['data'].Job_id;
                 this.jobName = response.value['data'].JobName;
                 this.biography = response.value['data'].Biography;
-                this.socialMedias = response.value['data'].User_social_media;
+                this.userSocialMedias = response.value['data'].User_social_media;
             }
             else
             {
@@ -385,6 +411,19 @@ export default defineComponent({
 
             this.isLoadingJobs = false;
         },
+        async listSocialMedias()
+        {
+            this.isLoadingSocialMedia = true;
+
+            const response: any = await getAllSocialMedias();
+
+            if(response.value['statusCode'] == 200)
+                this.socialMedias = response.value['data'];
+            else
+                Toast.fire({ icon: 'error', title: response.value['messages'] })
+
+            this.isLoadingSocialMedia = false;
+        },
         teste(event: any)
         {
             console.log(event.target.files[0])
@@ -393,6 +432,7 @@ export default defineComponent({
     async beforeMount() {
 
         await this.listJobs();
+        await this.listSocialMedias();
         await this.listStates();
         await this.getUser();
     },

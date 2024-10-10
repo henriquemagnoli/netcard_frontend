@@ -107,12 +107,12 @@
             </div>
 
             <div v-if="!isLoadingUser">
-                <div class="grid md:grid-cols-12 lg:grid-cols-12 gap-0 md:gap-5 mt-2">
-                    <div class="col-span-12 md:col-span-3" v-for="user in users">
+                <div class="grid md:grid-cols-12 lg:grid-cols-12 gap-0 md:gap-5 mb-2">
+                    <div class="col-span-12 md:col-span-3 mb-5" v-for="user in users">
                         <div class="card bg-base-100 shadow-xl">
                             <div class="card-body p-4">
                                 <img class="border-4 w-12 h-12 border-base-200 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
-                                <p class="font-bold">{{ user.UserName }}, {{ user.Birth_date }}</p>
+                                <p class="font-bold">{{ user.UserName }}, {{ calculteAge(user.Birth_date) }}</p>
                                 <p class="text-sm text-neutral-500">{{ user.JobName }}</p>
                                 <div class="flex h-full items-center justify-end">
                                     <div class="card-actions">
@@ -140,6 +140,7 @@ import { IStatesState, getAllStates } from '../hooks/useStates';
 import { ICitiesState, getAllCitiesBasedOnStateId } from '../hooks/useCities';
 import { IJobsState, getAllJobs } from '../hooks/useJobs';
 import { MagnifyingGlassIcon, FunnelIcon, EyeIcon, TrashIcon } from '@heroicons/vue/24/outline';
+import { calculteAge } from '../helper/helper';
 import ConnectionModal from '../components/ConnectionModal.vue';
 import Swal from 'sweetalert2';
 
@@ -295,11 +296,16 @@ export default defineComponent({
                 Swal.fire({ icon: 'error', title: 'Erro', text: response.value['messages']});
             
             this.isLoadingJobs = false;
+        },
+        calculteAge(birthDate: string)
+        {
+           return calculteAge(new Date(birthDate))
         }
     },
     async beforeMount() {
         await this.listJobs();
         await this.listStates();
+        await this.listUserConnections();
     },
     components: {
         ConnectionModal,

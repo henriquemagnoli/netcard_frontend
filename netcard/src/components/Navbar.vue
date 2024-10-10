@@ -57,7 +57,7 @@
 
       <DisclosurePanel class="md:hidden">
         <div class="space-y-1 px-2 pb-3 pt-2 sm:px-3">
-          <DisclosureButton v-for="item in navigation" :key="item.name" as="a" :href="item.href" :class="[item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 'flex gap-2 rounded-md px-3 py-2 text-base font-medium']" :aria-current="item.current ? 'page' : undefined">
+          <DisclosureButton v-for="item in navigation" :key="item.name" as="a" :href="item.href" :class="[item.href == path ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 'flex gap-2 rounded-md px-3 py-2 text-base font-medium']" :aria-current="item.current ? 'page' : undefined">
             <Squares2X2Icon class="w-5 h-5" v-if="item.name == 'Painel'" />
             <UserGroupIcon class="w-5 h-5" v-if="item.name == 'Conexões'" />
             {{ item.name }}
