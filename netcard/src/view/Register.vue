@@ -248,7 +248,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs } from 'vue';
-import { IUserState, setUser } from '../hooks/useUser';
+import { ILoginState, signUp } from '../hooks/useAuth';
 import { IStatesState, getAllStates } from '../hooks/useStates';
 import { ICitiesState, getAllCitiesBasedOnStateId } from '../hooks/useCities';
 import { IJobsState, getAllJobs } from '../hooks/useJobs';
@@ -261,10 +261,10 @@ export default defineComponent({
     setup(){
 
         // Interface variables
-        const userState: IUserState = reactive({
-            isLoadingUser: false,
-            messagesUser: '',
-            statusCodeUser: 0
+        const loginState: ILoginState = reactive({
+            isLoading: false,
+            messages: '',
+            statusCode: 0
         });
 
         const statesState: IStatesState = reactive({
@@ -314,7 +314,7 @@ export default defineComponent({
         const jobs = ref();
 
         return{
-            ...toRefs(userState),
+            ...toRefs(loginState),
             ...toRefs(statesState),
             ...toRefs(citiesState),
             ...toRefs(jobsState),
@@ -386,7 +386,7 @@ export default defineComponent({
                 jobId: this.job
             });
 
-            const response: any = await setUser(userObject);
+            const response: any = await signUp(userObject);
 
             if(response.value['statusCode'] == 200)
                 Swal.fire({ icon: 'success', title: 'Scuesso', text: 'Sua conta foi criada.' }).then(() => router.push('/'));

@@ -431,9 +431,12 @@ export default defineComponent({
     },
     async beforeMount() {
 
-        await this.listJobs();
-        await this.listSocialMedias();
-        await this.listStates();
+        await Promise.all([
+            this.listJobs,
+            this.listSocialMedias,
+            this.listStates
+        ]);
+
         await this.getUser();
     },
     components:{

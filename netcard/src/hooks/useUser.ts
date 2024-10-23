@@ -10,21 +10,6 @@ export interface IUserState
     statusCodeUser: number
 }
 
-export async function setUser(userObject: any)
-{
-    const request = await fetch(`${api_url}/user`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(userObject)
-    });
-
-    const response = await request.json();
-
-    const data = ref<IUserState[]>(response);
-    
-    return data;
-}
-
 export async function getUser(user_id: number)
 {
     const request = await fetch(`${api_url}/user/${user_id}`, {
@@ -42,7 +27,7 @@ export async function getUser(user_id: number)
     return data;
 }
 
-export async function setUserCoordinate(userObject: any)
+export async function setUserCoordinate(coordinateObject: any)
 {
     const request = await fetch(`${api_url}/user/${getCookies('userId')}/coordinate`, {
         method: 'POST',
@@ -50,7 +35,7 @@ export async function setUserCoordinate(userObject: any)
             'Authorization': String(getCookies('userToken')), 
             'Content-Type': 'application/json'     
         },
-        body: JSON.stringify(userObject)
+        body: JSON.stringify(coordinateObject)
     });
 
     const response = await request.json();
@@ -131,20 +116,32 @@ export async function deleteUserCoordinates()
     return data;
 }
 
-export async function updateUserCoordinate(latitude: Number, longitude: Number)
+export async function updateUserCoordinate(coordinateObject: any)
 {
-    const body = {
-        latitude: latitude,
-        longitude: longitude
-    };
-
     const request = await fetch(`${api_url}/user/${getCookies('userId')}/coordinate`, {
         method: 'PATCH',
         headers: {
             'Authorization': String(getCookies('userToken')), 
             'Content-Type': 'application/json'     
         },
-        body: JSON.stringify(body)
+        body: JSON.stringify(coordinateObject)
+    });
+
+    const response = await request.json();
+
+    const data = ref<IUserState[]>(response);
+
+    return data;
+}
+
+export async function deleteUserConnection(connection_id: number) 
+{
+    const request = await fetch(`${api_url}/user/${getCookies('userId')}/connection/${connection_id}`, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': String(getCookies('userToken')),
+            'Content-Type': 'application/json'
+        }
     });
 
     const response = await request.json();

@@ -64,7 +64,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive, ref, toRefs } from 'vue';
-import { ILoginState, verifyLogin } from '../hooks/useAuth';
+import { ILoginState, signIn } from '../hooks/useAuth';
 import { getCookies } from '../helper/helper';
 import { EnvelopeIcon, KeyIcon, EyeIcon, EyeSlashIcon } from '@heroicons/vue/24/outline';
 import Footer from '../components/Footer.vue';
@@ -116,7 +116,7 @@ export default defineComponent({
 
             this.isLoading = true;
 
-            const response: any = await verifyLogin(this.email, this.password);
+            const response: any = await signIn(this.email, this.password);
 
             if(response.value['statusCode'] != 200)
                 Swal.fire({ icon: 'error', title: 'Erro', text: response.value['messages']});

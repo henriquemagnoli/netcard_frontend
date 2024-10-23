@@ -77,7 +77,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive, ref, toRefs } from 'vue';
-import { IUserState, setUserCoordinate, getAllCoordinates } from '../hooks/useUser';
+import { IUserState, setUserCoordinate, getAllCoordinates, updateUserCoordinate } from '../hooks/useUser';
 import { calculteAge } from '../helper/helper';
 import { PlusIcon, XMarkIcon, UserGroupIcon, EyeIcon, MapPinIcon } from '@heroicons/vue/24/outline';
 import { GoogleMap, Marker, MarkerCluster, InfoWindow } from 'vue3-google-map';
@@ -95,11 +95,13 @@ export default defineComponent({
         });
 
         const google_key = import.meta.env.VITE_GOOGLE_API_KEY;
-        const center = { lat: -21.96866719331956, lng: -46.79836176634998 };
+        const center = ref();
         const usersCoordinates = ref();
         const show_modal = ref(false);
         const connection_id = ref(0);
         const is_visible = ref(false);
+        const latitude = ref(0);
+        const longitude = ref(0);
 
         return{
             ...toRefs(userState),
@@ -108,7 +110,9 @@ export default defineComponent({
             usersCoordinates,
             show_modal,
             connection_id,
-            is_visible
+            is_visible,
+            latitude,
+            longitude
         }
 
     },
@@ -137,18 +141,28 @@ export default defineComponent({
                     setCookie('userLatitude', coordinateObject.latitude, 999999);
                     setCookie('userLongitude', coordinateObject.longitude, 999999);
 
+                    this.center = {
+                        lat: Number(coordinateObject.latitude), 
+                        lng: Number(coordinateObject.longitude)
+                    }
+
                     await this.listCoordinates();
                 }
                 else
                 {
-                    console.log('teste')
+                    let coordinateObject: any = await this.getUserCoordinate();
 
-                    //await this.updateUserCoordinate();
+                    await this.updateUserCoordinate(coordinateObject);
 
-                    //setCookie('userLatitude', coordinateObject.latitude, 999999);
-                    //setCookie('userLongitude', coordinateObject.longitude, 999999);
+                    setCookie('userLatitude', coordinateObject.latitude, 999999);
+                    setCookie('userLongitude', coordinateObject.longitude, 999999);
 
-                    //await this.listCoordinates();
+                    this.center = {
+                        lat: Number(coordinateObject.latitude), 
+                        lng: Number(coordinateObject.longitude)
+                    }
+
+                    await this.listCoordinates();
                 }
             }
             catch(error)
@@ -174,9 +188,23 @@ export default defineComponent({
 
             this.isLoadingUser = false;
         },
-        async updateUserCoordinate()
+        async updateUserCoordinate(coordinateObject: any)
         {
-            console.log('atualiza coordenada')
+            this.isLoadingUser = true;
+
+            const response: any = await updateUserCoordinate(coordinateObject);
+
+            if(response.value['statusCode'] == 200)
+            {
+                this.is_visible = true;
+            }
+            else
+            {
+                Swal.fire({ icon: 'error', title: 'Erro', text: response.value['messages'] })
+            }
+
+            this.isLoadingUser = false;
+            
         },
         async getUserCoordinate()
         {   

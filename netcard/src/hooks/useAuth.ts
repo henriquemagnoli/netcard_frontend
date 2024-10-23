@@ -1,7 +1,7 @@
 import { setCookie, getCookies, deleteCookies } from "../helper/helper"
 import { ref } from "vue";
 
-const api_url = import.meta.env.VITE_URL_API;
+const api_url = import.meta.env.VITE_URL_AUTHENTICATION;
 
 export interface ILoginState
 {
@@ -10,7 +10,7 @@ export interface ILoginState
     statusCode: number
 }
 
-export async function verifyLogin(email: string, password: string) 
+export async function signIn(email: string, password: string) 
 {
     // Reset cookies from local machine
     deleteCookies();
@@ -20,7 +20,7 @@ export async function verifyLogin(email: string, password: string)
         password: password
     };
 
-    const request = await fetch(`${api_url}/login`, {
+    const request = await fetch(`${api_url}/signIn`, {
         method: 'POST',
         headers:{ 'Content-Type': 'application/json' },
         body: JSON.stringify(userCredentials)
@@ -40,6 +40,21 @@ export async function verifyLogin(email: string, password: string)
 
     const data = ref<ILoginState>(response);
 
+    return data;
+}
+
+export async function signUp(userObject: any)
+{
+    const request = await fetch(`${api_url}/signUp`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userObject)
+    });
+
+    const response = await request.json();
+
+    const data = ref<ILoginState[]>(response);
+    
     return data;
 }
 

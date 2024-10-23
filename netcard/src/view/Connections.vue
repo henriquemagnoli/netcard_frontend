@@ -19,7 +19,7 @@
                                 <div class="label">
                                     <span class="label-text">Nome</span>
                                 </div>
-                                <input type="text" placeholder="Digite o nome que deseja pesquisar..." class="input input-sm input-bordered w-full" />
+                                <input v-model="name" type="text" placeholder="Digite o nome que deseja pesquisar..." class="input input-sm input-bordered w-full" />
                             </label>
                         </div>
                         <div class="col-span-12 md:col-span-3">
@@ -45,10 +45,11 @@
                                 <div class="label">
                                     <span class="label-text">Sexo</span>
                                 </div>
-                                <select class="select select-sm select-bordered w-full">
-                                    <option disabled selected>Masculino</option>
-                                    <option>Feminino</option>
-                                    <option>Outros</option>
+                                <select v-model="sex" class="select select-sm select-bordered w-full">
+                                    <option value="">(Todos)</option>
+                                    <option value="M">Masculino</option>
+                                    <option value="F">Feminino</option>
+                                    <option value="O">Outros</option>
                                 </select>
                             </label>
                         </div>
@@ -135,7 +136,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive, ref, toRefs } from 'vue';
-import { IUserState, getAllUserConnections } from '../hooks/useUser';
+import { IUserState, getAllUserConnections, deleteUserConnection } from '../hooks/useUser';
 import { IStatesState, getAllStates } from '../hooks/useStates';
 import { ICitiesState, getAllCitiesBasedOnStateId } from '../hooks/useCities';
 import { IJobsState, getAllJobs } from '../hooks/useJobs';
@@ -251,7 +252,12 @@ export default defineComponent({
 
                 if(result.isConfirmed)
                 {
-                    Swal.fire({ icon: 'success', title: 'Sucesso', text: 'Conexão com o usuário rompida.'});
+                    const response: any = await deleteUserConnection(connection_id);
+
+                    if(response.value['statusCode'] == 200)
+                        Swal.fire({ icon: 'success', title: 'Sucesso', text: 'Conexão com o usuário rompida.'}).then(async () => await this.listUserConnections());
+                    else
+                        Swal.fire({ icon: 'error', title: 'Erro', text: response.value['messages']});         
                 }
             })
         },

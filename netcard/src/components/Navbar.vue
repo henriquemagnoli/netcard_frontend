@@ -169,7 +169,7 @@ export default defineComponent({
       },
       profilePage()
       {
-        router.push('/profile')
+        window.location.href = "/profile";
       }
     },
     beforeMount() {
