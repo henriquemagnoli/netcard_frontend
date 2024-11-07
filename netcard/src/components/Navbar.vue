@@ -95,7 +95,7 @@ import { defineComponent, ref, toRefs, reactive } from 'vue';
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { Bars3Icon, BellIcon, XMarkIcon, UserGroupIcon, Squares2X2Icon, ArrowLeftEndOnRectangleIcon, UserIcon } from '@heroicons/vue/24/outline'
 import { useRoute } from 'vue-router';
-import { IUserState, deleteUserCoordinates } from '../hooks/useUser';
+import { ICoordinatesState, deleteUserCoordinates } from '../hooks/useCoordinates';
 import router from '../router';
 import Swal from 'sweetalert2';
 import { deleteCookies } from '../helper/helper';
@@ -119,14 +119,14 @@ export default defineComponent({
             { name: 'Sair do Sistema', href: '/logout' },
         ]
 
-        const userState: IUserState = reactive({
-          isLoadingUser: false,
-          messagesUser: '',
-          statusCodeUser: 0
+        const coordinateState: ICoordinatesState = reactive({
+          isLoadingCoordinates: false,
+          messagesCoordinates: '',
+          statusCodeCoordinates: 0
         });
 
         return{
-          ...toRefs(userState),
+          ...toRefs(coordinateState),
           path,
           user,
           navigation,
@@ -149,7 +149,7 @@ export default defineComponent({
             
             if(result.isConfirmed)
             {
-              this.isLoadingUser = true;
+              this.isLoadingCoordinates = true;
 
               const response: any = await deleteUserCoordinates(); 
 
@@ -163,7 +163,7 @@ export default defineComponent({
                 Swal.fire({ icon:'error', title: 'Erro', text: response.value['messages'] })
               }
               
-              this.isLoadingUser = false;
+              this.isLoadingCoordinates = false;
             }
           })       
       },

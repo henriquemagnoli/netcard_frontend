@@ -104,6 +104,7 @@
 <script lang="ts">
 import { defineComponent, reactive, toRefs, ref } from 'vue';
 import { IUserState, getUser } from '../hooks/useUser';
+import { IConnectionsState, setUserConnection, getUserConnectionById } from '../hooks/useConnections';
 import { EyeIcon, CheckIcon  } from '@heroicons/vue/24/outline';
 import { calculteAge } from '../helper/helper';
 import Swal from 'sweetalert2';
@@ -121,6 +122,12 @@ export default defineComponent({
             statusCodeUser: 0
         });
 
+        const connectionState: IConnectionsState = reactive({
+            isLoadingConnections: false,
+            messagesConnections: '',
+            statusCodeConnections: 0
+        });
+
         const name = ref('');
         const age = ref(0);
         const jobName = ref('');
@@ -131,6 +138,7 @@ export default defineComponent({
 
         return{
             ...toRefs(userState),
+            ...toRefs(connectionState),
             name,
             age,
             jobName,
@@ -168,6 +176,18 @@ export default defineComponent({
             }
             
             this.isLoadingUser = false;
+        },
+        async setUserConnection()
+        {
+
+        },
+        async verifyIsConnection()
+        {
+            this.isLoadingConnections = true;
+
+            const response: any = await getUserConnectionById(Number(this.$props.connection_id));
+
+            this.isLoadingConnections = false;
         }
     },
     async beforeMount() {

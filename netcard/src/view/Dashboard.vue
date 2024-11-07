@@ -7,11 +7,11 @@
         <div v-if="is_visible">
             <div class="flex justify-center md:justify-end px-4 md:px-8">
                 <div class="absolute z-50 mt-5">
-                    <div v-if="isLoadingUser">
+                    <div v-if="isLoadingCoordinates">
                         <div class="skeleton h-12 w-60"></div>
                     </div>
 
-                    <div v-if="!isLoadingUser">
+                    <div v-if="!isLoadingCoordinates">
                         <div class="collapse collapse-arrow bg-white border bg-base-400">
                             <input type="checkbox" />
                             <div class="collapse-title text-md font-medium flex items-center gap-2"><UserGroupIcon class="w-5 h-5" /> Conexões Próximas</div>
@@ -77,7 +77,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive, ref, toRefs } from 'vue';
-import { IUserState, setUserCoordinate, getAllCoordinates, updateUserCoordinate } from '../hooks/useUser';
+import { ICoordinatesState, setUserCoordinate, getAllCoordinates, updateUserCoordinate } from '../hooks/useCoordinates';
 import { calculteAge } from '../helper/helper';
 import { PlusIcon, XMarkIcon, UserGroupIcon, EyeIcon, MapPinIcon } from '@heroicons/vue/24/outline';
 import { GoogleMap, Marker, MarkerCluster, InfoWindow } from 'vue3-google-map';
@@ -88,10 +88,10 @@ import Swal from 'sweetalert2';
 export default defineComponent({
     setup(){
 
-        const userState: IUserState = reactive({
-            isLoadingUser: false,
-            messagesUser: '',
-            statusCodeUser: 0
+        const coordinateState: ICoordinatesState = reactive({
+            isLoadingCoordinates: false,
+            messagesCoordinates: '',
+            statusCodeCoordinates: 0
         });
 
         const google_key = import.meta.env.VITE_GOOGLE_API_KEY;
@@ -104,7 +104,7 @@ export default defineComponent({
         const longitude = ref(0);
 
         return{
-            ...toRefs(userState),
+            ...toRefs(coordinateState),
             google_key,
             center,
             usersCoordinates,
@@ -173,7 +173,7 @@ export default defineComponent({
         },
         async setUserCoordinate(coordinateObject: any)
         {
-            this.isLoadingUser = true;
+            this.isLoadingCoordinates = true;
             
             const response: any = await setUserCoordinate(coordinateObject);
 
@@ -186,11 +186,11 @@ export default defineComponent({
                 Swal.fire({ icon:'error', title: 'Erro', text: response.value['messages'] })
             }
 
-            this.isLoadingUser = false;
+            this.isLoadingCoordinates = false;
         },
         async updateUserCoordinate(coordinateObject: any)
         {
-            this.isLoadingUser = true;
+            this.isLoadingCoordinates = true;
 
             const response: any = await updateUserCoordinate(coordinateObject);
 
@@ -203,7 +203,7 @@ export default defineComponent({
                 Swal.fire({ icon: 'error', title: 'Erro', text: response.value['messages'] })
             }
 
-            this.isLoadingUser = false;
+            this.isLoadingCoordinates = false;
             
         },
         async getUserCoordinate()
@@ -227,7 +227,7 @@ export default defineComponent({
         },
         async listCoordinates()
         {
-            this.isLoadingUser = true;
+            this.isLoadingCoordinates = true;
 
             const response: any = await getAllCoordinates();
 
@@ -241,7 +241,7 @@ export default defineComponent({
                 Swal.fire({ icon:'error', title: 'Erro', text: response.value['messages'] })
             }
 
-            this.isLoadingUser = false;
+            this.isLoadingCoordinates = false;
         },
         calculteAge(birthDate: string)
         {

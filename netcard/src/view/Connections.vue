@@ -101,13 +101,13 @@
                 </div>
             </div>
 
-            <div v-if="isLoadingUser">
+            <div v-if="isLoadingConnections">
                 <div class="text-center">
                     <p class="text-md font-semibold mt-10">Carregando informações ... <span class="loading loading-spinner loading-sm"></span></p>
                 </div>
             </div>
 
-            <div v-if="!isLoadingUser">
+            <div v-if="!isLoadingConnections">
                 <div class="grid md:grid-cols-12 lg:grid-cols-12 gap-0 md:gap-5 mb-2">
                     <div class="col-span-12 md:col-span-3 mb-5" v-for="user in users">
                         <div class="card bg-base-100 shadow-xl">
@@ -136,7 +136,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive, ref, toRefs } from 'vue';
-import { IUserState, getAllUserConnections, deleteUserConnection } from '../hooks/useUser';
+import { IConnectionsState, getAllUserConnections, deleteUserConnection } from '../hooks/useConnections';
 import { IStatesState, getAllStates } from '../hooks/useStates';
 import { ICitiesState, getAllCitiesBasedOnStateId } from '../hooks/useCities';
 import { IJobsState, getAllJobs } from '../hooks/useJobs';
@@ -149,10 +149,10 @@ import Swal from 'sweetalert2';
 export default defineComponent({
     setup(){
 
-        const userState: IUserState = reactive({
-            isLoadingUser: false,
-            messagesUser: '',
-            statusCodeUser: 0
+        const connectionsState: IConnectionsState = reactive({
+            isLoadingConnections: false,
+            messagesConnections: '',
+            statusCodeConnections: 0
         });
 
         const statesState: IStatesState = reactive({
@@ -191,7 +191,7 @@ export default defineComponent({
         const jobs = ref();
 
         return{
-            ...toRefs(userState),
+            ...toRefs(connectionsState),
             ...toRefs(statesState),
             ...toRefs(citiesState),
             ...toRefs(jobsState),
@@ -217,7 +217,7 @@ export default defineComponent({
         },
         async listUserConnections()
         {
-            this.isLoadingUser = true;
+            this.isLoadingConnections = true;
 
             const filterParams: any = ({
                 name: this.name,
@@ -234,7 +234,7 @@ export default defineComponent({
             else
                 Swal.fire({ icon: 'error', title: 'Erro', text: response.value['messages'] });
 
-            this.isLoadingUser = false;
+            this.isLoadingConnections = false;
         },
         async deleteConection(connection_id: number)
         {
