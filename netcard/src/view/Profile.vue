@@ -9,8 +9,8 @@
             </div>
 
             <div v-if="!isLoadingUser">
-                <div class="card bg-base-100 shadow-md">
-                    <div class="card-body p-4 text-md md:text-xs">
+                <!-- <div class="card bg-base-100 shadow-md">
+                    <div class="card-body p-4 text-md md:text-xs"> -->
                         <div role="tablist" class="tabs tabs-bordered">
                             <input type="radio" name="my_tabs_1" role="tab" class="tab" aria-label="Dados" checked />
                             <div role="tabpanel" class="tab-content p-5">
@@ -19,7 +19,7 @@
                                         <div class="flex">
                                             <div class="avatar">
                                                 <div class="md:w-44">
-                                                    <img class="border-4 border-base-200 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
+                                                    <img class="border-4 border-base-100 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
                                                 </div>
                                             </div>
                                             
@@ -214,11 +214,11 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    <!-- </div>
                     <div class="card-actions flex justify-end py-5 px-9">
                         <button class="btn bg-blue-500 hover:bg-blue-400 text-white">Alterar</button>    
                     </div>
-                </div>
+                </div> -->
             </div>   
         </div>
     </div>    
@@ -426,7 +426,16 @@ export default defineComponent({
         },
         teste(event: any)
         {
-            console.log(event.target.files[0])
+            const file = event.target.files[0];
+            const reader = new FileReader();
+
+            reader.onloadend = () => {
+                console.log('RESULT', reader.result)
+            }
+
+            reader.readAsDataURL(file);
+
+            //console.log(event.target.files[0])
         }
     },
     async beforeMount() {
