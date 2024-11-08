@@ -35,9 +35,10 @@
                     <div v-if="isLoadingUser == false">
                         <div class="space-y-5">
                             <div class="font-bold">
-                                <p class="flex items-center gap-3 text-xl">{{ name }}, {{ age }} <span class="text-xs text-gray-400 font-normal">
-                                                                                           <p class="flex items-center"><CheckIcon class="w-4 h-4"/>Adicionado</p>
-                                                                                           </span></p>
+                                <p class="flex items-center gap-3 text-xl">{{ name }}, {{ age }} <span v-if="isConnection" class="text-xs text-gray-400 font-normal">
+                                                                                                    <p class="flex items-center"><CheckIcon class="w-4 h-4"/>Adicionado</p>
+                                                                                                 </span>
+                                </p>
                                 <p class="text-sm">{{ jobName }}</p>
                                 
                             </div>
@@ -93,7 +94,7 @@
                 </div>
 
                 <div class="modal-action">
-                    <button class="btn btn-sm bg-blue-500 hover:bg-blue-400 text-white">Conectar</button>
+                    <button v-if="!isConnection" @click="setUserConnection" class="btn btn-sm bg-blue-500 hover:bg-blue-400 text-white">Conectar</button>
                     <button class="btn btn-sm btn-neutral" @click="closeModal">Fechar</button>
                 </div>
             </div>
@@ -106,8 +107,20 @@ import { defineComponent, reactive, toRefs, ref } from 'vue';
 import { IUserState, getUser } from '../hooks/useUser';
 import { IConnectionsState, setUserConnection, getUserConnectionById } from '../hooks/useConnections';
 import { EyeIcon, CheckIcon  } from '@heroicons/vue/24/outline';
-import { calculteAge } from '../helper/helper';
+import { calculteAge, getCookies } from '../helper/helper';
 import Swal from 'sweetalert2';
+
+const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+        toast.onmouseover = Swal.stopTimer;
+        toast.onmouseleave = Swal.resumeTimer;
+    }
+});
 
 export default defineComponent({
     props:{
@@ -136,6 +149,8 @@ export default defineComponent({
         const socialMedias = ref();
         const profilePicture = ref('');
 
+        const isConnection = ref(false);
+
         return{
             ...toRefs(userState),
             ...toRefs(connectionState),
@@ -145,7 +160,8 @@ export default defineComponent({
             biography,
             email,
             socialMedias,
-            profilePicture
+            profilePicture,
+            isConnection
         }
 
     },
@@ -179,18 +195,42 @@ export default defineComponent({
         },
         async setUserConnection()
         {
+            this.isLoadingConnections = true;
 
+            const response: any = await setUserConnection(Number(this.$props.connection_id));
+
+            if(response.value['statusCode'] == 200)
+                Toast.fire({ icon: 'success', title: response.value['messages'] }).then(async () => { 
+                    await this.verifyIsConnection();
+                    await this.getUser();
+                });
+            else
+                Toast.fire({ icon: 'error', title: response.value['messages'] });
+
+            this.isLoadingConnections = false;
         },
         async verifyIsConnection()
         {
             this.isLoadingConnections = true;
 
+            if(getCookies('userId') == this.$props.connection_id)
+            {
+                this.isConnection = true;
+                return;
+            }
+                
             const response: any = await getUserConnectionById(Number(this.$props.connection_id));
 
+            if(response.value['statusCode'] == 200)
+                this.isConnection = true; 
+            else if(response.value['statusCode'] == 404)
+                this.isConnection = false;
+                           
             this.isLoadingConnections = false;
         }
     },
     async beforeMount() {
+        await this.verifyIsConnection();
         await this.getUser();
     },
     components:{
