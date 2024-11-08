@@ -11,6 +11,13 @@
                         <div class="skeleton h-12 w-60"></div>
                     </div>
 
+                    <div class="form-control bg-white border px-2 bg-base-400 rounded-xl mb-2">
+                        <label class="label cursor-pointer">
+                            <span class="label-text text-md font-medium">Vísivel</span>
+                            <input @change="setUserVisible" v-model="isUserVisible" type="checkbox" class="toggle toggle-success" />
+                        </label>
+                    </div>
+
                     <div v-if="!isLoadingCoordinates">
                         <div class="collapse collapse-arrow bg-white border bg-base-400">
                             <input type="checkbox" />
@@ -103,6 +110,8 @@ export default defineComponent({
         const latitude = ref(0);
         const longitude = ref(0);
 
+        const isUserVisible = ref(true);
+
         return{
             ...toRefs(coordinateState),
             google_key,
@@ -112,7 +121,8 @@ export default defineComponent({
             connection_id,
             is_visible,
             latitude,
-            longitude
+            longitude,
+            isUserVisible
         }
 
     },
@@ -242,6 +252,17 @@ export default defineComponent({
             }
 
             this.isLoadingCoordinates = false;
+        },
+        async setUserVisible()
+        {
+            if(this.isUserVisible)
+            {
+                this.is_visible = true;
+            }
+            else
+            {
+                this.is_visible = false;
+            }
         },
         calculteAge(birthDate: string)
         {
