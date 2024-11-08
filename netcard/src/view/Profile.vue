@@ -19,7 +19,7 @@
                                         <div class="flex">
                                             <div class="avatar">
                                                 <div class="md:w-44">
-                                                    <img class="border-4 border-base-100 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
+                                                    <img class="w-full border-4 border-base-100 rounded-full" :src="profilePicture" alt="" />
                                                 </div>
                                             </div>
                                             
@@ -117,16 +117,18 @@
                                             </div>
                                             <input type="text" class='input input-bordered input-sm w-full'>
                                         </label>
-                                    </div>
+                                    </div>                             
+                                </div>
+                                <div class="grid grid-cols-12 mt-2">
                                     <div class="col-span-12 md:col-span-2">
                                         <div class="flex">
                                             <button class="btn w-full bg-cyan-400 btn-sm hover:bg-cyan-600 text-white"><PlusIcon class="w-5 h-5" /> Adicionar</button>
                                         </div>
-                                    </div>               
+                                    </div>  
                                 </div>
                                 <div class="grid md:grid-cols-12 lg:grid-cols-12 gap-0 md:gap-5 mt-2">
                                     <div class="col-span-12 md:col-span-3" v-for="userSocialMedia in userSocialMedias">
-                                        <div class="card bg-base-200 shadow-xl mb-2">
+                                        <div class="card bg-white border mb-2">
                                             <div class="card-body p-4">
                                                 <p class="font-bold text-base">{{ userSocialMedia.Name }}</p>
                                                 
@@ -233,7 +235,7 @@ import { IJobsState, getAllJobs } from '../hooks/useJobs';
 import { ISocialMediaState, getAllSocialMedias } from '../hooks/useSocialMedias';
 import Swal from 'sweetalert2';
 import { UserIcon, EnvelopeIcon, DocumentTextIcon, CalendarDaysIcon, UserGroupIcon, MapPinIcon, BriefcaseIcon, PlusIcon, DocumentDuplicateIcon, GlobeAltIcon, PencilIcon, TrashIcon, LinkIcon } from '@heroicons/vue/24/outline';
-import { getCookies, calculteAge } from '../helper/helper';
+import { getCookies, calculteAge, base64ToImage } from '../helper/helper';
 
 const Toast = Swal.mixin({
     toast: true,
@@ -286,7 +288,7 @@ export default defineComponent({
         const cpf = ref('');
         const birthDate = ref(0);
         const sex = ref('');
-        const profilePicture = ref('');
+        const profilePicture = ref();
         const zipCode = ref('');
         const state = ref('');
         const city = ref('');
@@ -352,7 +354,7 @@ export default defineComponent({
                 this.cpf = response.value['data'].Cpf;
                 this.birthDate = calculteAge(new Date(response.value['data'].Birth_date));
                 this.sex = response.value['data'].Sex;
-                this.profilePicture = response.value['data'].Profile_picture;
+                this.profilePicture = (response.value['data'].Profile_picture == null ? '' : response.value['data'].Profile_picture);     
                 this.zipCode = response.value['data'].Zip_code;
                 //this.state = response.value['data']
                 this.city = response.value['data'].City_id;

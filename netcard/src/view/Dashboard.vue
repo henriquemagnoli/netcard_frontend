@@ -4,7 +4,7 @@
 
     <div class="w-full h-[calc(100vh-144px)]">
 
-        <div v-if="is_visible">
+        <div v-if="isMapvisible">
             <div class="flex justify-center md:justify-end px-4 md:px-8">
                 <div class="absolute z-50 mt-5">
                     <div v-if="isLoadingCoordinates">
@@ -27,7 +27,14 @@
                                     <div class="card bg-base-200 cursor-pointer hover:scale-105 transition-all mb-2" @click="modalState(userCoordinate.User_id)">
                                         <div class="card-body p-4 text-md md:text-xs">
                                             <div class="flex gap-3 items-center">
-                                                <div class="rounded-full w-10 h-10 bg-gray-500"></div>
+                                                <!-- <div class="avatar">
+                                                    <div class="md:w-44">
+                                                        <img class="w-full border-4 border-base-100 rounded-full" :src="{{ userCoordinate. }}" alt="" />
+                                                    </div>
+                                                </div> -->
+                                                <!-- <div class="rounded-full w-10 h-10 bg-gray-500"></div> -->
+                                                <!-- this.profilePicture = (response.value['data'].Profile_picture == null ? '' : response.value['data'].Profile_picture);  -->
+                                                <img class="w-12 h-12 border-2 border-white rounded-full" :src="userCoordinate.Profile_picture" alt="" />
                                                 <div>
                                                     <p class="font-bold">{{ userCoordinate.User_name }}, {{ calculteAge(userCoordinate.Birth_date) }}</p>
                                                     <p>{{ userCoordinate.Job_name }}</p>
@@ -73,7 +80,7 @@
             </div> 
         </div>
 
-        <div v-if="!is_visible">
+        <div v-if="!isMapvisible">
             <div class="flex flex-col h-[calc(100vh-144px)] justify-center items-center">
                 <p class="text-center p-5">Seu mapa está desabilitado, clique a baixo para habilita-lo.</p>
                 <button type="button" class="btn btn-outline" @click="">Habilitar Localização <MapPinIcon class="w-5 h-5" /></button>
@@ -85,6 +92,7 @@
 <script lang="ts">
 import { defineComponent, reactive, ref, toRefs } from 'vue';
 import { ICoordinatesState, setUserCoordinate, getAllCoordinates, updateUserCoordinate } from '../hooks/useCoordinates';
+import { IUserState, updateUserVisible } from '../hooks/useUser';
 import { calculteAge } from '../helper/helper';
 import { PlusIcon, XMarkIcon, UserGroupIcon, EyeIcon, MapPinIcon } from '@heroicons/vue/24/outline';
 import { GoogleMap, Marker, MarkerCluster, InfoWindow } from 'vue3-google-map';
@@ -101,25 +109,32 @@ export default defineComponent({
             statusCodeCoordinates: 0
         });
 
+        const userState: IUserState = reactive({
+            isLoadingUser: false,
+            messagesUser: '',
+            statusCodeUser: 0
+        });
+
         const google_key = import.meta.env.VITE_GOOGLE_API_KEY;
         const center = ref();
         const usersCoordinates = ref();
         const show_modal = ref(false);
         const connection_id = ref(0);
-        const is_visible = ref(false);
+        const isMapvisible = ref(false);
         const latitude = ref(0);
         const longitude = ref(0);
 
-        const isUserVisible = ref(true);
+        const isUserVisible = ref(false);
 
         return{
             ...toRefs(coordinateState),
+            ...toRefs(userState),
             google_key,
             center,
             usersCoordinates,
             show_modal,
             connection_id,
-            is_visible,
+            isMapvisible,
             latitude,
             longitude,
             isUserVisible
@@ -160,25 +175,59 @@ export default defineComponent({
                 }
                 else
                 {
+                    // 1 - GET USER COORDINATES
                     let coordinateObject: any = await this.getUserCoordinate();
 
-                    await this.updateUserCoordinate(coordinateObject);
-
-                    setCookie('userLatitude', coordinateObject.latitude, 999999);
-                    setCookie('userLongitude', coordinateObject.longitude, 999999);
-
-                    this.center = {
-                        lat: Number(coordinateObject.latitude), 
-                        lng: Number(coordinateObject.longitude)
+                    if(Object.keys(coordinateObject).length === 0)
+                    {
+                        this.isMapvisible = false;
                     }
+                    else
+                    {
+                        // 2 - UPDATE USER COORDINATES AT DATA BASE
+                        if(await this.updateUserCoordinate(coordinateObject))
+                        {
+                            // 3 - SET COOKIES BASED ON COORDINATES RECEVEID
+                            setCookie('userLatitude', coordinateObject.latitude, 999999);
+                            setCookie('userLongitude', coordinateObject.longitude, 999999);
 
-                    await this.listCoordinates();
+                            // 4 - UPDATE USER VISIBILITY
+                            if(await this.setUserVisible())
+                            {
+                                setCookie('userIsVisible', "1", 999999);
+
+                                // 5 - SET COORDINATES VALUES TO GOOGLE MAPS TO CENTER USER VIEW BASED ON OWN COORDINATES
+                                this.center = {
+                                    lat: Number(coordinateObject.latitude), 
+                                    lng: Number(coordinateObject.longitude)
+                                }
+
+                                // 6 - LIST ALL COORDINATES
+                                if(await this.listCoordinates())
+                                {
+                                    this.isMapvisible = true;
+                                }
+                                else
+                                {
+                                    this.isMapvisible = false;
+                                }
+                            }
+                            else
+                            {
+                                this.isMapvisible = false;
+                            }
+                        }
+                        else
+                        {
+                            this.isMapvisible = false;
+                        }
+                    }                
                 }
             }
             catch(error)
             {
                 console.log(error)
-                this.is_visible = false;
+                this.isMapvisible = false;
             }      
         },
         async setUserCoordinate(coordinateObject: any)
@@ -189,7 +238,7 @@ export default defineComponent({
 
             if(response.value['statusCode'] == 200)
             {
-                this.is_visible = true;
+                this.isMapvisible = true;
             }
             else
             {
@@ -206,15 +255,15 @@ export default defineComponent({
 
             if(response.value['statusCode'] == 200)
             {
-                this.is_visible = true;
+                this.isLoadingCoordinates = false;
+                return true;
             }
             else
             {
                 Swal.fire({ icon: 'error', title: 'Erro', text: response.value['messages'] })
+                this.isLoadingCoordinates = false;
+                return false;
             }
-
-            this.isLoadingCoordinates = false;
-            
         },
         async getUserCoordinate()
         {   
@@ -232,7 +281,7 @@ export default defineComponent({
             }
             catch(error)
             {   
-                this.is_visible = false;
+                return {};
             }
         },
         async listCoordinates()
@@ -244,24 +293,37 @@ export default defineComponent({
             if(response.value['statusCode'] == 200)
             {
                 response.value['data'] != null ? this.usersCoordinates = response.value['data'] : false;
-                this.is_visible = true;
+                this.isLoadingCoordinates = false;
+                return true;
             }
             else
             {
                 Swal.fire({ icon:'error', title: 'Erro', text: response.value['messages'] })
+                this.isLoadingCoordinates = false;
+                return false;
             }
-
-            this.isLoadingCoordinates = false;
         },
         async setUserVisible()
         {
+            let newUserVisible: number = 0;
+
             if(this.isUserVisible)
+                newUserVisible = 1;
+            else
+                newUserVisible = 0;
+
+            const response: any = await updateUserVisible(newUserVisible);
+
+            if(response.value['statusCode'] == 200)
             {
-                this.is_visible = true;
+                this.isUserVisible = true;
+                setCookie('userIsVisible', String(newUserVisible), 999999);
+                return true;
             }
             else
             {
-                this.is_visible = false;
+                this.isUserVisible = false;
+                return false;
             }
         },
         calculteAge(birthDate: string)
@@ -270,7 +332,16 @@ export default defineComponent({
         }
     },  
     async beforeMount() {
+
+        // STEPS 
+        // 1 - Verify if user allows to share location
+        // IF USER DONT ALLOWs: update user is visible as 0 
+        // IF ALLOWS: update user is visible as 1, setting coordinates into cookies session
+        
         await this.verfiyCoordinates();
+
+
+
       
         // if(this.getUserCoordinate() == undefined)
         //     await this.listCoordinates();

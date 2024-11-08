@@ -9,7 +9,7 @@
                 </div>
 
                 <div v-if="isLoadingUser == false" class="absolute mt-24">
-                    <img class="w-32 h-32 border-4 border-base-200 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
+                    <img class="w-32 h-32 border-4 border-base-200 rounded-full" :src="profilePicture" alt="" />
                 </div>
             </div>
 
@@ -181,7 +181,7 @@ export default defineComponent({
                 this.name = response.value['data'].UserName;
                 this.email = response.value['data'].Email;
                 this.age = calculteAge(new Date(response.value['data'].Birth_date));
-                this.profilePicture = response.value['data'].Profile_picture;
+                this.profilePicture = (response.value['data'].Profile_picture == null ? '' : response.value['data'].Profile_picture);     
                 this.jobName = response.value['data'].JobName;
                 this.biography = response.value['data'].Biography;
                 this.socialMedias = response.value['data'].User_social_media;

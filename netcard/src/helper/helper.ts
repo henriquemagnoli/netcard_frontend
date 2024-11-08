@@ -22,6 +22,7 @@ export function deleteCookies()
                                         'userName', 
                                         'userEmail',
                                         'userToken',
+                                        'userIsVisible',
                                         'userLatitude',
                                         'userLongitude'];
     const date = new Date();
@@ -37,4 +38,18 @@ export function calculteAge(birthDate: Date) : number
 {
     const timeDiff = Math.abs(Date.now() - birthDate.getTime());
     return Math.floor((timeDiff / (1000 * 3600 * 24)) / 365);
+}
+
+export function base64ToImage(base64Image: string) //: HTMLImageElement
+{
+    fetch(base64Image)
+    .then(res => {
+      return res.blob()
+    })
+
+    // const image = new Image()
+    // image.src = base64Image;
+    // image.width = 100;
+
+    // return image
 }

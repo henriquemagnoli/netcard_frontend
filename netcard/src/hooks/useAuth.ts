@@ -36,6 +36,7 @@ export async function signIn(email: string, password: string)
         setCookie('userName', response.data.Name, expiryIn);
         setCookie('userEmail', response.data.Email, expiryIn);
         setCookie('userToken', response.data.Token, expiryIn);
+        setCookie('userIsVisible', response.data.IsVisible, expiryIn);
     }
 
     const data = ref<ILoginState>(response);

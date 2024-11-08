@@ -32,7 +32,22 @@ export async function updateUser(userObject: any)
     
 }
 
-export async function updateUserVisibel() 
+export async function updateUserVisible(user_visible: number) 
 {
-    
+    const body = { visible: user_visible };
+
+    const request = await fetch(`${api_url}/user/visible`, {
+        method: 'PATCH',
+        headers:{
+            'Authorization': String(getCookies('userToken')),
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+    });
+
+    const response = await request.json();
+
+    const data = ref<IUserState[]>(response);
+
+    return data;
 }
