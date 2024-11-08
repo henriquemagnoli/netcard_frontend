@@ -51,3 +51,55 @@ export async function updateUserVisible(user_visible: number)
 
     return data;
 }
+
+export async function setUserSocialMedia(userSocialMediaObject: any) 
+{
+    const request = await fetch(`${api_url}/user/social-media`, {
+        method: 'POST',
+        headers: {
+            'Authorization': String(getCookies('userToken')),
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userSocialMediaObject)
+    });
+
+    const response = await request.json();
+
+    const data = ref<IUserState[]>(response);
+
+    return data;
+}
+
+export async function updateUserSocialMedia(userSocialMediaObject: any, userSocialMediaId: number) 
+{
+    const request = await fetch(`${api_url}/user/social-media/${userSocialMediaId}`, {
+        method: 'PATCH',
+        headers: {
+            'Authorization': String(getCookies('userToken')),
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userSocialMediaObject)
+    });
+
+    const response = await request.json();
+
+    const data = ref<IUserState[]>(response);
+
+    return data;
+}
+
+export async function deleteUserSocialMedia(userSocialMediaId: number)
+{
+    const request = await fetch(`${api_url}/user/social-media/${userSocialMediaId}`, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': String(getCookies('userToken'))
+        }
+    });
+
+    const response = await request.json();
+
+    const data = ref<IUserState[]>(response);
+
+    return data;
+}

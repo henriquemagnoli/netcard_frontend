@@ -115,14 +115,14 @@
                                             <div class="label">
                                                 <span class="label-text flex"><BriefcaseIcon class="w-4 h-4 mr-2" />Url</span>
                                             </div>
-                                            <input type="text" class='input input-bordered input-sm w-full'>
+                                            <input v-model="url" type="text" class='input input-bordered input-sm w-full'>
                                         </label>
                                     </div>                             
                                 </div>
                                 <div class="grid grid-cols-12 mt-2">
                                     <div class="col-span-12 md:col-span-2">
                                         <div class="flex">
-                                            <button class="btn w-full bg-cyan-400 btn-sm hover:bg-cyan-600 text-white"><PlusIcon class="w-5 h-5" /> Adicionar</button>
+                                            <button @click="setUserSocialMedia" class="btn w-full bg-cyan-400 btn-sm hover:bg-cyan-600 text-white"><PlusIcon class="w-5 h-5" /> Adicionar</button>
                                         </div>
                                     </div>  
                                 </div>
@@ -228,14 +228,14 @@
 
 <script lang="ts">
 import { defineComponent, reactive, toRefs, ref } from 'vue';
-import { IUserState, getUser } from '../hooks/useUser';
+import { IUserState, getUser, setUserSocialMedia, updateUserSocialMedia, deleteUserSocialMedia } from '../hooks/useUser';
 import { IStatesState, getAllStates } from '../hooks/useStates';
 import { ICitiesState, getAllCitiesBasedOnStateId } from '../hooks/useCities';
 import { IJobsState, getAllJobs } from '../hooks/useJobs';
 import { ISocialMediaState, getAllSocialMedias } from '../hooks/useSocialMedias';
 import Swal from 'sweetalert2';
 import { UserIcon, EnvelopeIcon, DocumentTextIcon, CalendarDaysIcon, UserGroupIcon, MapPinIcon, BriefcaseIcon, PlusIcon, DocumentDuplicateIcon, GlobeAltIcon, PencilIcon, TrashIcon, LinkIcon } from '@heroicons/vue/24/outline';
-import { getCookies, calculteAge, base64ToImage } from '../helper/helper';
+import { getCookies, calculteAge } from '../helper/helper';
 
 const Toast = Swal.mixin({
     toast: true,
@@ -300,6 +300,7 @@ export default defineComponent({
         const jobName = ref('');
         const biography = ref();
         const socialMediaId = ref();
+        const url = ref('');
     
         // User object
         const userSocialMedias = ref();
@@ -335,7 +336,8 @@ export default defineComponent({
             states,
             cities,
             jobs,
-            socialMediaId
+            socialMediaId,
+            url
         }
 
     },
@@ -371,7 +373,7 @@ export default defineComponent({
             {
                 Swal.fire({ icon:'error', title: 'Erro', text: response.value['messages'] })
             }
-            
+
             this.isLoadingUser = false;
         },
         async listStates()
@@ -420,7 +422,10 @@ export default defineComponent({
             const response: any = await getAllSocialMedias();
 
             if(response.value['statusCode'] == 200)
+            {
                 this.socialMedias = response.value['data'];
+                this.socialMediaId = this.socialMedias[0]['Id']; 
+            }
             else
                 Toast.fire({ icon: 'error', title: response.value['messages'] })
 
@@ -436,19 +441,41 @@ export default defineComponent({
             }
 
             reader.readAsDataURL(file);
+        },
+        async setUserSocialMedia()
+        {
+            const userSocialMediaObject = {
+                socialMediaId: this.socialMediaId,
+                url: this.url
+            };
 
-            //console.log(event.target.files[0])
+            const response: any = await setUserSocialMedia(userSocialMediaObject);
+
+            if(response.value['statusCode'] == 200)
+                Toast.fire({ icon: 'success', title: response.value['messages'] }).then(async () => { await this.getUser() });
+            else
+                Toast.fire({ icon: 'error', title: response.value['messages'] })
+        },
+        async updateUserSocialMedia()
+        {
+
+        },
+        async deleteUserSocialMedia()
+        {
+
         }
     },
     async beforeMount() {
 
-        await Promise.all([
-            this.listJobs,
-            this.listSocialMedias,
-            this.listStates
-        ]);
+        this.isLoadingUser = true;
 
-        await this.getUser();
+        await Promise.all([
+            this.listJobs(),
+            this.listSocialMedias(),
+            this.listStates()
+        ])
+        
+        await this.getUser()
     },
     components:{
         UserIcon,
