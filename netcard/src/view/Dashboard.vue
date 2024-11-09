@@ -27,14 +27,12 @@
                                     <div class="card bg-base-200 cursor-pointer hover:scale-105 transition-all mb-2" @click="modalState(userCoordinate.User_id)">
                                         <div class="card-body p-4 text-md md:text-xs">
                                             <div class="flex gap-3 items-center">
-                                                <!-- <div class="avatar">
-                                                    <div class="md:w-44">
-                                                        <img class="w-full border-4 border-base-100 rounded-full" :src="{{ userCoordinate. }}" alt="" />
-                                                    </div>
-                                                </div> -->
-                                                <!-- <div class="rounded-full w-10 h-10 bg-gray-500"></div> -->
-                                                <!-- this.profilePicture = (response.value['data'].Profile_picture == null ? '' : response.value['data'].Profile_picture);  -->
-                                                <img class="w-12 h-12 border-2 border-white rounded-full" :src="userCoordinate.Profile_picture" alt="" />
+                                                <span v-if="userCoordinate.Profile_picture == null" >
+                                                    <div class="w-12 h-12 bg-gray-400 border-4 border-base-200 rounded-full flex items-center justify-center"><UserIcon class="w-6 h-6 text-white"/></div>
+                                                </span>
+                                                <span v-else>
+                                                    <img class="w-12 h-12 border-4 border-base-200 rounded-full" :src="userCoordinate.Profile_picture" alt="" />
+                                                </span>  
                                                 <div>
                                                     <p class="font-bold">{{ userCoordinate.User_name }}, {{ calculteAge(userCoordinate.Birth_date) }}</p>
                                                     <p>{{ userCoordinate.Job_name }}</p>
@@ -94,7 +92,7 @@ import { defineComponent, reactive, ref, toRefs } from 'vue';
 import { ICoordinatesState, setUserCoordinate, getAllCoordinates, updateUserCoordinate } from '../hooks/useCoordinates';
 import { IUserState, updateUserVisible } from '../hooks/useUser';
 import { calculteAge } from '../helper/helper';
-import { PlusIcon, XMarkIcon, UserGroupIcon, EyeIcon, MapPinIcon } from '@heroicons/vue/24/outline';
+import { PlusIcon, XMarkIcon, UserGroupIcon, EyeIcon, MapPinIcon, UserIcon } from '@heroicons/vue/24/outline';
 import { GoogleMap, Marker, MarkerCluster, InfoWindow } from 'vue3-google-map';
 import { getCookies, setCookie } from '../helper/helper';
 import ConnectionModal from '../components/ConnectionModal.vue';
@@ -356,6 +354,7 @@ export default defineComponent({
         UserGroupIcon,
         EyeIcon,
         MapPinIcon,
+        UserIcon,
         GoogleMap,
         Marker, 
         MarkerCluster,

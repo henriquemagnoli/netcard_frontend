@@ -138,7 +138,7 @@
 
                                                 <div class="flex justify-end gap-2">
                                                     <button class="btn btn-success btn-sm text-white"><PencilIcon class="w-5 h-5" /></button>
-                                                    <button class="btn btn-error btn-sm text-white"><TrashIcon class="w-5 h-5" /></button>
+                                                    <button @click="deleteUserSocialMedia(userSocialMedia.Id)" class="btn btn-error btn-sm text-white"><TrashIcon class="w-5 h-5" /></button>
                                                 </div>  
                                             </div>
                                         </div>
@@ -456,13 +456,36 @@ export default defineComponent({
             else
                 Toast.fire({ icon: 'error', title: response.value['messages'] })
         },
-        async updateUserSocialMedia()
+        async updateUserSocialMedia(userSocialMediaId: number)
         {
 
         },
-        async deleteUserSocialMedia()
+        async deleteUserSocialMedia(userSocialMediaId: number)
         {
+            console.log(userSocialMediaId);
 
+            Swal.fire({
+                title: 'Atenção',
+                text: 'Você está prestes a excluir uma rede social sua, tem certeza?',
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sim',
+                cancelButtonText: 'Não',
+                allowOutsideClick: false
+            }).then(async (result) => {
+
+                if(result.isConfirmed)
+                {
+                    const response: any = await deleteUserSocialMedia(userSocialMediaId);
+
+                    if(response.value['statusCode'] == 200)
+                        Toast.fire({ icon: 'success', title: response.value['messages'] }).then(async () => { await this.getUser() });
+                    else
+                        Toast.fire({ icon: 'error', title: response.value['messages'] })
+                }
+            });
         }
     },
     async beforeMount() {

@@ -9,7 +9,12 @@
                 </div>
 
                 <div v-if="isLoadingUser == false" class="absolute mt-24">
-                    <img class="w-32 h-32 border-4 border-base-200 rounded-full" :src="profilePicture" alt="" />
+                    <span v-if="profilePicture == null" >
+                        <div class="w-32 h-32 bg-gray-400 border-4 border-base-200 rounded-full flex items-center justify-center"><UserIcon class="w-16 h-16 text-white"/></div>
+                    </span>
+                    <span v-else>
+                        <img class="w-32 h-32 border-4 border-base-200 rounded-full" :src="profilePicture" alt="" />
+                    </span>  
                 </div>
             </div>
 
@@ -44,7 +49,12 @@
                             </div>
 
                             <div>
-                                <p class="text-sm">{{ biography }}</p>
+                                <span v-if="biography == null">
+                                    <p class="bg-yellow-200 text-yellow-600 p-3 rounded-md text-sm">Usuário não possui biografia.</p>
+                                </span>
+                                <span v-else>
+                                    <p class="text-sm">{{ biography }}</p>
+                                </span>    
                             </div>
 
                             <div class="grid grid-cols-12 gap-2">
@@ -66,23 +76,27 @@
                                 <div class="col-span-12 md:col-span-6">
                                     <div class="card bg-base-200 shadow-lg">
                                         <div class="card-body p-4 text-md md:text-xs">
-                                            <div class="flex gap-3 items-center">
-                                            
+                                            <div class="flex gap-3 items-center">                                  
                                                 <div>
                                                     <p class="font-semibold text-lg">Redes Sociais:</p>
-                                                    <div class="flex gap-4" >
-                                                        <div v-for="socialMedia in socialMedias">
-                                                            <a :href="socialMedia.Url" :class="[socialMedia.Social_media_id == 1 ? 'bg-[#0E76A8]' : 
-                                                                        socialMedia.Social_media_id == 2 ? 'bg-[#1877F2]' :
-                                                                        socialMedia.Social_media_id == 3 ? 'bg-[#6134AF]' :
-                                                                        'bg-[#171515]', 'btn text-white']">
-                                                                <i v-if="socialMedia.Social_media_id == 1" class="fa-brands fa-linkedin-in fa-xl"></i> 
-                                                                <i v-if="socialMedia.Social_media_id == 2" class="fa-brands fa-facebook-f fa-xl"></i>
-                                                                <i v-if="socialMedia.Social_media_id == 3" class="fa-brands fa-instagram fa-xl"></i>
-                                                                <i v-if="socialMedia.Social_media_id == 4" class="fa-brands fa-github fa-xl"></i>
-                                                            </a>
+                                                    <span v-if="socialMedias == ''">
+                                                        <p class="bg-yellow-200 text-yellow-600 p-3 rounded-md text-sm">Usuário não possui redes sociais.</p>
+                                                    </span>
+                                                    <span v-else>
+                                                        <div class="flex gap-4" >                                    
+                                                            <div v-for="socialMedia in socialMedias">
+                                                                <a :href="socialMedia.Url" :class="[socialMedia.Social_media_id == 1 ? 'bg-[#0E76A8]' : 
+                                                                            socialMedia.Social_media_id == 2 ? 'bg-[#1877F2]' :
+                                                                            socialMedia.Social_media_id == 3 ? 'bg-gradient-to-r from-[#833AB4] via-[#C13584] to-[#FCAF45]' :
+                                                                            'bg-[#171515]', 'btn text-white']">
+                                                                    <i v-if="socialMedia.Social_media_id == 1" class="fa-brands fa-linkedin-in fa-xl"></i> 
+                                                                    <i v-if="socialMedia.Social_media_id == 2" class="fa-brands fa-facebook-f fa-xl"></i>
+                                                                    <i v-if="socialMedia.Social_media_id == 3" class="fa-brands fa-instagram fa-xl"></i>
+                                                                    <i v-if="socialMedia.Social_media_id == 4" class="fa-brands fa-github fa-xl"></i>
+                                                                </a>
+                                                            </div>                                                           
                                                         </div>
-                                                    </div>
+                                                    </span>   
                                                 </div>
                                             </div>
                                         </div>
@@ -106,7 +120,7 @@
 import { defineComponent, reactive, toRefs, ref } from 'vue';
 import { IUserState, getUser } from '../hooks/useUser';
 import { IConnectionsState, setUserConnection, getUserConnectionById } from '../hooks/useConnections';
-import { EyeIcon, CheckIcon  } from '@heroicons/vue/24/outline';
+import { EyeIcon, CheckIcon, UserIcon } from '@heroicons/vue/24/outline';
 import { calculteAge, getCookies } from '../helper/helper';
 import Swal from 'sweetalert2';
 
@@ -181,7 +195,7 @@ export default defineComponent({
                 this.name = response.value['data'].UserName;
                 this.email = response.value['data'].Email;
                 this.age = calculteAge(new Date(response.value['data'].Birth_date));
-                this.profilePicture = (response.value['data'].Profile_picture == null ? '' : response.value['data'].Profile_picture);     
+                this.profilePicture = (response.value['data'].Profile_picture == null ? null : response.value['data'].Profile_picture);     
                 this.jobName = response.value['data'].JobName;
                 this.biography = response.value['data'].Biography;
                 this.socialMedias = response.value['data'].User_social_media;
@@ -235,7 +249,8 @@ export default defineComponent({
     },
     components:{
         EyeIcon,
-        CheckIcon
+        CheckIcon,
+        UserIcon
     }
 })
 
