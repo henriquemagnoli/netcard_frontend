@@ -122,7 +122,7 @@
                                 <div class="grid grid-cols-12 mt-2">
                                     <div class="col-span-12 md:col-span-2">
                                         <div class="flex">
-                                            <button @click="setUserSocialMedia" class="btn w-full bg-cyan-400 btn-sm hover:bg-cyan-600 text-white"><PlusIcon class="w-5 h-5" /> Adicionar</button>
+                                            <button @click="setUserSocialMedia" class="btn btn-sm bg-blue-500 hover:bg-blue-400 text-white"><PlusIcon class="w-5 h-5" /> Adicionar</button>
                                         </div>
                                     </div>  
                                 </div>
@@ -137,7 +137,7 @@
                                                 </div>
 
                                                 <div class="flex justify-end gap-2">
-                                                    <button class="btn btn-success btn-sm text-white"><PencilIcon class="w-5 h-5" /></button>
+                                                    <button @click="updateUserSocialMedia(userSocialMedia.Id)" class="btn btn-success btn-sm text-white"><PencilIcon class="w-5 h-5" /></button>
                                                     <button @click="deleteUserSocialMedia(userSocialMedia.Id)" class="btn btn-error btn-sm text-white"><TrashIcon class="w-5 h-5" /></button>
                                                 </div>  
                                             </div>
@@ -152,7 +152,7 @@
                                     <div class="col-span-12 md:col-span-2">
                                         <label class="form-control w-full">
                                             <div class="label">
-                                                <span class="label-text flex"><UserIcon class="w-4 h-4 mr-2" />CEP</span>
+                                                <span class="label-text flex"><BuildingOfficeIcon class="w-4 h-4 mr-2" />CEP</span>
                                             </div>
                                             <input v-model="zipCode" type="text" class='input input-bordered input-sm w-full'>
                                         </label>
@@ -160,7 +160,7 @@
                                     <div class="col-span-12 md:col-span-2">
                                         <label class="form-control w-full">
                                             <div class="label">
-                                                <span class="label-text flex"><UserIcon class="w-4 h-4 mr-2" />Estado</span>
+                                                <span class="label-text flex"><BuildingOfficeIcon class="w-4 h-4 mr-2" />Estado</span>
                                             </div>
                                             <select v-model="state" v-on:change="listCities" class="select select-bordered select-sm w-full">
                                                 <option v-for="state in states" :key="state.Id" :value="state.Id">{{ state.Name }}</option>
@@ -170,7 +170,7 @@
                                     <div class="col-span-12 md:col-span-8">
                                         <label class="form-control w-full">
                                             <div class="label">
-                                                <span class="label-text flex"><UserIcon class="w-4 h-4 mr-2" />Cidade</span>
+                                                <span class="label-text flex"><BuildingOfficeIcon class="w-4 h-4 mr-2" />Cidade</span>
                                             </div>
                                             <select v-model="city" class="select select-bordered select-sm w-full">
                                                 <option v-for="city in cities" :key="city.Id" :value="city.Id">{{ city.Name }}</option>
@@ -182,7 +182,7 @@
                                     <div class="col-span-12 md:col-span-6">
                                         <label class="form-control w-full">
                                             <div class="label">
-                                                <span class="label-text flex"><UserIcon class="w-4 h-4 mr-2" />Endereço</span>
+                                                <span class="label-text flex"><BuildingOfficeIcon class="w-4 h-4 mr-2" />Endereço</span>
                                             </div>
                                             <input v-model="street" type="text" class='input input-bordered input-sm w-full'>
                                         </label>
@@ -190,7 +190,7 @@
                                     <div class="col-span-12 md:col-span-4">
                                         <label class="form-control w-full">
                                             <div class="label">
-                                                <span class="label-text flex"><UserIcon class="w-4 h-4 mr-2" />Bairro</span>
+                                                <span class="label-text flex"><BuildingOfficeIcon class="w-4 h-4 mr-2" />Bairro</span>
                                             </div>
                                             <input v-model="district" type="text" class='input input-bordered input-sm w-full'>
                                         </label>
@@ -198,7 +198,7 @@
                                     <div class="col-span-12 md:col-span-2">
                                         <label class="form-control w-full">
                                             <div class="label">
-                                                <span class="label-text flex"><UserIcon class="w-4 h-4 mr-2" />Número</span>
+                                                <span class="label-text flex"><BuildingOfficeIcon class="w-4 h-4 mr-2" />Número</span>
                                             </div>
                                             <input v-model="streetNumber" type="text" class='input input-bordered input-sm w-full'>
                                         </label>
@@ -208,7 +208,7 @@
                                     <div class="col-span-12">
                                         <label class="form-control w-full">
                                             <div class="label">
-                                                <span class="label-text flex"><UserIcon class="w-4 h-4 mr-2" />Complemento</span>
+                                                <span class="label-text flex"><BuildingOfficeIcon class="w-4 h-4 mr-2" />Complemento</span>
                                             </div>
                                             <textarea v-model="streetComplement" class="textarea textarea-bordered" placeholder="Digite um complemento para seu endereço."></textarea>
                                         </label>
@@ -234,7 +234,7 @@ import { ICitiesState, getAllCitiesBasedOnStateId } from '../hooks/useCities';
 import { IJobsState, getAllJobs } from '../hooks/useJobs';
 import { ISocialMediaState, getAllSocialMedias } from '../hooks/useSocialMedias';
 import Swal from 'sweetalert2';
-import { UserIcon, EnvelopeIcon, DocumentTextIcon, CalendarDaysIcon, UserGroupIcon, MapPinIcon, BriefcaseIcon, PlusIcon, DocumentDuplicateIcon, GlobeAltIcon, PencilIcon, TrashIcon, LinkIcon } from '@heroicons/vue/24/outline';
+import { UserIcon, EnvelopeIcon, DocumentTextIcon, CalendarDaysIcon, UserGroupIcon, MapPinIcon, BriefcaseIcon, PlusIcon, DocumentDuplicateIcon, GlobeAltIcon, PencilIcon, TrashIcon, LinkIcon, BuildingOfficeIcon } from '@heroicons/vue/24/outline';
 import { getCookies, calculteAge } from '../helper/helper';
 
 const Toast = Swal.mixin({
@@ -458,13 +458,20 @@ export default defineComponent({
         },
         async updateUserSocialMedia(userSocialMediaId: number)
         {
-
+            await Swal.fire({
+                input: "text",
+                title: 'Alteração de URL',
+                text: 'Digite a nova URL no campo abaixo para alterar sua rede social.',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Salvar',
+                cancelButtonText: 'Cancelar',
+            });
         },
         async deleteUserSocialMedia(userSocialMediaId: number)
         {
-            console.log(userSocialMediaId);
-
-            Swal.fire({
+            await Swal.fire({
                 title: 'Atenção',
                 text: 'Você está prestes a excluir uma rede social sua, tem certeza?',
                 icon: "warning",
@@ -513,7 +520,8 @@ export default defineComponent({
         GlobeAltIcon,
         PencilIcon, 
         TrashIcon,
-        LinkIcon
+        LinkIcon,
+        BuildingOfficeIcon
     }
 })
 
