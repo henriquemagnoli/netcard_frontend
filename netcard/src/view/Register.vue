@@ -1,6 +1,9 @@
 <template>
 <div class="grid md:grid-cols-12 lg:grid-cols-12 h-screen">
         <div class="bg-gradient-to-r from-cyan-500 to-blue-500 hidden md:block col-span-8">
+            <div class="flex h-screen items-center justify-center">
+                <img src="./../assets/images/netcard_log.png">
+            </div>
         </div>
         <div class="div-form col-span-4 flex items-center"> 
             <div class="max-w-xl mx-auto px-10 md:px-10 py-5 md:py-0 space-y-20">

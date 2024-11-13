@@ -4,7 +4,11 @@
         <div class="flex h-16 items-center justify-between">
           <div class="flex items-center">
             <div class="flex-shrink-0">
-                <p class="text-white text-xl font-bold tracking-widest">Netcard</p>
+              <div class="flex h-full items-center">
+                <img class="h-14 w-14" src="./../assets/images/netcard_log.png">
+                <p class="text-white text-lg font-bold tracking-widest">Netcard</p>
+              </div>
+                
             </div>
             <div class="hidden md:block">
               <div class="ml-10 flex items-baseline space-x-4">

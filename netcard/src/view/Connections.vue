@@ -128,7 +128,7 @@
 
                                             <div class="mt-4 flex gap-2">
                                                 <button @click="modalState(user.Id)" class="btn btn-sm bg-blue-500 hover:bg-blue-400"><EyeIcon class="w-5 h-5 text-white" /></button>
-                                                <button @click="deleteConection(user.Id)" class="btn btn-sm btn-outline btn-error"><TrashIcon class="w-5 h-5" /></button>
+                                                <button @click="deleteConection(user.Id)" class="btn btn-sm btn-outline btn-error"><BookmarkSlashIcon class="w-5 h-5" /></button>
                                             </div>
                                         </div>
                                         
@@ -153,7 +153,7 @@ import { IConnectionsState, getAllUserConnections, deleteUserConnection } from '
 import { IStatesState, getAllStates } from '../hooks/useStates';
 import { ICitiesState, getAllCitiesBasedOnStateId } from '../hooks/useCities';
 import { IJobsState, getAllJobs } from '../hooks/useJobs';
-import { MagnifyingGlassIcon, FunnelIcon, EyeIcon, TrashIcon, UserIcon } from '@heroicons/vue/24/outline';
+import { MagnifyingGlassIcon, FunnelIcon, EyeIcon, BookmarkSlashIcon, UserIcon } from '@heroicons/vue/24/outline';
 import { calculateAge } from '../helper/helper';
 import ConnectionModal from '../components/ConnectionModal.vue';
 import Swal from 'sweetalert2';
@@ -331,7 +331,7 @@ export default defineComponent({
         MagnifyingGlassIcon,
         FunnelIcon,
         EyeIcon,
-        TrashIcon,
+        BookmarkSlashIcon,
         UserIcon
     }
 })

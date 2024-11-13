@@ -11,11 +11,19 @@
                         <div class="skeleton h-12 w-60"></div>
                     </div>
 
-                    <div class="form-control bg-white border px-2 bg-base-400 rounded-xl mb-2">
-                        <label class="label cursor-pointer">
-                            <span class="label-text text-md font-medium">Vísivel</span>
-                            <input @change="setUserVisible" v-model="isUserVisible" type="checkbox" class="toggle toggle-success" />
-                        </label>
+                    <div class="grid grid-cols-12 gap-2">
+                        <div class="col-span-10">
+                            <div class="form-control bg-white border px-2 bg-base-400 rounded-xl mb-2">
+                                <label class="label cursor-pointer">
+                                    <span class="label-text text-md font-medium">Vísivel</span>
+                                    <input @change="setUserVisible" v-model="isUserVisible" type="checkbox" class="toggle toggle-success" />
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-span-2 flex justify-end">
+                            <button @click="listCoordinates()" class="btn btn-square bg-white border bg-base-400"><ArrowPathIcon class="h-5 w-5" /></button>
+                        </div>                 
                     </div>
 
                     <div v-if="!isLoadingCoordinates">
@@ -92,7 +100,7 @@ import { defineComponent, reactive, ref, toRefs } from 'vue';
 import { ICoordinatesState, setUserCoordinate, getAllCoordinates, updateUserCoordinate } from '../hooks/useCoordinates';
 import { IUserState, updateUserVisible } from '../hooks/useUser';
 import { calculateAge } from '../helper/helper';
-import { PlusIcon, XMarkIcon, UserGroupIcon, EyeIcon, MapPinIcon, UserIcon } from '@heroicons/vue/24/outline';
+import { PlusIcon, XMarkIcon, UserGroupIcon, EyeIcon, MapPinIcon, UserIcon, ArrowPathIcon } from '@heroicons/vue/24/outline';
 import { GoogleMap, Marker, MarkerCluster, InfoWindow } from 'vue3-google-map';
 import { getCookies, setCookie, calculateDistanceInKm } from '../helper/helper';
 import ConnectionModal from '../components/ConnectionModal.vue';
@@ -174,52 +182,54 @@ export default defineComponent({
                 else
                 {
                     // 1 - GET USER COORDINATES
-                    let coordinateObject: any = await this.getUserCoordinate();
+                    //let coordinateObject: any = await this.getUserCoordinate();
+                    await this.getUserCoordinate();
 
-                    if(Object.keys(coordinateObject).length === 0)
-                    {
-                        this.isMapvisible = false;
-                    }
-                    else
-                    {
-                        // 2 - UPDATE USER COORDINATES AT DATA BASE
-                        if(await this.updateUserCoordinate(coordinateObject))
-                        {
-                            // 3 - SET COOKIES BASED ON COORDINATES RECEVEID
-                            setCookie('userLatitude', coordinateObject.latitude, 999999);
-                            setCookie('userLongitude', coordinateObject.longitude, 999999);
+                    // if(Object.keys(coordinateObject).length === 0)
+                    // {
+                    //     console.log(`teste`);
+                    //     this.isMapvisible = false;
+                    // }
+                    // else
+                    // {
+                    //     // 2 - UPDATE USER COORDINATES AT DATA BASE
+                    //     if(await this.updateUserCoordinate(coordinateObject))
+                    //     {
+                    //         // 3 - SET COOKIES BASED ON COORDINATES RECEVEID
+                    //         setCookie('userLatitude', coordinateObject.latitude, 999999);
+                    //         setCookie('userLongitude', coordinateObject.longitude, 999999);
 
-                            // 4 - UPDATE USER VISIBILITY
-                            if(await this.setUserVisible())
-                            {
-                                setCookie('userIsVisible', "1", 999999);
+                    //         // 4 - UPDATE USER VISIBILITY
+                    //         if(await this.setUserVisible())
+                    //         {
+                    //             setCookie('userIsVisible', "1", 999999);
 
-                                // 5 - SET COORDINATES VALUES TO GOOGLE MAPS TO CENTER USER VIEW BASED ON OWN COORDINATES
-                                this.center = {
-                                    lat: Number(coordinateObject.latitude), 
-                                    lng: Number(coordinateObject.longitude)
-                                }
+                    //             // 5 - SET COORDINATES VALUES TO GOOGLE MAPS TO CENTER USER VIEW BASED ON OWN COORDINATES
+                    //             this.center = {
+                    //                 lat: Number(coordinateObject.latitude), 
+                    //                 lng: Number(coordinateObject.longitude)
+                    //             }
 
-                                // 6 - LIST ALL COORDINATES
-                                if(await this.listCoordinates())
-                                {
-                                    this.isMapvisible = true;
-                                }
-                                else
-                                {
-                                    this.isMapvisible = false;
-                                }
-                            }
-                            else
-                            {
-                                this.isMapvisible = false;
-                            }
-                        }
-                        else
-                        {
-                            this.isMapvisible = false;
-                        }
-                    }                
+                    //             // 6 - LIST ALL COORDINATES
+                    //             if(await this.listCoordinates())
+                    //             {
+                    //                 this.isMapvisible = true;
+                    //             }
+                    //             else
+                    //             {
+                    //                 this.isMapvisible = false;
+                    //             }
+                    //         }
+                    //         else
+                    //         {
+                    //             this.isMapvisible = false;
+                    //         }
+                    //     }
+                    //     else
+                    //     {
+                    //         this.isMapvisible = false;
+                    //     }
+                    // }                
                 }
             }
             catch(error)
@@ -267,10 +277,14 @@ export default defineComponent({
         {   
             try
             {
+                console.log(pos);
+
                 const pos: any = await new Promise((resolve, reject) => {
                     if(navigator.geolocation)
                         navigator.geolocation.getCurrentPosition(resolve, reject);
                 });
+
+                
 
                 return {
                     latitude: String(pos.coords.latitude),
@@ -363,6 +377,7 @@ export default defineComponent({
         EyeIcon,
         MapPinIcon,
         UserIcon,
+        ArrowPathIcon,
         GoogleMap,
         Marker, 
         MarkerCluster,
