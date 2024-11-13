@@ -111,21 +111,29 @@
                 <div class="grid md:grid-cols-12 lg:grid-cols-12 gap-0 md:gap-5 mb-2">
                     <div class="col-span-12 md:col-span-3 mb-5" v-for="user in users">
                         <div class="card bg-base-100 shadow-xl">
-                            <div class="card-body p-4">
-                                <span v-if="user.Profile_picture == null" >
-                                    <div class="w-12 h-12 bg-gray-400 border-4 border-base-200 rounded-full flex items-center justify-center"><UserIcon class="w-6 h-6 text-white"/></div>
-                                </span>
-                                <span v-else>
-                                    <img class="w-12 h-12 border-4 border-base-200 rounded-full" :src="user.Profile_picture" alt="" />
-                                </span>  
-                                <p class="font-bold">{{ user.UserName }}, {{ calculteAge(user.Birth_date) }}</p>
-                                <p class="text-sm text-neutral-500">{{ user.JobName }}</p>
-                                <div class="flex h-full items-center justify-end">
-                                    <div class="card-actions">
-                                        <button @click="modalState(user.Id)" class="btn btn-sm bg-blue-500 hover:bg-blue-400"><EyeIcon class="w-5 h-5 text-white" /></button>
-                                        <button @click="deleteConection(user.Id)" class="btn btn-sm btn-error"><TrashIcon class="w-5 h-5 text-white" /></button>
+                            <div class="card-body p-0">
+                                <div class="grid grid-cols-12">
+                                    <div class="col-span-4 w-full h-32">
+                                        <span v-if="user.Profile_picture == null" >
+                                            <div class="bg-gray-400 h-full flex items-center justify-center rounded-l-xl"><UserIcon class="w-10 h-10 text-white"/></div>
+                                        </span>
+                                        <span v-else>
+                                            <img class="" :src="user.Profile_picture" alt="" />
+                                        </span>  
                                     </div>
-                                </div> 
+                                    <div class="col-span-8 h-full flex items-center px-5">
+                                        <div>
+                                            <p class="font-bold">{{ user.UserName }}, {{ calculteAge(user.Birth_date) }}</p>
+                                            <p class="text-sm text-neutral-500">{{ user.JobName }}</p>
+
+                                            <div class="mt-4 flex gap-2">
+                                                <button @click="modalState(user.Id)" class="btn btn-sm bg-blue-500 hover:bg-blue-400"><EyeIcon class="w-5 h-5 text-white" /></button>
+                                                <button @click="deleteConection(user.Id)" class="btn btn-sm btn-outline btn-error"><TrashIcon class="w-5 h-5" /></button>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

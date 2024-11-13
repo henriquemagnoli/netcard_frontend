@@ -493,6 +493,25 @@ export default defineComponent({
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'Salvar',
                 cancelButtonText: 'Cancelar',
+                inputValidator: (value) => {
+                    if(!value)
+                        return "Nova Url deve ser informada."
+                }
+            }).then(async (result) => {
+                
+                if(result.isConfirmed)
+                {
+                    const userSocialMediaObject = {
+                        url: result.value
+                    };
+
+                    const response: any = await updateUserSocialMedia(userSocialMediaObject, userSocialMediaId)
+
+                    if(response.value['statusCode'] == 200)
+                        Toast.fire({ icon: 'success', title: response.value['messages'] }).then(async () => { await this.getUser() });
+                    else
+                        Toast.fire({ icon: 'error', title: response.value['messages'] })
+                }
             });
         },
         async deleteUserSocialMedia(userSocialMediaId: number)
