@@ -65,7 +65,7 @@
                                                 <div>
                                                     <p class="font-semibold text-lg">Contatos:</p>
                                                 </div>
-                                                <div>   
+                                                <div class="text-sm">   
                                                     <p><span class="font-semibold">Telefone:</span> 12345-1235</p>
                                                     <p class="break-all"><span class="font-semibold"> E-mail:</span> {{ email }}</p>
                                                 </div>
@@ -108,7 +108,7 @@
                 </div>
 
                 <div class="modal-action">
-                    <button v-if="!isConnection" @click="setUserConnection" class="btn btn-sm bg-blue-500 hover:bg-blue-400 text-white">Conectar</button>
+                    <button v-if="!isConnection" @click="setUserConnection" class="btn btn-sm bg-blue-500 hover:bg-blue-400 text-white"><ArrowsRightLeftIcon class="h-5 w-5"/> Conectar</button>
                     <button class="btn btn-sm btn-neutral" @click="closeModal">Fechar</button>
                 </div>
             </div>
@@ -120,8 +120,8 @@
 import { defineComponent, reactive, toRefs, ref } from 'vue';
 import { IUserState, getUser } from '../hooks/useUser';
 import { IConnectionsState, setUserConnection, getUserConnectionById } from '../hooks/useConnections';
-import { EyeIcon, CheckIcon, UserIcon } from '@heroicons/vue/24/outline';
-import { calculteAge, getCookies } from '../helper/helper';
+import { EyeIcon, CheckIcon, UserIcon, ArrowsRightLeftIcon } from '@heroicons/vue/24/outline';
+import { calculateAge, getCookies } from '../helper/helper';
 import Swal from 'sweetalert2';
 
 const Toast = Swal.mixin({
@@ -194,7 +194,7 @@ export default defineComponent({
             {
                 this.name = response.value['data'].UserName;
                 this.email = response.value['data'].Email;
-                this.age = calculteAge(new Date(response.value['data'].Birth_date));
+                this.age = calculateAge(new Date(response.value['data'].Birth_date));
                 this.profilePicture = (response.value['data'].Profile_picture == null ? null : response.value['data'].Profile_picture);     
                 this.jobName = response.value['data'].JobName;
                 this.biography = response.value['data'].Biography;
@@ -250,7 +250,8 @@ export default defineComponent({
     components:{
         EyeIcon,
         CheckIcon,
-        UserIcon
+        UserIcon,
+        ArrowsRightLeftIcon
     }
 })
 

@@ -146,7 +146,7 @@ import { IStatesState, getAllStates } from '../hooks/useStates';
 import { ICitiesState, getAllCitiesBasedOnStateId } from '../hooks/useCities';
 import { IJobsState, getAllJobs } from '../hooks/useJobs';
 import { MagnifyingGlassIcon, FunnelIcon, EyeIcon, TrashIcon, UserIcon } from '@heroicons/vue/24/outline';
-import { calculteAge } from '../helper/helper';
+import { calculateAge } from '../helper/helper';
 import ConnectionModal from '../components/ConnectionModal.vue';
 import Swal from 'sweetalert2';
 
@@ -310,7 +310,7 @@ export default defineComponent({
         },
         calculteAge(birthDate: string)
         {
-           return calculteAge(new Date(birthDate))
+           return calculateAge(new Date(birthDate))
         }
     },
     async beforeMount() {

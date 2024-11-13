@@ -37,7 +37,7 @@
                                                     <p class="font-bold">{{ userCoordinate.User_name }}, {{ calculteAge(userCoordinate.Birth_date) }}</p>
                                                     <p>{{ userCoordinate.Job_name }}</p>
                                                 </div>
-                                                <p class="font-bold">10 km</p>
+                                                <p class="font-bold">{{ userCoordinate.Distance }} km</p>
                                             </div>
                                         </div>
                                     </div>
@@ -91,10 +91,10 @@
 import { defineComponent, reactive, ref, toRefs } from 'vue';
 import { ICoordinatesState, setUserCoordinate, getAllCoordinates, updateUserCoordinate } from '../hooks/useCoordinates';
 import { IUserState, updateUserVisible } from '../hooks/useUser';
-import { calculteAge } from '../helper/helper';
+import { calculateAge } from '../helper/helper';
 import { PlusIcon, XMarkIcon, UserGroupIcon, EyeIcon, MapPinIcon, UserIcon } from '@heroicons/vue/24/outline';
 import { GoogleMap, Marker, MarkerCluster, InfoWindow } from 'vue3-google-map';
-import { getCookies, setCookie } from '../helper/helper';
+import { getCookies, setCookie, calculateDistanceInKm } from '../helper/helper';
 import ConnectionModal from '../components/ConnectionModal.vue';
 import Swal from 'sweetalert2';
 
@@ -291,6 +291,14 @@ export default defineComponent({
             if(response.value['statusCode'] == 200)
             {
                 response.value['data'] != null ? this.usersCoordinates = response.value['data'] : false;
+
+                this.usersCoordinates.forEach((element: { Distance: string; Coordinates: { lat: number; lng: number; }; }) => {
+                    element.Distance = calculateDistanceInKm(Number(getCookies('userLatitude')), 
+                                                             Number(getCookies('userLongitude')),
+                                                             element.Coordinates.lat,
+                                                             element.Coordinates.lng).toFixed(2); // Here will add new field to json about distance based on current user
+                });
+
                 this.isLoadingCoordinates = false;
                 return true;
             }
@@ -326,7 +334,7 @@ export default defineComponent({
         },
         calculteAge(birthDate: string)
         {
-           return calculteAge(new Date(birthDate))
+           return calculateAge(new Date(birthDate))
         }
     },  
     async beforeMount() {

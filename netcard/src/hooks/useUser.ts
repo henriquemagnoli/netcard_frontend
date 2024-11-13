@@ -29,7 +29,20 @@ export async function getUser(user_id: number)
 
 export async function updateUser(userObject: any)
 {
-    
+    const request = await fetch(`${api_url}/user`, {
+        method: 'PATCH',
+        headers: {
+            'Authorization': String(getCookies('userToken')),
+            'Content-Type': 'application/JSON'
+        },
+        body: JSON.stringify(userObject)
+    });
+
+    const response = await request.json();
+
+    const data = ref<IUserState[]>(response);
+
+    return data;
 }
 
 export async function updateUserVisible(user_visible: number) 
