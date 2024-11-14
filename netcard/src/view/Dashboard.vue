@@ -62,7 +62,12 @@
                     <InfoWindow>
                         <div id="content" class="space-y-4">               
                             <div>
-                                <img class="border-4 w-12 h-12 border-base-200 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
+                                <span v-if="userCoordinate.Profile_picture == null" >
+                                    <div class="w-12 h-12 bg-gray-400 border-4 border-base-200 rounded-full flex items-center justify-center"><UserIcon class="w-6 h-6 text-white"/></div>
+                                </span>
+                                <span v-else>
+                                    <img class="w-12 h-12 border-4 border-base-200 rounded-full" :src="userCoordinate.Profile_picture" alt="" />
+                                </span>  
                                 <h1 id="firstHeading" class="firstHeading text-xl font-semibold">{{ userCoordinate.User_name }}, {{ calculteAge(userCoordinate.Birth_date) }}</h1>
                                 <div id="bodyContent">
                                     <p>{{ userCoordinate.Job_name }}</p>

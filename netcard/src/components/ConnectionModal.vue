@@ -66,7 +66,6 @@
                                                     <p class="font-semibold text-lg">Contatos:</p>
                                                 </div>
                                                 <div class="text-sm">   
-                                                    <p><span class="font-semibold">Telefone:</span> 12345-1235</p>
                                                     <p class="break-all"><span class="font-semibold"> E-mail:</span> {{ email }}</p>
                                                 </div>
                                             </div>
