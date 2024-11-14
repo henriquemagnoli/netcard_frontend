@@ -161,6 +161,7 @@ export default defineComponent({
             {
                 // Get Coordinates from user
                 let coordinateObject: any = await this.getUserCoordinate();
+                let coordinateRequest = null;
 
                 // If coordinates are empty, I assume that user didnt shared the location
                 if(Object.keys(coordinateObject).length == 0)
@@ -170,6 +171,47 @@ export default defineComponent({
                     return;
                 }
 
+                if(getCookies('userLatitude') == undefined || getCookies('userLongitude') == undefined)
+                {
+                    coordinateRequest = await this.setUserCoordinate(coordinateObject);
+                }
+                else
+                {
+                    coordinateRequest = await this.updateUserCoordinate(coordinateObject)
+                }
+
+                // Verify if coordinates have been inserted
+                if(coordinateRequest)
+                {
+                    // Set new cookies to latitude and longitude
+                    setCookie('userLatitude', coordinateObject.latitude, 999999);
+                    setCookie('userLongitude', coordinateObject.longitude, 999999);
+
+                    let updateVisible = await this.updateUserVisible(1);
+
+                    if(updateVisible)
+                    {
+                        setCookie('userIsVisible', String(1), 999999);
+                        this.isUserVisible = true;
+
+                        // Set values for center user view
+                        this.center = {
+                            lat: Number(coordinateObject.latitude), 
+                            lng: Number(coordinateObject.longitude)
+                        }
+
+                        // List all user coordinates
+                        let listCoordinates = await this.listCoordinates();
+                        
+                        // If listing works, then I enable map
+                        if(listCoordinates)
+                        {
+                            this.isMapvisible = true;
+                        }
+                    }             
+                }
+
+                /*
                 // User first time
                 if(getCookies('userLatitude') == undefined || getCookies('userLongitude') == undefined)
                 {
@@ -243,6 +285,7 @@ export default defineComponent({
                         }            
                     }
                 }
+                    */
             }
             catch(error)
             {
