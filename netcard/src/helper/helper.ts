@@ -23,6 +23,7 @@ export function deleteCookies()
                                         'userEmail',
                                         'userToken',
                                         'userIsVisible',
+                                        'userExpiresIn',
                                         'userLatitude',
                                         'userLongitude'];
     const date = new Date();

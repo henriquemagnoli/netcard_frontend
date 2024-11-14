@@ -371,7 +371,7 @@ export default defineComponent({
         },
         async validateIsUserVisible()
         {
-            if(Number(getCookies('userIsVisible')) == 1)
+            if(Number(getCookies('userIsVisible')) == 1 || Number(getCookies('userIsVisible')) == undefined)
                 await this.verfiyCoordinates();
         },
         calculteAge(birthDate: string)

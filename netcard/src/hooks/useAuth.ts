@@ -37,6 +37,7 @@ export async function signIn(email: string, password: string)
         setCookie('userEmail', response.data.Email, expiryIn);
         setCookie('userToken', response.data.Token, expiryIn);
         setCookie('userIsVisible', response.data.IsVisible, expiryIn);
+        setCookie('userExpiresIn', response.data.ExpiresIn, expiryIn);
     }
 
     const data = ref<ILoginState>(response);
@@ -62,7 +63,20 @@ export async function signUp(userObject: any)
 export function auth(to, from, next)
 {
     if(getCookies('userToken') != undefined)
-        next();
+    {
+        let currentDate = new Date();
+        let expiresDate = new Date(String(getCookies('userExpiresIn')));
+
+        if(currentDate > expiresDate)
+        {
+            deleteCookies();
+            next('/login');
+        }
+        else
+            next();
+    }
     else
-        next('/');
+    {
+        next('/login');
+    }
 }
