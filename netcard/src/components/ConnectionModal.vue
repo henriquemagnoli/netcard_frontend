@@ -88,7 +88,7 @@
                                                                 <a :href="socialMedia.Url" :class="[socialMedia.Social_media_id == 1 ? 'bg-[#0E76A8]' : 
                                                                             socialMedia.Social_media_id == 2 ? 'bg-[#1877F2]' :
                                                                             socialMedia.Social_media_id == 3 ? 'bg-gradient-to-r from-[#833AB4] via-[#C13584] to-[#FCAF45]' :
-                                                                            'bg-[#171515]', 'btn text-white']">
+                                                                            'bg-[#171515]', 'btn btn-square text-white']">
                                                                     <i v-if="socialMedia.Social_media_id == 1" class="fa-brands fa-linkedin-in fa-xl"></i> 
                                                                     <i v-if="socialMedia.Social_media_id == 2" class="fa-brands fa-facebook-f fa-xl"></i>
                                                                     <i v-if="socialMedia.Social_media_id == 3" class="fa-brands fa-instagram fa-xl"></i>

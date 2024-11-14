@@ -10,22 +10,14 @@
                     <div v-if="isLoadingCoordinates">
                         <div class="skeleton h-12 w-60"></div>
                     </div>
-
-                    <div class="grid grid-cols-12 gap-2">
-                        <div class="col-span-10">
-                            <div class="form-control bg-white border px-2 bg-base-400 rounded-xl mb-2">
-                                <label class="label cursor-pointer">
-                                    <span class="label-text text-md font-medium">Vísivel</span>
-                                    <input @change="setUserVisible" v-model="isUserVisible" type="checkbox" class="toggle toggle-success" />
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="col-span-2 flex justify-end">
-                            <button @click="listCoordinates()" class="btn btn-square bg-white border bg-base-400"><ArrowPathIcon class="h-5 w-5" /></button>
-                        </div>                 
+  
+                    <div class="form-control bg-white border px-2 bg-base-400 rounded-xl mb-2">
+                        <label class="label cursor-pointer">
+                            <span class="label-text text-md font-medium">Vísivel</span>
+                            <input @change="changeUserVisible" v-model="isUserVisible" type="checkbox" class="toggle toggle-success" />
+                        </label>
                     </div>
-
+                
                     <div v-if="!isLoadingCoordinates">
                         <div class="collapse collapse-arrow bg-white border bg-base-400">
                             <input type="checkbox" />
@@ -45,7 +37,9 @@
                                                     <p class="font-bold">{{ userCoordinate.User_name }}, {{ calculteAge(userCoordinate.Birth_date) }}</p>
                                                     <p>{{ userCoordinate.Job_name }}</p>
                                                 </div>
-                                                <p class="font-bold">{{ userCoordinate.Distance }} km</p>
+                                                <span v-if="userId != userCoordinate.User_id">
+                                                    <p class="font-bold">{{ userCoordinate.Distance }} km</p>
+                                                </span>                                      
                                             </div>
                                         </div>
                                     </div>
@@ -88,8 +82,8 @@
 
         <div v-if="!isMapvisible">
             <div class="flex flex-col h-[calc(100vh-144px)] justify-center items-center">
-                <p class="text-center p-5">Seu mapa está desabilitado, clique a baixo para habilita-lo.</p>
-                <button type="button" class="btn btn-outline" @click="">Habilitar Localização <MapPinIcon class="w-5 h-5" /></button>
+                <p class="text-center p-5">Seu mapa está desabilitado, clique no botão a baixo para habilita-lo.</p>
+                <button type="button" class="btn btn-outline" @click="verfiyCoordinates()">Habilitar Localização <MapPinIcon class="w-5 h-5" /></button>
             </div>
         </div>
     </div>
@@ -97,9 +91,9 @@
 
 <script lang="ts">
 import { defineComponent, reactive, ref, toRefs } from 'vue';
-import { ICoordinatesState, setUserCoordinate, getAllCoordinates, updateUserCoordinate } from '../hooks/useCoordinates';
+import { ICoordinatesState, setUserCoordinate, getAllCoordinates, updateUserCoordinate, deleteUserCoordinates } from '../hooks/useCoordinates';
 import { IUserState, updateUserVisible } from '../hooks/useUser';
-import { calculateAge } from '../helper/helper';
+import { calculateAge, deleteCookiesByName } from '../helper/helper';
 import { PlusIcon, XMarkIcon, UserGroupIcon, EyeIcon, MapPinIcon, UserIcon, ArrowPathIcon } from '@heroicons/vue/24/outline';
 import { GoogleMap, Marker, MarkerCluster, InfoWindow } from 'vue3-google-map';
 import { getCookies, setCookie, calculateDistanceInKm } from '../helper/helper';
@@ -132,6 +126,8 @@ export default defineComponent({
 
         const isUserVisible = ref(false);
 
+        const userId = ref(Number(getCookies('userId')));
+
         return{
             ...toRefs(coordinateState),
             ...toRefs(userState),
@@ -143,7 +139,8 @@ export default defineComponent({
             isMapvisible,
             latitude,
             longitude,
-            isUserVisible
+            isUserVisible,
+            userId
         }
 
     },
@@ -155,86 +152,96 @@ export default defineComponent({
         },
         async verfiyCoordinates()
         {
-            // 1 - Verify if location is on
-            // IF verify if exists coordinates on cookie, if not, set a coordinate
-            // IF is on update or set user coordinate and set on cookie, Open Map, List coordinates
-            // ELSE dont set coordinate, continue to disable map
-
             try
             {
-                // Verify if exists coordinates on cookies
+                // Get Coordinates from user
+                let coordinateObject: any = await this.getUserCoordinate();
+
+                // If coordinates are empty, I assume that user didnt shared the location
+                if(Object.keys(coordinateObject).length == 0)
+                {
+                    Swal.fire({ icon: 'warning', title: 'Atenção', text: 'Você deve habilitar a permissão de compartilhar a localização de seu navegador.' })
+                    this.isMapvisible = false;
+                    return;
+                }
+
+                // User first time
                 if(getCookies('userLatitude') == undefined || getCookies('userLongitude') == undefined)
                 {
-                    let coordinateObject: any = await this.getUserCoordinate();
+                    // If coordinates are filled, I will set user coordinates
+                    let setCoordinates = await this.setUserCoordinate(coordinateObject);
 
-                    await this.setUserCoordinate(coordinateObject);
+                    // Verify if coordinates have been inserted
+                    if(setCoordinates)
+                    {
+                        // Set new cookies to latitude and longitude
+                        setCookie('userLatitude', coordinateObject.latitude, 999999);
+                        setCookie('userLongitude', coordinateObject.longitude, 999999);
 
-                    setCookie('userLatitude', coordinateObject.latitude, 999999);
-                    setCookie('userLongitude', coordinateObject.longitude, 999999);
+                        let updateVisible = await this.updateUserVisible(1);
 
-                    this.center = {
-                        lat: Number(coordinateObject.latitude), 
-                        lng: Number(coordinateObject.longitude)
+                        if(updateVisible)
+                        {
+                            setCookie('userIsVisible', String(1), 999999);
+                            this.isUserVisible = true;
+
+                            // Set values for center user view
+                            this.center = {
+                                lat: Number(coordinateObject.latitude), 
+                                lng: Number(coordinateObject.longitude)
+                            }
+
+                            // List all user coordinates
+                            let listCoordinates = await this.listCoordinates();
+                            
+                            // If listing works, then I enable map
+                            if(listCoordinates)
+                            {
+                                this.isMapvisible = true;
+                            }
+                        }             
                     }
-
-                    await this.listCoordinates();
                 }
                 else
                 {
-                    // 1 - GET USER COORDINATES
-                    //let coordinateObject: any = await this.getUserCoordinate();
-                    await this.getUserCoordinate();
+                    // If coordinates are filled, I will update user coordinates 
+                    let updateCoordinates = await this.updateUserCoordinate(coordinateObject)
 
-                    // if(Object.keys(coordinateObject).length === 0)
-                    // {
-                    //     console.log(`teste`);
-                    //     this.isMapvisible = false;
-                    // }
-                    // else
-                    // {
-                    //     // 2 - UPDATE USER COORDINATES AT DATA BASE
-                    //     if(await this.updateUserCoordinate(coordinateObject))
-                    //     {
-                    //         // 3 - SET COOKIES BASED ON COORDINATES RECEVEID
-                    //         setCookie('userLatitude', coordinateObject.latitude, 999999);
-                    //         setCookie('userLongitude', coordinateObject.longitude, 999999);
+                    // Verify if coordinates have been updated
+                    if(updateCoordinates)
+                    {
+                        // Set new cookies to latitude and longitude
+                        setCookie('userLatitude', coordinateObject.latitude, 999999);
+                        setCookie('userLongitude', coordinateObject.longitude, 999999);
 
-                    //         // 4 - UPDATE USER VISIBILITY
-                    //         if(await this.setUserVisible())
-                    //         {
-                    //             setCookie('userIsVisible', "1", 999999);
+                        let updateVisible = await this.updateUserVisible(1);
 
-                    //             // 5 - SET COORDINATES VALUES TO GOOGLE MAPS TO CENTER USER VIEW BASED ON OWN COORDINATES
-                    //             this.center = {
-                    //                 lat: Number(coordinateObject.latitude), 
-                    //                 lng: Number(coordinateObject.longitude)
-                    //             }
+                        if(updateVisible)
+                        {
+                            setCookie('userIsVisible', String(1), 999999);
+                            this.isUserVisible = true;
 
-                    //             // 6 - LIST ALL COORDINATES
-                    //             if(await this.listCoordinates())
-                    //             {
-                    //                 this.isMapvisible = true;
-                    //             }
-                    //             else
-                    //             {
-                    //                 this.isMapvisible = false;
-                    //             }
-                    //         }
-                    //         else
-                    //         {
-                    //             this.isMapvisible = false;
-                    //         }
-                    //     }
-                    //     else
-                    //     {
-                    //         this.isMapvisible = false;
-                    //     }
-                    // }                
+                            // Set values for center user view
+                            this.center = {
+                                lat: Number(coordinateObject.latitude), 
+                                lng: Number(coordinateObject.longitude)
+                            }
+
+                            // List all user coordinates
+                            let listCoordinates = await this.listCoordinates();
+                            
+                            // If listing works, then I enable map
+                            if(listCoordinates)
+                            {
+                                this.isMapvisible = true;
+                            }
+                        }            
+                    }
                 }
             }
             catch(error)
             {
-                console.log(error)
+                console.log('teste')
                 this.isMapvisible = false;
             }      
         },
@@ -246,14 +253,15 @@ export default defineComponent({
 
             if(response.value['statusCode'] == 200)
             {
-                this.isMapvisible = true;
+                this.isLoadingCoordinates = false;
+                return true;
             }
             else
             {
-                Swal.fire({ icon:'error', title: 'Erro', text: response.value['messages'] })
+                this.isLoadingCoordinates = false;
+                Swal.fire({ icon:'error', title: 'Erro', text: response.value['messages'] });
+                return false;
             }
-
-            this.isLoadingCoordinates = false;
         },
         async updateUserCoordinate(coordinateObject: any)
         {
@@ -277,21 +285,17 @@ export default defineComponent({
         {   
             try
             {
-                console.log(pos);
-
                 const pos: any = await new Promise((resolve, reject) => {
                     if(navigator.geolocation)
                         navigator.geolocation.getCurrentPosition(resolve, reject);
                 });
-
-                
 
                 return {
                     latitude: String(pos.coords.latitude),
                     longitude: String(pos.coords.longitude),
                 }
             }
-            catch(error)
+            catch(error: GeolocationPositionError | any)
             {   
                 return {};
             }
@@ -323,52 +327,61 @@ export default defineComponent({
                 return false;
             }
         },
-        async setUserVisible()
+        async updateUserVisible(visibleValue: number)
         {
-            let newUserVisible: number = 0;
-
-            if(this.isUserVisible)
-                newUserVisible = 1;
-            else
-                newUserVisible = 0;
-
-            const response: any = await updateUserVisible(newUserVisible);
+            const response: any = await updateUserVisible(visibleValue);
 
             if(response.value['statusCode'] == 200)
-            {
-                this.isUserVisible = true;
-                setCookie('userIsVisible', String(newUserVisible), 999999);
                 return true;
-            }
             else
-            {
-                this.isUserVisible = false;
                 return false;
+        },
+        async deleteUserCoordinates()
+        {
+            const response: any = await deleteUserCoordinates();
+
+            if(response.value['statusCode'] == 200)
+                return true;
+            else
+                return false;
+        },
+        async changeUserVisible()
+        {
+            if(!this.isUserVisible)
+            {
+                // Need to update user visibility
+                let updateVisible = await this.updateUserVisible(0);
+
+                if(updateVisible)
+                {
+                    setCookie('userIsVisible', "0", 999999)
+
+                    // Need to delete user coordinates
+                    let deleteCoordinates = await this.deleteUserCoordinates();
+
+                    if(deleteCoordinates)
+                    {
+                        deleteCookiesByName('userLatitude');
+                        deleteCookiesByName('userLongitude');
+                        
+                        this.isMapvisible = false;
+                    }             
+                }
             }
+        },
+        async validateIsUserVisible()
+        {
+            if(Number(getCookies('userIsVisible')) == 1)
+                await this.verfiyCoordinates();
         },
         calculteAge(birthDate: string)
         {
            return calculateAge(new Date(birthDate))
         }
     },  
-    async beforeMount() {
-
-        // STEPS 
-        // 1 - Verify if user allows to share location
-        // IF USER DONT ALLOWs: update user is visible as 0 
-        // IF ALLOWS: update user is visible as 1, setting coordinates into cookies session
-        
-        await this.verfiyCoordinates();
-
-
-
-      
-        // if(this.getUserCoordinate() == undefined)
-        //     await this.listCoordinates();
-
-        //await this.getUserCoordinate();
-        //await this.setUserCoordinate();
-        //await this.listCoordinates();
+    async beforeMount() { 
+        //await this.verfiyCoordinates();
+        await this.validateIsUserVisible();
     },
     components:{
         PlusIcon,

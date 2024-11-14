@@ -34,6 +34,15 @@ export function deleteCookies()
     });
 }
 
+export function deleteCookiesByName(name: string)
+{
+    const date = new Date();
+
+    date.setTime(date.getTime() + (-1 * 24 * 60 * 60 * 1000));
+
+    document.cookie = `${name}=; expires=${date.toUTCString()}; path=/`;
+}
+
 export function calculateAge(birthDate: Date) : number
 {
     const timeDiff = Math.abs(Date.now() - birthDate.getTime());

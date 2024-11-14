@@ -34,7 +34,7 @@
                   <MenuButton class="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                     <span class="absolute -inset-1.5" />
                     <span class="sr-only">Open user menu</span>
-                    <span v-if="user.imageUrl == null" >
+                    <span v-if="user.imageUrl == ''" >
                         <div class="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center"><UserIcon class="w-4 h-4 text-white"/></div>
                     </span>
                     <span v-else>
@@ -58,7 +58,7 @@
           <div class="-mr-2 flex md:hidden">
             <!-- Mobile menu button -->
             <DisclosureButton class="relative inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-              <span class="absolute -inset-0.5" />
+              <span class="absolute -inset-0.5"></span>
               <span class="sr-only">Open main menu</span>
               <Bars3Icon v-if="!open" class="block h-6 w-6" aria-hidden="true" />
               <XMarkIcon v-else class="block h-6 w-6" aria-hidden="true" />
@@ -78,7 +78,12 @@
         <div class="border-t border-gray-700 pb-3 pt-4">
           <div class="flex items-center px-5">
             <div class="flex-shrink-0">
-              <img class="h-10 w-10 rounded-full" :src="user.imageUrl" alt="" />
+              <span v-if="user.imageUrl == ''" >
+                  <div class="w-10 h-10 bg-gray-400 rounded-full flex items-center justify-center"><UserIcon class="w-4 h-4 text-white"/></div>
+              </span>
+              <span v-else>
+                  <img class="w-10 h-10 rounded-full" :src="user.imageUrl" alt="" />
+              </span>  
             </div>
             <div class="ml-3">
               <div class="text-base font-medium leading-none text-white">{{ user.name }}</div>
@@ -116,7 +121,7 @@ export default defineComponent({
         const user = {
             name: 'Tom Cook',
             email: 'tom@example.com',
-            imageUrl: null
+            imageUrl: ''
         }
         const navigation = [
             { name: 'Painel', href: '/dashboard', current: true },
