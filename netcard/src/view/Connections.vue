@@ -118,7 +118,7 @@
                                             <div class="bg-gray-400 h-full flex items-center justify-center rounded-l-xl"><UserIcon class="w-10 h-10 text-white"/></div>
                                         </span>
                                         <span v-else>
-                                            <img class="" :src="user.Profile_picture" alt="" />
+                                            <img class="h-full rounded-l-xl" :src="user.Profile_picture" alt="" />
                                         </span>  
                                     </div>
                                     <div class="col-span-8 h-full flex items-center px-5">
